@@ -68,7 +68,7 @@ class MainProcess {
           version: req.useragent.version,
           os: req.useragent.os,
           platform: req.useragent.platform,
-          geoIp: JSON.stringify(req.useragent.geoIp, null, 4),
+          geoIp: this.util.jsonSave(req.useragent.geoIp),
           source: req.useragent.source
         }
       }
@@ -170,6 +170,21 @@ class MainProcess {
         return res.end('Error 500');
       }
     }) );
+
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+    // TEST ZONE
+
+
+
+
+
+    // setTimeout(()=>{
+    //   console.log(colors.yellow(this.util.jsonSave(this)));
+    // },3000);
+
+
+
 
     // -------------------------------------------------------------------------
     // -------------------------------------------------------------------------
