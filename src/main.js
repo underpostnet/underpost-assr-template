@@ -13,7 +13,7 @@ const buildDir = dir => dir.replace(/\\/g, '/');
 const __filename = buildDir(fileURLToPath(import.meta.url));
 const __dirname = buildDir(dirname(__filename));
 console.log(colors.green('__dirname:'+__dirname));
-console.log(colors.green('__filename'+__filename));
+console.log(colors.green('__filename:'+__filename));
 
 class MainProcess {
 
