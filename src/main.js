@@ -179,8 +179,18 @@ class MainProcess {
 
 
 
-    // setTimeout(()=>{
-    //   console.log(colors.yellow(this.util.jsonSave(this)));
+    // setTimeout(async ()=>{
+    //   console.log(
+    //     colors.redBG(colors.black(
+    //       this.util.jsonSave(this)
+    //     ))
+    //   );
+    //   await this.util.timer(1000);
+    //   console.log('1');
+    //   await this.util.timer(1000);
+    //   console.log('2');
+    //   await this.util.timer(1000);
+    //   console.log('3');
     // },3000);
 
 
