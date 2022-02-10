@@ -44,11 +44,10 @@ class MainProcess {
       // recursive iterator read
       readRecursive: (dir, out) =>
         fs.existsSync(__dirname+dir) ?
-        fs.readdirSync(__dirname+dir).forEach( async file => {
-            fs.lstatSync(__dirname+dir+'/'+file).isDirectory() ?
-            this.fileGestor.readRecursive(dir+'/'+file, out):
-            out(__dirname+dir+'/'+file);
-        }):
+        fs.readdirSync(__dirname+dir).forEach( async file =>
+        fs.lstatSync(__dirname+dir+'/'+file).isDirectory() ?
+        this.fileGestor.readRecursive(dir+'/'+file, out) :
+        out(__dirname+dir+'/'+file)) :
         console.log(colors.red(' readRecursive: (dir, out) => no directory found:'+__dirname+dir))
 
     }
