@@ -1,19 +1,17 @@
 
 
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-
 import fs from 'fs';
 import colors from 'colors/safe.js';
 import server  from 'http';
 import express from 'express';
 import expressUserAgent from 'express-useragent';
+import navDir from './navDir.js';
 
-const buildDir = dir => dir.replace(/\\/g, '/');
-const __filename = buildDir(fileURLToPath(import.meta.url));
-const __dirname = buildDir(dirname(__filename));
-console.log(colors.green('__dirname:'+__dirname));
-console.log(colors.green('__filename:'+__filename));
+// console.log('navDir test ->');
+// console.log(navDir('../../'));
+// console.log(navDir('..'));
+// console.log(navDir());
+// console.log(navDir('/test'));
 
 class MainProcess {
 
@@ -43,12 +41,12 @@ class MainProcess {
 
       // recursive iterator read
       readRecursive: (dir, out) =>
-        fs.existsSync(__dirname+dir) ?
-        fs.readdirSync(__dirname+dir).forEach( async file =>
-        fs.lstatSync(__dirname+dir+'/'+file).isDirectory() ?
+        fs.existsSync(navDir(dir)) ?
+        fs.readdirSync(navDir(dir)).forEach( async file =>
+        fs.lstatSync(navDir(dir)+'/'+file).isDirectory() ?
         this.fileGestor.readRecursive(dir+'/'+file, out) :
-        out(__dirname+dir+'/'+file)) :
-        console.log(colors.red(' readRecursive: (dir, out) => no directory found:'+__dirname+dir))
+        out(navDir()+dir+'/'+file)) :
+        console.log(colors.red(' readRecursive: (dir, out) => no directory found:'+navDir(dir)))
 
     }
 
@@ -109,7 +107,7 @@ class MainProcess {
     // instance data
     // -------------------------------------------------------------------------
 
-    this.data = JSON.parse(fs.readFileSync(__dirname+'/data.json', 'utf8'));
+    this.data = JSON.parse(fs.readFileSync(navDir('/data/data.json'), 'utf8'));
 
     // -------------------------------------------------------------------------
     // instance server

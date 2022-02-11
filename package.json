@@ -4,7 +4,7 @@
   "version": "2.0.0",
   "main": "./src/main.js",
   "scripts": {
-    "start": "nodemon src/main"
+    "start": "nodemon src/app"
   },
   "repository": {
     "type": "git",
