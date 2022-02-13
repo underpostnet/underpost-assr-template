@@ -1,0 +1,35 @@
+{
+   "server":{
+      "host":"http://localhost",
+      "visiblePort": true,
+      "httpPort":5000
+   },
+   "charset":"utf-8",
+   "statics":[
+      "/underpost-library"
+   ],
+   "fonts": [
+       {
+           "name": "retro-font",
+           "url": "/fonts/retro/PressStart2P.ttf",
+           "type": "truetype"
+       },
+       {
+           "name": "gothic",
+           "url": "/fonts/gothic/GOTHIC.ttf",
+           "type": "truetype"
+       }
+   ],
+   "views":[
+      {
+         "lang":"en",
+         "dir":"ltr",
+         "charset":"utf-8",
+         "uri":"/",
+         "title":"underpost.net",
+         "description":"underpost interface",
+         "image":"/img/underpost-social.jpg",
+         "favicon": "/img/underpost.png"
+      }
+   ]
+}
