@@ -1,6 +1,6 @@
 {
   "watch": [
-    "./src"
+    "./src", "../underpost.net"
   ],
   "ext": "js",
   "delay": "0",

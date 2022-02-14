@@ -10,8 +10,10 @@ import shell from 'shelljs';
 import admZip from 'adm-zip';
 import request from 'superagent';
 
+import util from '../underpost-modules-v2/util.js';
 import navDir from '../underpost-modules-v2/navDir.js';
 import rest from '../underpost-modules-v2/rest.js';
+import files from '../underpost-modules-v2/files.js';
 
 // console.log('navDir test ->');
 // console.log(navDir('../../'));
@@ -23,31 +25,19 @@ class MainProcess {
 
   constructor(obj){
 
+    this.dev = process.argv.slice(2)[0]=='d' ? true: false;
+    console.log(process.argv);
+
     // -------------------------------------------------------------------------
     // utility methods
     // -------------------------------------------------------------------------
 
     this.util = {
-      timer: ms => new Promise(res => setTimeout(res, ms)),
-      jsonSave: obj => JSON.stringify(obj, null, 4),
-      uriValidator: uri => uri == undefined ? '' : uri,
       buildUrl: uri =>
-                this.data.server.visiblePort ?
-                this.data.server.host + ':' + this.data.server.httpPort + this.util.uriValidator(uri):
-                this.data.server.host + this.util.uriValidator(uri)
+            this.data.server.visiblePort ?
+            this.data.server.host + ':' + this.data.server.httpPort + util.uriValidator(uri):
+            this.data.server.host + util.uriValidator(uri)
     };
-
-    // -------------------------------------------------------------------------
-    // files methods
-    // -------------------------------------------------------------------------
-
-    this.readRecursive = (dir, out) =>
-      fs.existsSync(navDir(dir)) ?
-      fs.readdirSync(navDir(dir)).forEach( async file =>
-      fs.lstatSync(navDir(dir)+'/'+file).isDirectory() ?
-      this.readRecursive(dir+'/'+file, out) :
-      out(navDir()+dir+'/'+file)) :
-      console.log(colors.red(' readRecursive: (dir, out) => no directory found:'+navDir(dir)))
 
     // -------------------------------------------------------------------------
     // req methods
@@ -64,7 +54,7 @@ class MainProcess {
           version: req.useragent.version,
           os: req.useragent.os,
           platform: req.useragent.platform,
-          geoIp: this.util.jsonSave(req.useragent.geoIp),
+          geoIp: util.jsonSave(req.useragent.geoIp),
           source: req.useragent.source
         }
       }
@@ -87,7 +77,7 @@ class MainProcess {
   				<!DOCTYPE html>
           <html dir='`+path.dir+`' lang='`+path.lang+`'>
             <head>
-        				<meta charset='`+path.charset+`'>
+        				<meta charset='`+this.data.charset+`'>
                 <title>`+path.title+`</title>
                 <link rel='canonical' href='`+this.util.buildUrl(path.uri)+`'>
                 <link rel='icon' type='image/png' href='`+this.util.buildUrl()+path.favicon+`'>
@@ -136,6 +126,7 @@ class MainProcess {
     console.log(colors.yellow(
       'HTTP SERVER ON PORT:'
       +this.data.server.httpPort
+      +' MODE:'+(this.dev==true?'DEV':'PROD')
     ));
 
     // -------------------------------------------------------------------------
@@ -176,9 +167,10 @@ class MainProcess {
     // -------------------------------------------------------------------------
 
     this.data.statics.map( dir => {
-      this.readRecursive( '../'+dir, outDir => {
+      files.readRecursive( '../'+dir, outDir => {
         const uri = outDir.split(dir)[1];
-        console.log(colors.green('set static path:'+uri));
+        // console.log(colors.green('set static path:'+uri));
+        // console.log(navDir('../underpost-library/'+uri));
         this.app.get(uri, (req, res) => res.sendFile(navDir('../underpost-library/'+uri)));
       });
     });
@@ -197,14 +189,14 @@ class MainProcess {
       console.log(reqInfo);
       try {
         res.writeHead( 200, {
-          'Content-Type': 'text/html; charset=utf-8',
+          'Content-Type': ('text/html; charset='+this.data.charset),
           'Content-Language': path.lang
         });
         return res.end(this.render.view(path));
       }catch(error){
         console.log(colors.red(error));
         res.writeHead( 500, {
-          'Content-Type': 'text/html; charset=utf-8',
+          'Content-Type': ('text/html; charset='+this.data.charset),
           'Content-Language': path.lang
         });
         return res.end('Error 500');

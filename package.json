@@ -4,8 +4,10 @@
   "version": "2.0.0",
   "main": "./src/main.js",
   "scripts": {
-    "start": "nodemon src/app",
-    "update": "node update"
+    "start": "node src/app",
+    "update": "node bin/update",
+    "dev": "nodemon bin/build d",
+    "reset": "node bin/reset"
   },
   "repository": {
     "type": "git",

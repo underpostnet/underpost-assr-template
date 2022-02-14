@@ -19,16 +19,22 @@ https://underpost.net
 - update:
 
 
-`node update`
+`npm run update`
 
 
 - run dev mode:
 
 
-`npm start d`
+`npm run dev`
 
 
 - run production mode:
 
 
 `npm start`
+
+
+- reset modules:
+
+
+`npm run reset`
