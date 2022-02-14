@@ -10,10 +10,8 @@ import shell from 'shelljs';
 import admZip from 'adm-zip';
 import request from 'superagent';
 
-import util from '../underpost-modules-v2/util.js';
-import navDir from '../underpost-modules-v2/navDir.js';
-import rest from '../underpost-modules-v2/rest.js';
-import files from '../underpost-modules-v2/files.js';
+import { util, navDir, rest, files }
+from '../underpost_modules/underpost.js';
 
 // console.log('navDir test ->');
 // console.log(navDir('../../'));
@@ -44,19 +42,41 @@ class MainProcess {
     // -------------------------------------------------------------------------
 
     this.req = {
-      info: req => {
-        return {
-          ip: req.connection.remoteAddress || req.headers['x-forwarded-for'],
-          date: new Date(),
-          host: req.headers.host,
-          lang: req.acceptsLanguages(),
-          browser: req.useragent.browser,
-          version: req.useragent.version,
-          os: req.useragent.os,
-          platform: req.useragent.platform,
-          geoIp: util.jsonSave(req.useragent.geoIp),
-          source: req.useragent.source
-        }
+      info: (req, path, logOff) => {
+          const reqInfo = {
+            ip: req.connection.remoteAddress || req.headers['x-forwarded-for'],
+            date: new Date().toISOString(),
+            host: req.headers.host,
+            lang: req.acceptsLanguages().join('|'),
+            browser: req.useragent.browser,
+            version: req.useragent.version,
+            os: req.useragent.os,
+            platform: req.useragent.platform,
+            geoIp: util.jsonSave(req.useragent.geoIp)
+          };
+          if(logOff===true){
+            console.log(colors.bgYellow(colors.black(' path info ->')));
+            console.table(path);
+            console.log(colors.bgYellow(colors.black(' req info ->')));
+            console.table(reqInfo);
+            console.log(colors.bgYellow(colors.black(' source info ->')));
+            console.table(req.useragent.source);
+          }
+          return {
+            ...path,
+            ...reqInfo,
+            ...{source: req.useragent.source}
+          }
+      },
+      logInfo: (req, path) => {
+        console.log(
+           colors.bgYellow(colors.black(' GET '))
+         + colors.green(' .'+path.uri));
+        const display_ = this.req.info(req, path);
+        const source_ = display_.source;
+        delete display_.source;
+        console.table(display_);
+        console.log(colors.green(' source: ')+source_);
       }
     };
 
@@ -115,6 +135,15 @@ class MainProcess {
 
     this.data = JSON.parse(fs.readFileSync(navDir('../data/data.json'), 'utf8'));
 
+    if(this.dev){
+          // console.log(colors.yellow('save colors config ->'))
+          fs.writeFileSync(
+            navDir('../data/colors.json'),
+            util.jsonSave(colors),
+            this.data.charset
+          );
+    }
+
     // -------------------------------------------------------------------------
     // instance server
     // -------------------------------------------------------------------------
@@ -139,28 +168,6 @@ class MainProcess {
     // fontawesome 5.3.1 source
     // -------------------------------------------------------------------------
 
-    // ! fs.existsSync(navDir('/fontawesome')) ?
-    // fs.mkdirSync(navDir('/fontawesome')) : null;
-
-    // fs.writeFileSync(
-    //   navDir(nameFile),
-    //   await rest.getRaw('https://underpost.net/fontawesome-5.3.1'+path),
-    //   this.data.charset
-    // )
-
-    // request
-    //   .get('https://underpost.net/download/fontawesome-free-5.3.1.zip')
-    //   .on('error', function(error) {
-    //     console.log(error);
-    //   })
-    //   .pipe(fs.createWriteStream(navDir('/fontawesome-5.3.1.zip')))
-    //   .on('finish', function() {
-    //     console.log('finished dowloading');
-    //     const zip = new admZip(navDir('/fontawesome-5.3.1.zip'));
-    //     console.log('start unzip');
-    //     zip.extractAllTo(navDir('/fontawesome/'), true);
-    //     console.log('finished unzip');
-    //   });
 
     // -------------------------------------------------------------------------
     // statics paths
@@ -169,9 +176,10 @@ class MainProcess {
     this.data.statics.map( dir => {
       files.readRecursive( '../'+dir, outDir => {
         const uri = outDir.split(dir)[1];
+        const srcPath = navDir('../'+dir+uri);
         // console.log(colors.green('set static path:'+uri));
-        // console.log(navDir('../underpost-library/'+uri));
-        this.app.get(uri, (req, res) => res.sendFile(navDir('../underpost-library/'+uri)));
+        // console.log(srcPath);
+        this.app.get(uri, (req, res) => res.sendFile(srcPath));
       });
     });
 
@@ -182,11 +190,7 @@ class MainProcess {
     this.data.views.map( path =>
     this.app.get(path.uri, (req, res) => {
       // npm response-time
-      console.log(colors.yellow(' path info ->'));
-      console.log(path);
-      const reqInfo = this.req.info(req);
-      console.log(colors.yellow(' req info ->'));
-      console.log(reqInfo);
+      this.req.logInfo(req, path);
       try {
         res.writeHead( 200, {
           'Content-Type': ('text/html; charset='+this.data.charset),

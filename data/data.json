@@ -6,7 +6,7 @@
    },
    "charset":"utf-8",
    "statics":[
-      "/underpost-library"
+      "/underpost_modules/underpost-library"
    ],
    "fonts": [
        {

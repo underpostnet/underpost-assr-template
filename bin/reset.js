@@ -27,9 +27,7 @@ const deleteFolderRecursive = path => {
 
 [
   './node_modules',
-  './underpost-library',
-  './underpost-modules-v1',
-  './underpost-modules-v2'
+  './underpost_modules'
 ].map( path => deleteFolderRecursive(path) );
 
 

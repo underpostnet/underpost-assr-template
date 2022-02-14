@@ -1,5 +1,3 @@
 /node_modules
+/underpost_modules
 /package-lock.json
-/underpost-modules-v1
-/underpost-modules-v2
-/underpost-library
