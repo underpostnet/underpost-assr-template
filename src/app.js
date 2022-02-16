@@ -8,7 +8,7 @@ import express from 'express';
 import expressUserAgent from 'express-useragent';
 import shell from 'shelljs';
 
-import { util, navi, rest, files }
+import { util, navi, rest, files, info }
 from '../underpost_modules/underpost.js';
 
 // console.log('navi test ->');
@@ -33,55 +33,6 @@ class MainProcess {
             this.data.server.visiblePort ?
             this.data.server.host + ':' + this.data.server.httpPort + util.uriValidator(uri):
             this.data.server.host + util.uriValidator(uri)
-    };
-
-    // -------------------------------------------------------------------------
-    // req methods
-    // -------------------------------------------------------------------------
-
-    this.req = {
-      info: (req, path, groupTable) => {
-          const reqInfo = {
-            ip: req.connection.remoteAddress || req.headers['x-forwarded-for'],
-            date: new Date().toISOString(),
-            host: req.headers.host,
-            lang: req.acceptsLanguages().join('|'),
-            browser: req.useragent.browser,
-            version: req.useragent.version,
-            os: req.useragent.os,
-            platform: req.useragent.platform,
-            geoIp: util.jsonSave(req.useragent.geoIp)
-          };
-          if(groupTable===true){
-            console.log('');
-            console.log(colors.bgBrightYellow(colors.black(util.tu(' path info '))));
-            console.table(path);
-            console.log(colors.bgBrightYellow(colors.black(util.tu(' req info '))));
-            console.table(reqInfo);
-            console.log(colors.bgBrightYellow(colors.black(util.tu(' source info '))));
-            console.table(req.useragent.source);
-            console.log(colors.bgBrightYellow(colors.black(util.tu(' resume '))));
-          }
-          return {
-            ...path,
-            ...reqInfo,
-            ...{source: req.useragent.source}
-          }
-      },
-      logInfo: (req, path) => {
-        const dataPath = this.paths.filter(x=>x.path==path.uri)[0];
-        console.log(
-          ' \n > '
-         + colors.bgYellow(colors.black(' '
-         + util.tu(dataPath.methods)
-         + ' '))
-         + colors.green(' .'+path.uri));
-        const display_ = this.req.info(req, path);
-        const source_ = display_.source;
-        delete display_.source;
-        console.table({ ...dataPath, ...display_ });
-        console.log(' source: '+colors.green(source_));
-      }
     };
 
     // -------------------------------------------------------------------------
@@ -196,7 +147,7 @@ class MainProcess {
     this.app.get(path.uri, (req, res) => {
       // npm response-time
       // console.log(req);
-      this.req.logInfo(req, path);
+      info.req(req, path, this.paths);
       try {
         res.writeHead( 200, {
           'Content-Type': ('text/html; charset='+this.data.charset),
@@ -226,6 +177,9 @@ class MainProcess {
       }
       :null
     ), 0);
+
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
 
   }
