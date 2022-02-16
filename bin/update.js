@@ -14,6 +14,9 @@ const request = require('superagent');
 const projectName = 'underpost-assr-template';
 const charset = 'utf8';
 
+! fs.existsSync( './underpost_modules' ) ?
+fs.mkdirSync( './underpost_modules' ) : null;
+
 const getProjectName = dep => dep.split('/').pop();
 
 const install = dep => {
@@ -40,27 +43,33 @@ const update = dep => {
         update(dep) : install(dep) );
 
 
-request
-  .get('https://underpost.net/download/fontawesome-free-5.3.1.zip')
-  .on('error', function(error) {
-    console.log(error);
-  })
-  .pipe(fs.createWriteStream('./fontawesome-5.3.1.zip'))
-  .on('finish', function() {
-    console.log('finished dowloading');
-    const zip = new admZip('./fontawesome-5.3.1.zip');
-    console.log('start unzip');
-    zip.extractAllTo('./underpost_modules', true);
-    console.log('finished unzip');
-    fs.unlinkSync('./fontawesome-5.3.1.zip');
-    fs.renameSync(
-      './underpost_modules/fontawesome-free-5.3.1-web',
-      './underpost_modules/fontawesome'
-    );
+if(!fs.existsSync( './underpost_modules/fontawesome' )){
+  console.log(colors.yellow(' install -> fontawesome'));
+  request
+    .get('https://underpost.net/download/fontawesome-free-5.3.1.zip')
+    .on('error', function(error) {
+      console.log(error);
+    })
+    .pipe(fs.createWriteStream('./fontawesome-5.3.1.zip'))
+    .on('finish', function() {
+      console.log('   -> finished dowloading');
+      const zip = new admZip('./fontawesome-5.3.1.zip');
+      console.log('   -> start unzip');
+      zip.extractAllTo('./underpost_modules', true);
+      console.log('   -> finished unzip');
+      fs.unlinkSync('./fontawesome-5.3.1.zip');
+      fs.renameSync(
+        './underpost_modules/fontawesome-free-5.3.1-web',
+        './underpost_modules/fontawesome'
+      );
+      shell.exec('node bin/build');
+    });
+}else{
+  shell.exec('node bin/build');
+}
 
-    shell.exec('node bin/build');
 
-  });
+
 
 
 
