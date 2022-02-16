@@ -138,10 +138,6 @@ class MainProcess {
         const srcPath = navi('../'+dir+uri);
         // console.log(colors.green('set static path:'+uri));
         // console.log(srcPath);
-        /*
-        set static path:/webfonts/fa-solid-900.woff2
-        C:/dd/underpost-assr-template/underpost_modules/fontawesome/webfonts/fa-solid-900.woff2
-        */
         this.app.get(uri, (req, res) => res.sendFile(srcPath));
       });
     });
