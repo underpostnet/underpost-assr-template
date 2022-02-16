@@ -65,7 +65,7 @@ class MainProcess {
         				<meta name='twitter:card' content='summary_large_image'>
         				<meta name='viewport' content='initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
         				<meta name='viewport' content='width=device-width, user-scalable=no'>
-                <!-- <link rel='stylesheet' href='/css/all.min.css'> -->
+                <link rel='stylesheet' href='/css/all.min.css'>
                 <link rel='stylesheet' href='/style/simple.css'>
                 `+this.data.fonts.map( dataFont => this.render.font(dataFont) ).join('')+`
                 <script src='/util.js'></script>
@@ -77,7 +77,15 @@ class MainProcess {
                         <br>
                         <span style='font-family: gothic'>Hello World</span>
                         <br>
-                        <i class='fas fa-lock'></i>
+                            <div class='inl'
+                            style='
+                            margin: 5px;
+                            padding: 5px;
+                            border: 3px solid yellow;
+                            font-size: 60px;'>
+                            <i class='fas fa-lock'></i> <br> <i class="fab fa-bitcoin"></i>
+                            </div>
+
                     </div>
             </body>
         </html>
@@ -121,11 +129,6 @@ class MainProcess {
     this.app.use(expressUserAgent.express());
 
     // -------------------------------------------------------------------------
-    // fontawesome 5.3.1 source
-    // -------------------------------------------------------------------------
-
-
-    // -------------------------------------------------------------------------
     // statics paths
     // -------------------------------------------------------------------------
 
@@ -135,6 +138,10 @@ class MainProcess {
         const srcPath = navi('../'+dir+uri);
         // console.log(colors.green('set static path:'+uri));
         // console.log(srcPath);
+        /*
+        set static path:/webfonts/fa-solid-900.woff2
+        C:/dd/underpost-assr-template/underpost_modules/fontawesome/webfonts/fa-solid-900.woff2
+        */
         this.app.get(uri, (req, res) => res.sendFile(srcPath));
       });
     });

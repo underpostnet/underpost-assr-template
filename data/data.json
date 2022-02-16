@@ -6,7 +6,8 @@
    },
    "charset":"utf-8",
    "statics":[
-      "/underpost_modules/underpost-library"
+      "/underpost_modules/underpost-library",
+      "/underpost_modules/fontawesome"
    ],
    "fonts": [
        {
