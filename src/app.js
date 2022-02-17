@@ -59,6 +59,7 @@ class MainProcess {
                 <link rel='icon' type='image/png' href='`+this.util.buildUrl()+path.favicon+`'>
         				<meta name ='title' content='`+path.title+`'>
         				<meta name ='description' content='`+path.description+`'>
+                <meta name='author' content='`+this.data.author+`' />
         				<meta property='og:title' content='`+path.title+`'>
         				<meta property='og:description' content='`+path.description+`'>
         				<meta property='og:image' content='`+this.util.buildUrl()+path.image+`'>
