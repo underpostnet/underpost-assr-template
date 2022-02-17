@@ -1,7 +1,7 @@
 
 
-import { Test } from './test.js';
-import { QuillEditor } from './quill-editor.js';
+import { Test } from '../mods/test.js';
+import { UnderpostQuillEditor } from '../mods/underpost-quill-editor.js';
 
 
 class Home {
@@ -9,7 +9,7 @@ class Home {
   constructor(){
 
     new Test();
-    new QuillEditor();
+    new UnderpostQuillEditor();
 
   }
 

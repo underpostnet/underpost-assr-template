@@ -73,7 +73,7 @@ class MainProcess {
                 `+this.data.fonts.map( dataFont => this.render.font(dataFont) ).join('')+`
                 <script src='/util.js'></script>
                 <script src='/vanilla.js'></script>
-                <script type='module' src='/`+path.view+`'></script>
+                <script type='module' src='/views/`+path.view+`'></script>
             </head>
             <body></body>
         </html>

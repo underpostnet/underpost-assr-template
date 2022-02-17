@@ -10,8 +10,7 @@
    "statics":[
       "/underpost_modules/underpost-library",
       "/underpost_modules/fontawesome",
-      "/src/client/mods",
-      "/src/client/views"
+      "/src/client"
    ],
    "fonts": [
        {
