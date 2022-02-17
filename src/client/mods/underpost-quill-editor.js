@@ -227,12 +227,17 @@ class UnderpostQuillEditor {
         setInterval( () => {
           // https://stackoverflow.com/questions/20958078/resize-a-base-64-image-in-javascript-without-using-canvas
           // currentSrc
-            console.log('img ->');
+
             // console.log(s('#editor-container.ql-container.ql-snow'));
-            console.log(getKeys(sa('img')).map( imgEditor => true ? {
+
+            const getImgDataDOM = () =>
+            getKeys(sa('img')).map( imgEditor => true ? {
               src: sa('img')[imgEditor].currentSrc,
               index: imgEditor
-            }:null ));
+            }:null );
+
+            console.log('getImgDataDOM ->');
+            console.log(jsonSave(getImgDataDOM()));
             // console.log(jsonSave(sa('img'))); .map(x=>x.currentSrc)
         }, 1500);
 

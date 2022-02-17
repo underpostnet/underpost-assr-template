@@ -7,7 +7,8 @@
     "start": "node src/app",
     "update": "node bin/update",
     "dev": "nodemon bin/build d",
-    "reset": "node bin/reset"
+    "reset": "node bin/reset",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -41,6 +42,7 @@
     "express-useragent": "latest",
     "response-time": "latest",
     "adm-zip": "latest",
-    "superagent": "latest"
+    "superagent": "latest",
+    "mocha": "latest"
   }
 }

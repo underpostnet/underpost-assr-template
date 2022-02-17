@@ -29,13 +29,13 @@ class Test {
     		required: true,
     		style_content_input: '',
     		style_input: '',
-    		style_label: '',
+    		style_label: 'color: red;',
     		style_outline: true,
     		style_placeholder: '',
     		textarea: false,
-    		active_label: false,
-    		initLabelPos: 15,
-    		endLabelPos: -30,
+    		active_label: true,
+    		initLabelPos: 0,
+    		endLabelPos: -17,
     		text_label: 'input test',
     		tag_label: 'a3',
     		fnOnClick: async () => {
@@ -44,7 +44,7 @@ class Test {
     		value: ``,
     		topContent: '',
     		botContent: '',
-    		placeholder: 'input test'
+    		placeholder: ''
     	}));
 
   }

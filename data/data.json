@@ -4,7 +4,8 @@
       "host":"http://localhost",
       "visiblePort": true,
       "httpPort":5000,
-      "log_all_ms_response": false
+      "log_all_ms_response": false,
+      "limitSizeJSON":"25mb"
    },
    "charset":"utf-8",
    "statics":[

@@ -28,6 +28,12 @@ https://underpost.net
 `npm run dev`
 
 
+- run mocha unit test:
+
+
+`npm test`
+
+
 - run production mode:
 
 

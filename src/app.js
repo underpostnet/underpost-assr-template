@@ -9,6 +9,8 @@ import expressUserAgent from 'express-useragent';
 import shell from 'shelljs';
 import responseTime from 'response-time';
 
+import { ApiTest } from './api/api-test.js';
+
 import { util, navi, rest, files, info }
 from '../underpost_modules/underpost.js';
 
@@ -105,7 +107,7 @@ class MainProcess {
     .listen(this.data.server.httpPort);
 
     console.log(colors.yellow(
-      'HTTP SERVER ON PORT:'
+      ' HTTP SERVER ON PORT:'
       +this.data.server.httpPort
       +' MODE:'+(this.dev==true?'DEV':'PROD')
     ));
@@ -116,11 +118,14 @@ class MainProcess {
 
     this.app.use(expressUserAgent.express());
 
+    this.app.use(express.json({limit: this.data.server.limitSizeJSON}));
+    this.app.use(express.urlencoded({limit: this.data.server.limitSizeJSON, extended: true}));
+
     this.app.use(responseTime( (req, res, time) => {
       this.data.server.log_all_ms_response?
       console.log(req.originalUrl.padStart(30," ")+' '+colors.green(time+'ms'))
       :req.originalUrl.split('.')[1]==undefined ?
-      console.log((' response time ['+req.originalUrl)+']: '+colors.green(time+'ms'))
+      console.log((' '+colors.yellow('END-REQUEST')+' ['+req.originalUrl)+']: '+colors.green(time+'ms'))
       :null;
     }));
 
@@ -146,7 +151,7 @@ class MainProcess {
     this.app.get(path.uri, (req, res) => {
       // npm response-time
       // console.log(req);
-      info.req(req, util.newInstance(path));
+      info.view(req, util.newInstance(path));
       try {
         res.writeHead( 200, {
           'Content-Type': ('text/html; charset='+this.data.charset),
@@ -162,6 +167,16 @@ class MainProcess {
         return res.end('Error 500');
       }
     }) );
+
+    // -------------------------------------------------------------------------
+    // load API routes-services
+    // -------------------------------------------------------------------------
+
+    console.log(' Load API routes-services: '+colors.green( 'ApiTest'));
+    this.Apitest = new ApiTest({
+      data: this.data,
+      app: this.app
+    });
 
     // -------------------------------------------------------------------------
     // save info paths
