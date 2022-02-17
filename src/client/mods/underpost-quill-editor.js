@@ -99,6 +99,7 @@ class UnderpostQuillEditor {
               <button class='ql-table'></button>
               <!-- <button id='insert-table'>Insert Table</button> -->
 
+              <div class='in fll'>|</div class='in fll'>
 
               <!-- <button id='insert-row-above'>Insert Row Above</button> -->
               <button id='insert-row-above'>`+iconAddRowAbove+`</button>
@@ -113,11 +114,15 @@ class UnderpostQuillEditor {
               <button id='insert-column-right'>`+iconAddColRight+`</button>
 
 
+                <div class='in fll'>|</div class='in fll'>
+
               <!-- <button id='delete-row'>Delete Row</button> -->
               <button id='delete-row'>`+iconRemoveRow+`</button>
 
               <!-- <button id='delete-column'>Delete Column</button> -->
               <button id='delete-column'>`+iconRemoveCol+`</button>
+
+              <div class='in fll'>|</div class='in fll'>
 
               <!-- <button id='delete-table'>Delete Table</button> -->
               <button id='delete-table'>`+iconRemoveTable+`</button>
@@ -215,7 +220,21 @@ class UnderpostQuillEditor {
           console.log(sa(".ql-editor")[1].innerHTML);
           */
           console.log(s('.ql-editor').innerHTML);
-        }
+        };
+
+
+        const intervalTest =
+        setInterval( () => {
+          // https://stackoverflow.com/questions/20958078/resize-a-base-64-image-in-javascript-without-using-canvas
+          // currentSrc
+            console.log('img ->');
+            // console.log(s('#editor-container.ql-container.ql-snow'));
+            console.log(getKeys(sa('img')).map( imgEditor => true ? {
+              src: sa('img')[imgEditor].currentSrc,
+              index: imgEditor
+            }:null ));
+            // console.log(jsonSave(sa('img'))); .map(x=>x.currentSrc)
+        }, 1500);
 
   }
 
