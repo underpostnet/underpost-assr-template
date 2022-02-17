@@ -19,13 +19,13 @@ class MochaApiTest {
           data: 'test'
         };
         const expected = JSON.stringify(testData);
-        it('Expected response -> '+expected, async () => {
-          const response = JSON.stringify(await rest.postJSON(
+        it('Expected response -> '+expected, async () =>
+          assert.equal(expected, JSON.stringify(
+          await rest.FETCH(
+            'post',
             'http://localhost:5000/test',
              testData
-          ));
-          return assert.equal(expected, response);
-        });
+        ))));
       });
 
     });
