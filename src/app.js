@@ -7,6 +7,7 @@ import server  from 'http';
 import express from 'express';
 import expressUserAgent from 'express-useragent';
 import shell from 'shelljs';
+import responseTime from 'response-time';
 
 import { util, navi, rest, files, info }
 from '../underpost_modules/underpost.js';
@@ -128,6 +129,14 @@ class MainProcess {
 
     this.app.use(expressUserAgent.express());
 
+    this.app.use(responseTime( (req, res, time) => {
+      this.data.server.log_all_ms_response?
+      console.log(req.originalUrl.padStart(30," ")+' '+colors.green(time+'ms'))
+      :req.originalUrl.split('.')[1]==undefined ?
+      console.log((' response time ['+req.originalUrl)+']: '+colors.green(time+'ms'))
+      :null;
+    }));
+
     // -------------------------------------------------------------------------
     // statics paths
     // -------------------------------------------------------------------------
@@ -150,7 +159,7 @@ class MainProcess {
     this.app.get(path.uri, (req, res) => {
       // npm response-time
       // console.log(req);
-      info.req(req, path, this.paths);
+      info.req(req, path);
       try {
         res.writeHead( 200, {
           'Content-Type': ('text/html; charset='+this.data.charset),

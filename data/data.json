@@ -2,7 +2,8 @@
    "server":{
       "host":"http://localhost",
       "visiblePort": true,
-      "httpPort":5000
+      "httpPort":5000,
+      "log_all_ms_response": false
    },
    "charset":"utf-8",
    "statics":[
