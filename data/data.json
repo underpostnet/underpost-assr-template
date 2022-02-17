@@ -8,7 +8,9 @@
    "charset":"utf-8",
    "statics":[
       "/underpost_modules/underpost-library",
-      "/underpost_modules/fontawesome"
+      "/underpost_modules/fontawesome",
+      "/src/client/mods",
+      "/src/client/views"
    ],
    "fonts": [
        {
@@ -30,7 +32,9 @@
          "title":"underpost.net",
          "description":"underpost interface",
          "image":"/img/underpost-social.jpg",
-         "favicon": "/img/underpost.png"
+         "favicon": "/img/underpost.png",
+         "view": "home.js",
+         "modules": ["test.js", "quill-editor.js"]
       }
    ]
 }
