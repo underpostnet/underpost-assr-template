@@ -45,12 +45,43 @@ class UnderpostQuillEditor {
             color: black;
             border: 2px solid yellow;
           }
+
+
+          /* QUILL FONTS */
+
+          #toolbar-container .ql-font span[data-label="gothic"]::before {
+            font-family: "gothic";
+          }
+
+          #toolbar-container .ql-font span[data-label="retro-font"]::before {
+            font-family: "retro-font";
+          }
+
+          .ql-font-gothic {
+             font-family: "gothic";
+           }
+
+           .ql-font-retro-font {
+             font-family: "retro-font";
+           }
+
+           /* END FONTS */
+
           </style>
           <div id='standalone-container'>
             <div id='toolbar-container'>
               <span class='ql-formats'>
-                <select class='ql-font'></select>
-                <select class='ql-size'></select>
+                <select class='ql-font'>
+                       <option selected>Sans Serif</option>
+                       <option value="gothic">gothic</option>
+                       <option value="retro-font">retro-font</option>
+                </select>
+                <select class='ql-size'>
+                       <option selected>Default</option>
+                       <option value="12px">12</option>
+                       <option value="16px">16</option>
+                       <option value="18px">18</option>
+                </select>
               </span>
               <span class='ql-formats'>
                 <button class='ql-bold'></button>
@@ -132,6 +163,17 @@ class UnderpostQuillEditor {
           </div>
       `);
 
+
+      const Font = Quill.import('formats/font');
+      Font.whitelist = ['gothic', 'retro-font'];
+      Quill.register(Font, true);
+
+
+      const Size = Quill.import('attributors/style/size');
+      Size.whitelist = ['12px', '16px', '18px'];
+      Quill.register(Size, true);
+
+
       this.editor = new Quill('#editor-container', {
         modules: {
           syntax: true,
@@ -162,6 +204,23 @@ class UnderpostQuillEditor {
        console.log(' currentIndex -> ');
        console.log(currentIndex);
 
+
+       window.dragMoveListener = function(event) {
+        const target = event.target,
+            // keep the dragged position in the data-x/data-y attributes
+            x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx,
+            y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+        // translate the element
+        target.style.webkitTransform =
+        target.style.transform =
+          'translate(' + x + 'px, ' + y + 'px)';
+
+        // update the posiion attributes
+        target.setAttribute('data-x', x);
+        target.setAttribute('data-y', y);
+      };
+
     this.classInsertsImg = [];
     this.editoInterval = setInterval( () => {
       getImgDataDOM().map(imgDOM => {
@@ -182,7 +241,7 @@ class UnderpostQuillEditor {
         				sa('img')[imgDOM.index].classList.add(newClass);
                   // console.log(s('.'+newClass));
                   // s('.'+newClass).style.position = 'relative';
-                  dragDrop('.'+newClass);
+                  // dragDrop('.'+newClass);
                   interact('.'+newClass)
                     .resizable({
                       // resize from all edges and corners

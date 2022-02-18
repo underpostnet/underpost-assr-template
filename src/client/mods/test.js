@@ -47,6 +47,7 @@ class Test {
     		placeholder: ''
     	}));
 
+      // console.log(jsonSave(window));
   }
 
 }
