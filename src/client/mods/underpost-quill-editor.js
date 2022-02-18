@@ -237,11 +237,13 @@ class UnderpostQuillEditor {
                 const newClass = makeid(5);
                 console.warn('NEW IMG ADD: '+newClass);
         				this.classInsertsImg.push(newClass);
-                sa('img')[imgDOM.index].classList.add('abs');
+                // sa('img')[imgDOM.index].classList.add('abs');
         				sa('img')[imgDOM.index].classList.add(newClass);
                   // console.log(s('.'+newClass));
                   // s('.'+newClass).style.position = 'relative';
                   // dragDrop('.'+newClass);
+                  // queda dragable en modo INL con vuelta automatica
+                  // y transitoriamente animada a su posicion mas coherente
                   interact('.'+newClass)
                     .resizable({
                       // resize from all edges and corners
@@ -249,9 +251,9 @@ class UnderpostQuillEditor {
 
                       listeners: {
                         move (event) {
-                          var target = event.target
-                          var x = (parseFloat(target.getAttribute('data-x')) || 0)
-                          var y = (parseFloat(target.getAttribute('data-y')) || 0)
+                          const target = event.target
+                          let x = (parseFloat(target.getAttribute('data-x')) || 0)
+                          let y = (parseFloat(target.getAttribute('data-y')) || 0)
 
                           // update the element's style
                           target.style.width = event.rect.width + 'px'
