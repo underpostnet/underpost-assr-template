@@ -9,7 +9,9 @@ class Home {
   constructor(){
 
     new Test();
-    new UnderpostQuillEditor();
+    new UnderpostQuillEditor({
+      divContent: 'body'
+    });
 
   }
 
