@@ -8,6 +8,7 @@ import express from 'express';
 import expressUserAgent from 'express-useragent';
 import shell from 'shelljs';
 import responseTime from 'response-time';
+import cors from 'cors';
 
 import { ApiTest } from './api/api-test.js';
 
@@ -106,11 +107,13 @@ class MainProcess {
     this.server = server.Server(this.app)
     .listen(this.data.server.httpPort);
 
-    console.log(colors.yellow(
-      ' HTTP SERVER ON PORT:'
-      +this.data.server.httpPort
-      +' MODE:'+(this.dev==true?'DEV':'PROD')
-    ));
+    console.log(
+      colors.yellow(
+        ' HTTP SERVER ON PORT:')
+        +colors.green(this.data.server.httpPort)
+        +colors.yellow(' MODE:')+colors.green((this.dev==true?'DEV':'PROD'))
+        +colors.yellow(' HOST:')+colors.green(this.util.buildUrl())
+    );
 
     // -------------------------------------------------------------------------
     // middlewares
@@ -120,6 +123,10 @@ class MainProcess {
 
     this.app.use(express.json({limit: this.data.server.limitSizeJSON}));
     this.app.use(express.urlencoded({limit: this.data.server.limitSizeJSON, extended: true}));
+
+    this.app.use(cors({
+      origin: [this.util.buildUrl()]
+    }));
 
     this.app.use(responseTime( (req, res, time) => {
       this.data.server.log_all_ms_response?

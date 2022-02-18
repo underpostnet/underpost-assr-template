@@ -35,6 +35,7 @@ class Home {
               border: 2px solid red;
               background: #ebeceb;
               overflow: hidden !important;
+              font-size: 20px;
             }`,
             standalone_container: `{
               background: #c7c9c7;
@@ -44,7 +45,7 @@ class Home {
             }`,
         },
         fonts: ['gothic', 'retro-font'],
-        text_sizes: range(1, 80).map(size_=>size_+'px'),
+        text_sizes: range(1, 80).filter(size_=>size_%5==0).map(size_=>size_+'px'),
         scientific_tools: false,
         image: false,
         video: false,

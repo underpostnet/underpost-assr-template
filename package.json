@@ -43,6 +43,7 @@
     "response-time": "latest",
     "adm-zip": "latest",
     "superagent": "latest",
-    "mocha": "latest"
+    "mocha": "latest",
+    "cors": "latest"
   }
 }
