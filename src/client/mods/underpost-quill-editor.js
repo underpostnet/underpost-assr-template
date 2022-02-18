@@ -223,6 +223,34 @@ class UnderpostQuillEditor {
         };
 
 
+
+
+
+
+        function resizeBase64Img(url, width, height, end) {
+              let img = new Image();
+              img.setAttribute('crossOrigin', 'anonymous');
+              img.onload = function () {
+                  let canvas = document.createElement("canvas");
+                  canvas.style.display = 'none';
+                  canvas.width = width;
+                  canvas.height = height;
+                  let ctx = canvas.getContext("2d");
+                  ctx.scale(width/this.width,  height/this.height);
+                  ctx.drawImage(this, 0, 0);
+                  let result = canvas.toDataURL();
+                  // console.log(result);
+                  end(result);
+                  // console.log(result.substr(result.indexOf(",") + 1));
+                  // $('#ASSIGNEDELEMENT').val(result.substr(result.indexOf(",") + 1));
+              };
+
+              img.src = url;
+          }
+
+        let w_ = 400;
+        let h_ = 400;
+
         const intervalTest =
         setInterval( () => {
           // https://stackoverflow.com/questions/20958078/resize-a-base-64-image-in-javascript-without-using-canvas
@@ -236,9 +264,34 @@ class UnderpostQuillEditor {
               index: imgEditor
             }:null );
 
-            console.log('getImgDataDOM ->');
-            console.log(jsonSave(getImgDataDOM()));
+            // console.log('getImgDataDOM ->');
+            // console.log(jsonSave(getImgDataDOM()));
             // console.log(jsonSave(sa('img'))); .map(x=>x.currentSrc)
+
+            getImgDataDOM().map(dataImg => {
+              // console.log(dataImg.src);
+              const dataImg_ = newInstance(dataImg);
+              const arrData = dataImg_.src.split(',');
+              const rawBase64 = arrData[1];
+              const format = arrData[0];
+              // console.log(
+              //   isBase64(rawBase64)
+              // );
+              if(isBase64(rawBase64)){
+                console.log('resize on ->');
+                // console.log(imageToDataUri(dataImg.src, 40, 40));
+                // sa('img')[dataImg.index].src = imageToDataUri(dataImg.src, w_, h_);
+                resizeBase64Img(dataImg.src, w_, h_, resizeImge => {
+                  sa('img')[dataImg.index].src = resizeImge;
+                });
+              }
+            });
+
+
+
+            w_ -= 10;
+            h_ -= 10;
+
         }, 1500);
 
   }
