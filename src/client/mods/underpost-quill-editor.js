@@ -37,45 +37,19 @@ class UnderpostQuillEditor {
       <link rel='stylesheet' href='/quill/css/monokai-sublime.min.css' />
       <link rel='stylesheet' href='/quill/css/quill.snow.css' />
           <style>
-          tr {
-            background: #cfcfcf;
-          }
-          td {
-            min-width: 100px;
-            border: 1px solid black;
-          }
-          .ql-editor {
-            min-height: 600px;
-            border: 2px solid red;
-            background: #ebeceb;
-            overflow: hidden !important;
-          }
-          #standalone-container {
-            background: #c7c9c7;
-            color: black;
-            border: 2px solid yellow;
-          }
+          tr `+obj.style.tr+`
+          td `+obj.style.td+`
+          .ql-editor `+obj.style.ql_editor+`
+          #standalone-container `+obj.style.standalone_container+`
 
-
-          /* QUILL FONTS */
-
-          #toolbar-container .ql-font span[data-label="gothic"]::before {
-            font-family: "gothic";
-          }
-
-          #toolbar-container .ql-font span[data-label="retro-font"]::before {
-            font-family: "retro-font";
-          }
-
-          .ql-font-gothic {
-             font-family: "gothic";
-           }
-
-           .ql-font-retro-font {
-             font-family: "retro-font";
-           }
-
-           /* END FONTS */
+            `+obj.fonts.map(font_ => `
+             #toolbar-container .ql-font span[data-label="`+font_+`"]::before {
+               font-family: "`+font_+`";
+             }
+             .ql-font-`+font_+` {
+               font-family: "`+font_+`";
+             }
+             `).join(' ')+`
 
           </style>
           <div id='standalone-container'>
@@ -83,14 +57,15 @@ class UnderpostQuillEditor {
               <span class='ql-formats'>
                 <select class='ql-font'>
                        <option selected>Sans Serif</option>
-                       <option value="gothic">gothic</option>
-                       <option value="retro-font">retro-font</option>
+                       `+obj.fonts.map(font_ => `
+                       <option value="`+font_+`">`+font_+`</option>
+                        `).join(' ')+`
                 </select>
                 <select class='ql-size'>
                        <option selected>Default</option>
-                       <option value="12px">12</option>
-                       <option value="16px">16</option>
-                       <option value="18px">18</option>
+                       `+obj.text_sizes.map(size_ => `
+                       <option value="`+size_+`">`+size_+`</option>
+                        `).join(' ')+`
                 </select>
               </span>
               <span class='ql-formats'>
@@ -107,10 +82,14 @@ class UnderpostQuillEditor {
                 <select class='ql-color'></select>
                 <select class='ql-background'></select>
               </span>
-              <span class='ql-formats'>
-                <button class='ql-script' value='sub'></button>
-                <button class='ql-script' value='super'></button>
-              </span>
+
+              `+(obj.scientific_tools ?`
+                <span class='ql-formats'>
+                  <button class='ql-script' value='sub'></button>
+                  <button class='ql-script' value='super'></button>
+                </span>
+                `:'')+`
+
               <span class='ql-formats'>
                 <button class='ql-header' value='1'></button>
                 <button class='ql-header' value='2'></button>
@@ -129,13 +108,14 @@ class UnderpostQuillEditor {
               </span>
               <span class='ql-formats'>
                 <button class='ql-link'></button>
-                <button class='ql-image'></button>
-                <button class='ql-video'></button>
-                <button class='ql-formula'></button>
+                `+(obj.image?`<button class='ql-image'></button>`:'')+`
+                `+(obj.video?`<button class='ql-video'></button>`:'')+`
+                `+(obj.scientific_tools?`<button class='ql-formula'></button>`:'')+`
               </span>
               <span class='ql-formats'>
                 <button class='ql-clean'></button>
               </span>
+              `+(obj.table?`
               <span class='ql-formats'>
 
 
@@ -171,7 +151,8 @@ class UnderpostQuillEditor {
                 <button id='delete-table'>`+iconRemoveTable+`</button>
 
 
-              </span>
+              </span>`:'')+`
+
             </div>
             <div id='editor-container'>test</div>
           </div>
@@ -179,12 +160,12 @@ class UnderpostQuillEditor {
 
 
       const Font = Quill.import('formats/font');
-      Font.whitelist = ['gothic', 'retro-font'];
+      Font.whitelist = obj.fonts;
       Quill.register(Font, true);
 
 
       const Size = Quill.import('attributors/style/size');
-      Size.whitelist = ['12px', '16px', '18px'];
+      Size.whitelist = obj.text_sizes;
       Quill.register(Size, true);
 
 
@@ -197,7 +178,7 @@ class UnderpostQuillEditor {
         placeholder: 'Compose an epic...',
         theme: 'snow'
       });
-
+if(obj.table){
 
      s('#insert-row-above').onclick = () =>
        this.editor.getModule('table').insertRowAbove();
@@ -214,7 +195,7 @@ class UnderpostQuillEditor {
      s('#delete-table').onclick = () =>
        this.editor.getModule('table').deleteTable();
 
-
+}
 
        s('.ql-undo').onclick = () => {
          // console.warn('undo');
