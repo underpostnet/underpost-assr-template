@@ -1,9 +1,9 @@
 
 class Test {
 
-  constructor(){
+  constructor(obj){
 
-      append('body', `
+      append(obj.divContent, `
         <div class='inl' style='border: 2px solid red; padding: 10px; margin: 5px;'>
             <img src='/img/underpost-social.jpg'>
             <br>
@@ -21,7 +21,7 @@ class Test {
         </div>
       `);
 
-      append('body', renderInput({
+      append(obj.divContent, renderInput({
     		underpostClass: 'inl',
     		id_content_input: 'a1',
     		id_input: 'a2',
@@ -47,7 +47,6 @@ class Test {
     		placeholder: ''
     	}));
 
-      // console.log(jsonSave(window));
   }
 
 }

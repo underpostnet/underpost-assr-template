@@ -34,8 +34,7 @@
          "description":"underpost interface",
          "image":"/img/underpost-social.jpg",
          "favicon": "/img/underpost.png",
-         "view": "home.js",
-         "modules": ["test.js", "quill-editor.js"]
+         "view": "home.js"
       }
    ]
 }
