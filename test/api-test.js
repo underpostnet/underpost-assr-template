@@ -17,7 +17,7 @@ class MochaApiTest {
 
     new UtilMod().initDataTools(this);
 
-    describe('Apitest module', () => {
+    describe(' Module: '+colors.green('Apitest'), () => {
       const endPointTest = this.util.buildUrl('/test');
       describe('POST '+endPointTest, () => {
         const testData = { data: 'test' };
@@ -32,7 +32,7 @@ class MochaApiTest {
       });
     });
 
-    describe('Network Module', () => {
+    describe(' Module: '+colors.green('Network'), () => {
       const endPointTest = this.util.buildUrl('/network/get-paths');
       describe('GET '+endPointTest, () => {
         const expected = 'object';
