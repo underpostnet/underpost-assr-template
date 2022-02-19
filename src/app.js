@@ -45,12 +45,10 @@ class MainProcess {
 
     this.render = {
       font: dataFont => `
-      <style>
       @font-face {
         font-family: '`+dataFont.name+`';
         src: URL('`+dataFont.url+`') format('`+dataFont.type+`');
       }
-      </style>
       `,
       view: path => `
   				<!DOCTYPE html>
@@ -73,7 +71,7 @@ class MainProcess {
                 <link rel='stylesheet' href='/css/all.min.css'>
                 <link rel='stylesheet' href='/style/simple.css'>
                 <link rel='stylesheet' href='/style/place-bar-select.css'>
-                `+this.data.fonts.map( dataFont => this.render.font(dataFont) ).join('')+`
+                <link rel='stylesheet' href='/fonts.css'>
                 <script src='/util.js'></script>
                 <script src='/vanilla.js'></script>
                 <script type='module' src='/views/`+path.view+`'></script>
@@ -149,6 +147,19 @@ class MainProcess {
         this.app.get(uri, (req, res) => res.sendFile(srcPath));
       });
     });
+
+    // -------------------------------------------------------------------------
+    // instance virtual src styles
+    // -------------------------------------------------------------------------
+
+    this.app.get('/fonts.css', (req, res) =>
+      {
+        res.writeHead( 200, {
+          'Content-Type': ('text/css; charset='+this.data.charset)
+        });
+        return res.end(this.data.fonts.map( dataFont => this.render.font(dataFont) ).join(''));
+      }
+    );
 
     // -------------------------------------------------------------------------
     // views paths
