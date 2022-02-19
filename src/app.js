@@ -11,6 +11,8 @@ import responseTime from 'response-time';
 import cors from 'cors';
 
 import { ApiTest } from './api/api-test.js';
+import { Network } from './api/network.js';
+import { UtilMod } from './mods/util.js'
 
 import { util, navi, rest, files, info }
 from '../underpost_modules/underpost.js';
@@ -25,19 +27,6 @@ class MainProcess {
 
   constructor(obj){
 
-    this.dev = process.argv.slice(2)[0]=='d' ? true: false;
-    console.log(process.argv);
-
-    // -------------------------------------------------------------------------
-    // utility methods
-    // -------------------------------------------------------------------------
-
-    this.util = {
-      buildUrl: uri =>
-            this.data.server.visiblePort ?
-            this.data.server.host + ':' + this.data.server.httpPort + util.uriValidator(uri):
-            this.data.server.host + util.uriValidator(uri)
-    };
 
     // -------------------------------------------------------------------------
     // render methods
@@ -76,26 +65,22 @@ class MainProcess {
                 <script src='/vanilla.js'></script>
                 <script type='module' src='/views/`+path.view+`'></script>
             </head>
-            <body></body>
+            <body>
+                <div style='display: none;'>
+                  <h1>`+path.title+`</h1> <h2>`+path.description+`</h2>
+                </div>
+            </body>
         </html>
         `
     };
 
     // -------------------------------------------------------------------------
-    // instance data
+    // data instance and utility methods
     // -------------------------------------------------------------------------
 
     this.data = JSON.parse(fs.readFileSync(navi('../data/data.json'), 'utf8'));
 
-    if(this.dev){
-          // console.log(colors.yellow('save colors config ->'))
-          // fs.writeFileSync(
-          //   navi('../data/colors.json'),
-          //   util.jsonSave(colors),
-          //   this.data.charset
-          // );
-
-    }
+    new UtilMod().initDataTools(this);
 
     // -------------------------------------------------------------------------
     // instance server
@@ -144,6 +129,10 @@ class MainProcess {
         const srcPath = navi('../'+dir+uri);
         // console.log(colors.green('set static path:'+uri));
         // console.log(srcPath);
+        switch (uri) {
+          case '/views/home.js':
+              console.log(' Load View: '+colors.green('Home'));
+        }
         this.app.get(uri, (req, res) => res.sendFile(srcPath));
       });
     });
@@ -190,11 +179,15 @@ class MainProcess {
     // load API routes-services
     // -------------------------------------------------------------------------
 
-    console.log(' Load API routes-services: '+colors.green( 'ApiTest'));
-    this.Apitest = new ApiTest({
+    this.globalApiModules = {
       data: this.data,
       app: this.app
-    });
+    };
+
+    console.log(' Load API routes-services: '+colors.green( 'ApiTest'));
+    this.Apitest = new ApiTest(this.globalApiModules);
+    console.log(' Load API routes-services: '+colors.green( 'Network'));
+    this.Network = new Network(this.globalApiModules);
 
     // -------------------------------------------------------------------------
     // save info paths

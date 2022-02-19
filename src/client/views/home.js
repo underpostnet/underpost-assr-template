@@ -12,7 +12,7 @@ class Home {
     //-------------------------------------------------------------------------
     //-------------------------------------------------------------------------
 
-    
+
 
     append('body', `
 
@@ -166,9 +166,9 @@ class Home {
         },
         fonts: ['gothic', 'retro-font'],
         text_sizes: range(1, 80).filter(size_=>size_%5==0).map(size_=>size_+'px'),
-        scientific_tools: false,
-        image: false,
-        video: false,
+        scientific_tools: true,
+        image: true,
+        video: true,
         table: true
     });
 

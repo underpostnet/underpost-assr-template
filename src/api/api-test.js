@@ -1,7 +1,5 @@
 
-
 'use strict';
-
 
 import colors from 'colors/safe.js';
 import { util, navi, rest, files, info }
@@ -9,16 +7,15 @@ from '../../underpost_modules/underpost.js';
 
 class ApiTest {
 
-
   constructor(obj){
-
+    // init instances
     this.app = obj.app;
     this.data = obj.data;
+    // router instances
+    this.postTest('/test');
+  }
 
-    //--------------------------------------------------------------------------
-    //--------------------------------------------------------------------------
-
-    const uri = '/test';
+  postTest(uri){
     this.app.post(uri, (req, res) => {
       info.api(req, { uri, apiModule: 'ApiTest' } );
       try {
@@ -38,14 +35,8 @@ class ApiTest {
         return res.end('Error 500');
       }
     });
-
-    //--------------------------------------------------------------------------
-    //--------------------------------------------------------------------------
-
   }
 
-
 }
-
 
 export { ApiTest };
