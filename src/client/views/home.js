@@ -3,6 +3,8 @@
 import { Test } from '../mods/test.js';
 import { UnderpostQuillEditor } from '../mods/underpost-quill-editor.js';
 import { UnderpostInteract } from '../mods/underpost-interact.js';
+import { Table } from '../mods/table.js';
+import { Rest } from '../mods/rest.js';
 
 
 class Home {
@@ -176,6 +178,39 @@ class Home {
     new UnderpostInteract( {
       type: 'quill'
     });
+
+
+    //-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
+
+    (async () =>
+      new Table({
+        divContent: 'body',
+        data: (await new Rest().FETCH( '/network/get-paths', 'get'))
+          .map( path => true ? {
+            path: `
+
+                <div class='inl' style='padding: 10px;'>
+                    `+path.split('/data')[1]+`
+                </div>
+            `
+          } : null )
+      })
+    )();
+
+
+
+
+
+
+
+
+
+
+    //-------------------------------------------------------------------------
+    //-------------------------------------------------------------------------
+
+
 
   }
 
