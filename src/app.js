@@ -41,7 +41,7 @@ class MainProcess {
     };
 
     console.log(' Load API routes-services: '+colors.green( 'Views'));
-    this.render = new Views(this.processObj);
+    this.Views = new Views(this.processObj);
 
     console.log(' Load API routes-services: '+colors.green( 'ApiTest'));
     this.Apitest = new ApiTest(this.processObj);
