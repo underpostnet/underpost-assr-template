@@ -14,8 +14,8 @@ class UtilMod {
             app.data.server.host + ':' + app.data.server.httpPort + util.uriValidator(uri):
             app.data.server.host + util.uriValidator(uri)
     };
-    app.dev = process.argv.slice(2)[0]=='d' ? true: false;
-    console.log(process.argv);
+    app.dev = process.argv.slice(2)[0]=='d' ? true: false;    
+    return app.util;
   }
 }
 

@@ -15,7 +15,7 @@ class MochaApiTest {
 
     this.data = JSON.parse(fs.readFileSync(navi('../../../data/data.json'), 'utf8'));
 
-    new UtilMod().initDataTools(this);
+    this.util = new UtilMod().initDataTools(this);
 
     describe(' Module: '+colors.green('Apitest'), () => {
       const endPointTest = this.util.buildUrl('/test');
