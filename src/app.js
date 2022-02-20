@@ -15,6 +15,7 @@ from '../underpost_modules/underpost.js';
 // App mods
 import { Middlewares } from './mods/middlewares.js';
 import { UtilMod } from './mods/util.js';
+import { Errors } from './mods/errors.js';
 
 // API services
 import { ApiTest } from './api/api-test.js';
@@ -43,6 +44,9 @@ class MainProcess {
 
     console.log(' Load API Instance: '+colors.green('Network'));
     new Network(this);
+
+    console.log(' Load MOD Instance: '+colors.green('Errors'));
+    new Errors(this);
 
     this.server = server.Server(this.app)
     .listen(this.data.server.httpPort);
