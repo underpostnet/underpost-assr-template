@@ -8,27 +8,23 @@ from '../../underpost_modules/underpost.js';
 
 class Network {
 
-  constructor(obj){
-    // init instances
-    this.data = obj.data;
-    this.path = obj.data.network.consolePath+'/src/data';
-    this.app = obj.app;
-    // router instances
-    this.getPaths('/network/get-paths');
+  constructor(MainProcess){
+      this.getPaths(MainProcess, '/network/get-paths');
   }
 
-  getPaths(uri){
-    this.app.get(uri, (req, res) => {
+  getPaths(MainProcess, uri){
+    MainProcess.app.get(uri, (req, res) => {
       info.api(req, { uri, apiModule: 'Network' } );
       try {
+        const path = MainProcess.data.network.consolePath+'/src/data';
         res.writeHead( 200, {
-          'Content-Type': ('application/json; charset='+this.data.charset),
+          'Content-Type': ('application/json; charset='+MainProcess.data.charset),
           'Content-Language': '*'
         });
-        return res.end(JSON.stringify(fs.existsSync( navi(this.path) ) ?
+        return res.end(JSON.stringify(fs.existsSync( navi(MainProcess.path) ) ?
             (()=>{
               let PathsNetwork = [];
-              files.readRecursive(this.path,
+              files.readRecursive(path,
               dir => PathsNetwork.push(dir));
               console.log(colors.yellow(' Network > get paths >'));
               console.log(PathsNetwork);
@@ -42,7 +38,7 @@ class Network {
       }catch(error){
         console.log(colors.red(error));
         res.writeHead( 500, {
-          'Content-Type': ('application/json; charset='+this.data.charset),
+          'Content-Type': ('application/json; charset='+MainProcess.data.charset),
           'Content-Language': '*'
         });
         return res.end('Error 500');

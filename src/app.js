@@ -26,28 +26,23 @@ class MainProcess {
 
   constructor(obj){
 
+    this.app = express();
     this.data = JSON.parse(fs.readFileSync(navi('../data/data.json'), 'utf8'));
 
-    this.app = new Middlewares({
-      app: express(),
-      data: this.data
-    }).baseMiddlewares();
+    console.log(' Load MOD Instance: '+colors.green('UtilMod'));
+    new UtilMod(this);
 
-    this.util = new UtilMod().initDataTools(this);
+    console.log(' Load MOD Instance: '+colors.green('Middlewares'));
+    new Middlewares(this);
 
-    this.processObj = {
-      data: this.data,
-      app: this.app
-    };
+    console.log(' Load API Instance: '+colors.green('Views'));
+    new Views(this);
 
-    console.log(' Load API routes-services: '+colors.green( 'Views'));
-    this.Views = new Views(this.processObj);
+    console.log(' Load API Instance: '+colors.green('ApiTest'));
+    new ApiTest(this);
 
-    console.log(' Load API routes-services: '+colors.green( 'ApiTest'));
-    this.Apitest = new ApiTest(this.processObj);
-
-    console.log(' Load API routes-services: '+colors.green( 'Network'));
-    this.Network = new Network(this.processObj);
+    console.log(' Load API Instance: '+colors.green('Network'));
+    new Network(this);
 
     this.server = server.Server(this.app)
     .listen(this.data.server.httpPort);
