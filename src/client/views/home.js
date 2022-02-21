@@ -1,215 +1,218 @@
-
-
 import { Test } from '../mods/test.js';
 import { UnderpostQuillEditor } from '../mods/underpost-quill-editor.js';
 import { UnderpostInteract } from '../mods/underpost-interact.js';
+import { Base } from '../mods/base.js';
 import { Table } from '../mods/table.js';
 import { Rest } from '../mods/rest.js';
 
 
 class Home {
 
+
   constructor(){
 
-    //-------------------------------------------------------------------------
-    //-------------------------------------------------------------------------
+    new Base();
+
+
+        append('body', `
+
+              <br><br>
+
+        `);
+
+        const sizeTitle = 20;
+        const sizeContent = 15;
+
+        append('body', renderInput({
+          underpostClass: 'in',
+          id_content_input: 'a1',
+          id_input: 'underpost-ql-title',
+          type: 'text',
+          required: true,
+          style_content_input: '',
+          style_input: 'padding: 8px; font-family: retro-font; font-size: '+sizeTitle+'px;',
+          style_label: 'color: red; font-size: 12px;',
+          style_outline: true,
+          style_placeholder: '',
+          textarea: false,
+          active_label: true,
+          initLabelPos: 3,
+          endLabelPos: -25,
+          text_label: 'Title',
+          tag_label: 'a3',
+          fnOnClick: async () => {
+            console.log('click input');
+          },
+          value: ``,
+          topContent: '',
+          botContent: '',
+          placeholder: ''
+        }));
 
 
 
-    append('body', `
 
-        <style>
+    const renderTitle = obj_ => `
 
-            body {
-              font-family: retro-font;
-            }
+         <div class='in' style='color: white; background: red; font-size: 24px; padding: 15px;'>
+             `+obj_.title+`
+         </div>
+         <div class='in' style='color: white; background: red; font-size: 18px; padding: 15px;'>
+             `+obj_.date+`
+         </div>
 
-        </style>
-        <form class='inl card-login-content' style='
-
-            margin: 10px;
-            border: 3px solid yellow;
-            border-radius: 5px;
-            width: 320px;
-            height: auto;
-            padding: 10px;
-
-        '>
-
-        <br>
-
-        <span style='font-size: 30px;'>LogIn</span>
-
-        <img src='/img/underpost-social.jpg'>
-
-        <br>
-        <br>
-
-        </form>
-    `);
-
-    const mainCardLoginContent =
-    '.card-login-content';
-
-    append(mainCardLoginContent, renderInput({
-      underpostClass: 'inl',
-      id_content_input: 'a1',
-      id_input: 'a2',
-      type: 'text',
-      required: true,
-      style_content_input: 'width: 250px; margin: 10px;',
-      style_input: 'padding: 8px;',
-      style_label: 'color: red; font-size: 10px;',
-      style_outline: true,
-      style_placeholder: '',
-      textarea: false,
-      active_label: true,
-      initLabelPos: 3,
-      endLabelPos: -19,
-      text_label: 'Base64 Sign Key',
-      tag_label: 'a3',
-      fnOnClick: async () => {
-        console.log('click input');
-      },
-      value: ``,
-      topContent: '',
-      botContent: '',
-      placeholder: ''
-    }));
-
-    append(mainCardLoginContent, `
-          <br>
-                `+spr(' ', 1)+`
-                      <div class='inl login-paste'>
-                           <i style='font-size: 14px;' class="fas fa-paste"></i>
-                      </div>
-
-                      <div class='inl login-send'>
-                             SEND <i style='font-size: 14px;' class="fas fa-sign-in-alt"></i>
-                      </div>
-
-
-                  <br>
-                  <br>
-                  <style>
-                  .login-send, .login-paste {
-                    border: 4px solid red;
-                    padding: 7px;
-                    margin: 5px;
-                    cursor: pointer;
-                    font-size: 10px;
-                    transition: .3s;
-                    border-radius: 5px;
-                  }
-                  .login-send:hover, .login-paste:hover {
-                    border: 4px solid yellow;
-                  }
-                  </style>
-
-      `);
-
-      const logIn = () => console.log('send ->'+s('.a2').value);
-
-      s('.login-send').onclick = () => logIn();
-      s(mainCardLoginContent).onsubmit =
-      () => false;
-
-      s('.login-paste').onclick = async () =>
-      s('.a2').value = await getPasteContent();
-
-      s('body').onkeydown = () => {
-        switch (window.event.keyCode) {
-          case 13:
-              logIn();
-            break;
-          default:
-              console.log('no action key -> '+window.event.keyCode);
-        }
-    };
-
-
-    //-------------------------------------------------------------------------
-    //-------------------------------------------------------------------------
-
-    append('body', `
-        <div class='in editor-content'>
-            test
-        </div>
-    `);
-
-    new Test({
-      divContent: 'body'
-    });
-
-
-    new UnderpostQuillEditor({
-        divContent: '.editor-content',
+    `;
+    this.editor = new UnderpostQuillEditor({
+        divContent: 'body',
         style:  {
-            tr: `{
-              background: #cfcfcf;
-            }`,
-            td: `{
+            tr: `
+              background: none;
+            `,
+            td: `
               min-width: 100px;
-              border: 1px solid black;
-            }`,
-            ql_editor: `{
-              min-height: 600px;
-              border: 2px solid red;
+              border: 1px solid gray;
+            `,
+            ql_editor: `
+              min-height: 300px;
               background: #ebeceb;
               overflow: hidden !important;
-              font-size: 20px;
-            }`,
-            standalone_container: `{
+            `,
+            standalone_container: `
               background: #c7c9c7;
               color: black;
-              border: 2px solid yellow;
-              max-width: 600px;
-            }`,
+            `,
         },
-        fonts: ['gothic', 'retro-font'],
+        fontDefault: 'retro-font',
+        fonts: ['gothic', 'retro-font', 'arial', 'Verdana', 'Times'],
+        placeholder: 'Compose an epic...',
+        initContent: '',
+        sizeDefault: sizeContent,
         text_sizes: range(1, 80).filter(size_=>size_%5==0).map(size_=>size_+'px'),
         scientific_tools: true,
         image: true,
         video: true,
-        table: true
+        table: true,
+        idBtnSend: '.btn-send-underpost',
+        interactQuill: new UnderpostInteract( {
+          type: 'quill'
+        }),
+        onSubmit: async (value, quillLength) => {
+
+                      const title = s('.underpost-ql-title').value;
+
+                         if(quillLength<=1){
+                           return   notifi.display(
+                              'rgb(22, 22, 22)',
+                              'Empty content',
+                              2000,
+                              'error'
+                            );
+                         }
+
+                         if(title==''){
+                           return   notifi.display(
+                              'rgb(22, 22, 22)',
+                              'Empty title',
+                              2000,
+                              'error'
+                            );
+                         }
+
+                         value = value.replace('contenteditable="true"', 'style="background: none"');
+                         value = value.replaceAll('transform: translate', 'none: ');
+                         value = value.replace('ql-editor-main', '');
+
+                         const date = new Date().toISOString();
+
+                         prepend('.'+idContentDashBoard, renderTitle({title, date}) + value);
+
+                         const dataPost  = {
+                           title,
+                           date,
+                           base64Html: enBase64(value),
+                           id: getHash().replaceAll('-', '')
+                         };
+
+                         const response = await new Rest().FETCH('/posts', 'post', dataPost);
+
+                         console.log('POST /posts ->');
+                         console.log(response);
+
+                         if(response.success===true){
+                           this.editor.reset();
+                           return notifi.display(
+                              'rgb(22, 22, 22)',
+                              'Success',
+                              2000,
+                              'success'
+                            );
+                         }
+
+                         return notifi.display(
+                            'rgb(22, 22, 22)',
+                            'Error service',
+                            2000,
+                            'error'
+                          );
+        }
     });
 
-
-    new UnderpostInteract( {
-      type: 'quill'
-    });
+    s('.ql-editor').classList.add('ql-editor-main');
 
 
-    //-------------------------------------------------------------------------
-    //-------------------------------------------------------------------------
+    const idContentDashBoard = 'dashboard-post';
 
-    (async () =>
-      new Table({
-        divContent: 'body',
-        data: (await new Rest().FETCH( '/network/get-paths', 'get'))
-          .map( path => true ? {
-            path: `
 
-                <div class='inl' style='padding: 10px;'>
-                    `+path.split('/data')[1]+`
-                </div>
-            `
-          } : null )
-      })
-    )();
+    append('body', `
 
 
 
+        <style>
+
+              .btn-send-underpost {
+
+                transition: .3s;
+                padding: 15px;
+                margin: 5px;
+                background: rgba(212, 0, 0, 0.8);
+                cursor: pointer;
+                font-size: 13px;
+                font-family: retro-font;
+
+              }
+              .btn-send-underpost:hover {
+                background: rgba(212, 0, 0, 1);
+              }
+        </style>
+
+        <div class='inl btn-send-underpost'>
+
+              SEND
+
+        </div>
+
+        <div class='in `+idContentDashBoard+`'>
+
+        </div>
 
 
 
+    `);
 
 
+  (async ()=>{
 
+    const currentsPost = await new Rest().FETCH('/posts', 'get');
+    console.log('currentsPost ->');
+    console.log(currentsPost);
+    console.log('currentsPost Size ->');
+    console.log(getSizeJSON(currentsPost));
 
-    //-------------------------------------------------------------------------
-    //-------------------------------------------------------------------------
+    currentsPost.data.reverse().map(dataPost =>
+      append('.'+idContentDashBoard, renderTitle(dataPost)+deBase64(dataPost.base64Html))
+    );
 
+  })();
 
 
   }

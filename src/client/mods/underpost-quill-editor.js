@@ -37,10 +37,20 @@ class UnderpostQuillEditor {
       <link rel='stylesheet' href='/quill/css/monokai-sublime.min.css' />
       <link rel='stylesheet' href='/quill/css/quill.snow.css' />
           <style>
-          tr `+obj.style.tr+`
-          td `+obj.style.td+`
-          .ql-editor `+obj.style.ql_editor+`
-          #standalone-container `+obj.style.standalone_container+`
+          tr {
+            `+obj.style.tr+`
+           }
+          td {
+            `+obj.style.td+`
+           }
+          .ql-editor {
+            `+obj.style.ql_editor+`
+            font-family: `+obj.fontDefault+`;
+            font-size: `+obj.sizeDefault+`px;
+           }
+          #standalone-container {
+            `+obj.style.standalone_container+`
+           }
 
             `+obj.fonts.map(font_ => `
              #toolbar-container .ql-font span[data-label="`+font_+`"]::before {
@@ -55,8 +65,8 @@ class UnderpostQuillEditor {
           <div id='standalone-container'>
             <div id='toolbar-container'>
               <span class='ql-formats'>
-                <select class='ql-font'>
-                       <option selected>Sans Serif</option>
+                <select class='ql-font' style='width: 180px'>
+                       <option selected>Default</option>
                        `+obj.fonts.map(font_ => `
                        <option value="`+font_+`">`+font_+`</option>
                         `).join(' ')+`

@@ -37,7 +37,7 @@
          "description":"underpost interface",
          "image":"/img/underpost-social.jpg",
          "favicon": "/img/underpost.png",
-         "view": "home0.js"
+         "view": "home.js"
       }
    ]
 }
