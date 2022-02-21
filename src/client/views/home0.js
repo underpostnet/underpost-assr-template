@@ -45,7 +45,17 @@ class Home {
 
 
     const quillPlaceHolder = 'Compose an epic...';
-    new UnderpostQuillEditor({
+    const renderTitle = obj_ => `
+
+         <div class='in' style='color: white; background: red; font-size: 24px; padding: 15px;'>
+             `+obj_.title+`
+         </div>
+         <div class='in' style='color: white; background: red; font-size: 18px; padding: 15px;'>
+             `+obj_.date+`
+         </div>
+
+    `;
+    this.editor = new UnderpostQuillEditor({
         divContent: 'body',
         style:  {
             tr: `{
@@ -102,34 +112,44 @@ class Home {
 
                          value = value.replace('contenteditable="true"', 'style="background: none"');
                          value = value.replaceAll('transform: translate', 'none: ');
+                         value = value.replace('ql-editor-main', '');
 
                          const date = new Date().toISOString();
 
-                         const renderTitle = title => `
+                         append('body', renderTitle({title, date}) + value);
 
-                              <div class='in' style='color: white; background: red; font-size: 24px; padding: 15px;'>
-                                  `+title+`
-                              </div>
-                              <div class='in' style='color: white; background: red; font-size: 18px; padding: 15px;'>
-                                  `+date+`
-                              </div>
-
-                         `;
-
-                         value = renderTitle(title) + value;
-
-                         append('body', value);
-
-                         const response = await new Rest().FETCH('/posts', 'post', {
+                         const dataPost  = {
                            title,
                            date,
                            base64Html: enBase64(value),
-                         });
+                           id: getHash().replaceAll('-', '')
+                         };
+
+                         const response = await new Rest().FETCH('/posts', 'post', dataPost);
+
                          console.log('POST /posts ->');
                          console.log(response);
+
+                         if(response.success===true){
+                           this.editor.reset();
+                           return notifi.display(
+                              'rgb(22, 22, 22)',
+                              'Success',
+                              2000,
+                              'success'
+                            );
+                         }
+
+                         return notifi.display(
+                            'rgb(22, 22, 22)',
+                            'Error service',
+                            2000,
+                            'error'
+                          );
         }
     });
 
+    s('.ql-editor').classList.add('ql-editor-main');
 
 
     append('body', `
@@ -170,7 +190,7 @@ class Home {
     console.log(currentsPost);
 
     currentsPost.data.map(dataPost =>
-      append('body', deBase64(dataPost.base64Html))
+      append('body', renderTitle(dataPost)+deBase64(dataPost.base64Html))
     );
 
   })();

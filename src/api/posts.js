@@ -10,10 +10,10 @@ class Posts {
 
   constructor(MainProcess){
       this.postPost(MainProcess, '/posts');
-      this.getPost(MainProcess, '/posts');
+      this.getPosts(MainProcess, '/posts');
   }
 
-  getPost(MainProcess, uri){
+  getPosts(MainProcess, uri){
     MainProcess.app.get(uri, (req, res) => {
       info.api(req, { uri, apiModule: 'Posts' } );
       try {

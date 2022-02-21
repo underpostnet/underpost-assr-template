@@ -39,7 +39,7 @@ class UnderpostInteract {
       this.currentsImgWithResizableDraggable = [];
 
          setInterval( () =>
-         getAllChillNodeDataByDiv('.ql-editor').forEach((item, i) =>
+         getAllChillNodeDataByDiv('.ql-editor-main').forEach((item, i) =>
             (()=>{
               if(item.localName=='img'||item.nodeName=='IMG'){
                 if(!this.currentsImgWithResizableDraggable.includes(item.classList[0])){

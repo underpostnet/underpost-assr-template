@@ -219,8 +219,6 @@ if(obj.table){
 
                await obj.onSubmit(s('.underpost-ql-title').value, value, this.editor.getLength());
 
-               htmls('.ql-editor', '');
-               s('.underpost-ql-title').value = '';
 
                                // movimiento a los videos
                                // ajustar margenes de tabla manualmente
@@ -232,6 +230,11 @@ if(obj.table){
 
 
 
+  }
+
+  reset(){
+    htmls('.ql-editor', '');
+    s('.underpost-ql-title').value = '';
   }
 
 }
