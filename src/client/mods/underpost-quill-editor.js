@@ -209,40 +209,24 @@ if(obj.table){
 
 
 
-       setTimeout(()=>{
-         s('.btn-send-underpost').onclick = () => {
-
+       setTimeout( () => {
+         s(obj.idBtnSend).onclick = async () => {
 
                let value = s('.ql-editor').outerHTML;
 
-               if(this.editor.getLength()<=1){
-                 return   notifi.display(
-                    'rgb(22, 22, 22)',
-                    'Empty content',
-                    2000,
-                    'error'
-                  );
-               }
+               obj.interactQuill.currentsImgWithResizableDraggable
+               .map(id_ => obj.interactQuill.remove('.'+id_));
 
+               await obj.onSubmit(s('.underpost-ql-title').value, value, this.editor.getLength());
 
-
-
-               value = value.replace('contenteditable="true"', 'style="background: none"');
-
-               append('body', value);
                htmls('.ql-editor', '');
+               s('.underpost-ql-title').value = '';
 
-               obj.interactQuill.currentsImgWithResizableDraggable.map(id_ => {
-                 console.log(id_);
-                // s('.'+id_).style.border = '3px solid red';
-
-                obj.interactQuill.remove('.'+id_);
-
-               });
-
-
+                               // movimiento a los videos
+                               // ajustar margenes de tabla manualmente
          };
-       },0);
+
+       }, 0);
 
 
 

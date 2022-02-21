@@ -10,6 +10,40 @@ class Home {
 
   constructor(){
 
+
+        append('body', `
+
+              <br><br>
+
+        `);
+
+        append('body', renderInput({
+          underpostClass: 'inl',
+          id_content_input: 'a1',
+          id_input: 'underpost-ql-title',
+          type: 'text',
+          required: true,
+          style_content_input: 'width: 70%; margin: 10px;',
+          style_input: 'padding: 8px;',
+          style_label: 'color: red; font-size: 20px;',
+          style_outline: true,
+          style_placeholder: '',
+          textarea: false,
+          active_label: true,
+          initLabelPos: 3,
+          endLabelPos: -25,
+          text_label: 'Title',
+          tag_label: 'a3',
+          fnOnClick: async () => {
+            console.log('click input');
+          },
+          value: ``,
+          topContent: '',
+          botContent: '',
+          placeholder: ''
+        }));
+
+
     const quillPlaceHolder = 'Compose an epic...';
     new UnderpostQuillEditor({
         divContent: 'body',
@@ -42,9 +76,58 @@ class Home {
         image: true,
         video: true,
         table: true,
+        idBtnSend: '.btn-send-underpost',
         interactQuill: new UnderpostInteract( {
           type: 'quill'
-        })
+        }),
+        onSubmit: async (title, value, quillLength) => {
+
+                         if(quillLength<=1){
+                           return   notifi.display(
+                              'rgb(22, 22, 22)',
+                              'Empty content',
+                              2000,
+                              'error'
+                            );
+                         }
+
+                         if(title==''){
+                           return   notifi.display(
+                              'rgb(22, 22, 22)',
+                              'Empty title',
+                              2000,
+                              'error'
+                            );
+                         }
+
+                         value = value.replace('contenteditable="true"', 'style="background: none"');
+                         value = value.replaceAll('transform: translate', 'none: ');
+
+                         const date = new Date().toISOString();
+
+                         const renderTitle = title => `
+
+                              <div class='in' style='color: white; background: red; font-size: 24px; padding: 15px;'>
+                                  `+title+`
+                              </div>
+                              <div class='in' style='color: white; background: red; font-size: 18px; padding: 15px;'>
+                                  `+date+`
+                              </div>
+
+                         `;
+
+                         value = renderTitle(title) + value;
+
+                         append('body', value);
+
+                         const response = await new Rest().FETCH('/posts', 'post', {
+                           title,
+                           date,
+                           base64Html: enBase64(value),
+                         });
+                         console.log('POST /posts ->');
+                         console.log(response);
+        }
     });
 
 
@@ -78,6 +161,19 @@ class Home {
 
 
     `);
+
+
+  (async ()=>{
+
+    const currentsPost = await new Rest().FETCH('/posts', 'get');
+    console.log('currentsPost ->');
+    console.log(currentsPost);
+
+    currentsPost.data.map(dataPost =>
+      append('body', deBase64(dataPost.base64Html))
+    );
+
+  })();
 
 
     const fontSizeNotifi = 20;

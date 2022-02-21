@@ -21,6 +21,7 @@ import { Errors } from './mods/errors.js';
 import { ApiTest } from './api/api-test.js';
 import { Network } from './api/network.js';
 import { Views } from './api/views.js';
+import { Posts } from './api/posts.js';
 
 
 class MainProcess {
@@ -44,6 +45,9 @@ class MainProcess {
 
     console.log(' Load API Instance: '+colors.green('Network'));
     new Network(this);
+
+    console.log(' Load API Instance: '+colors.green('Posts'));
+    new Posts(this);
 
     console.log(' Load MOD Instance: '+colors.green('Errors'));
     new Errors(this);
