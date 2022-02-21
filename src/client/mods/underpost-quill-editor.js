@@ -154,7 +154,7 @@ class UnderpostQuillEditor {
               </span>`:'')+`
 
             </div>
-            <div id='editor-container'>test</div>
+            <div id='editor-container'>`+obj.initContent+`</div>
           </div>
       `);
 
@@ -175,7 +175,7 @@ class UnderpostQuillEditor {
           toolbar: '#toolbar-container',
           table: true
         },
-        placeholder: 'Compose an epic...',
+        placeholder: obj.placeholder,
         theme: 'snow'
       });
 if(obj.table){
@@ -205,6 +205,44 @@ if(obj.table){
          // console.warn('redo');
          redo();
        };
+
+
+
+
+       setTimeout(()=>{
+         s('.btn-send-underpost').onclick = () => {
+
+
+               let value = s('.ql-editor').outerHTML;
+
+               if(this.editor.getLength()<=1){
+                 return   notifi.display(
+                    'rgb(22, 22, 22)',
+                    'Empty content',
+                    2000,
+                    'error'
+                  );
+               }
+
+
+
+
+               value = value.replace('contenteditable="true"', 'style="background: none"');
+
+               append('body', value);
+               htmls('.ql-editor', '');
+
+               obj.interactQuill.currentsImgWithResizableDraggable.map(id_ => {
+                 console.log(id_);
+                // s('.'+id_).style.border = '3px solid red';
+
+                obj.interactQuill.remove('.'+id_);
+
+               });
+
+
+         };
+       },0);
 
 
 

@@ -109,6 +109,12 @@ class UnderpostInteract {
            });
 
    }
+
+   remove(target){
+      console.warn('remove -> '+target);
+      interact(target).resizable(false);
+      interact(target).draggable(false);
+   }
 }
 
 export { UnderpostInteract };
