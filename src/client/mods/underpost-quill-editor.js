@@ -217,7 +217,7 @@ if(obj.table){
                obj.interactQuill.currentsImgWithResizableDraggable
                .map(id_ => obj.interactQuill.remove('.'+id_));
 
-               await obj.onSubmit(s('.underpost-ql-title').value, value, this.editor.getLength());
+               await obj.onSubmit(value, this.editor.getLength());
 
 
                                // movimiento a los videos

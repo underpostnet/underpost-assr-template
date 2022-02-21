@@ -90,7 +90,9 @@ class Home {
         interactQuill: new UnderpostInteract( {
           type: 'quill'
         }),
-        onSubmit: async (title, value, quillLength) => {
+        onSubmit: async (value, quillLength) => {
+
+                      const title = s('.underpost-ql-title').value;
 
                          if(quillLength<=1){
                            return   notifi.display(
