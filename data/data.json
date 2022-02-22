@@ -38,6 +38,16 @@
          "image":"/img/underpost-social.jpg",
          "favicon": "/img/underpost.png",
          "view": "home.js"
+      },
+      {
+         "lang":"en",
+         "dir":"ltr",
+         "uri":"/quill-editor",
+         "title":"editor - underpost.net",
+         "description":"underpost interface",
+         "image":"/img/underpost-social.jpg",
+         "favicon": "/img/underpost.png",
+         "view": "editor.js"
       }
    ]
 }
