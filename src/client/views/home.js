@@ -16,11 +16,18 @@ class Home {
 
         append('body', `
 
+              <br>
+              <br>
+
+                <div class='in' style='text-align: center;'>
+                    UNDERpost.net - Quill Editor
+                </div>
+
               <br><br>
 
         `);
 
-        const sizeTitle = 20;
+        const sizeTitle = 15;
         const sizeContent = 15;
 
         append('body', renderInput({
@@ -30,12 +37,18 @@ class Home {
           type: 'text',
           required: true,
           style_content_input: '',
-          style_input: 'padding: 8px; font-family: retro-font; font-size: '+sizeTitle+'px;',
+          style_input: `
+
+              padding: 12px 15px;
+              font-family: retro-font;
+              font-size: `+sizeTitle+`px;
+
+          `,
           style_label: 'color: red; font-size: 12px;',
           style_outline: true,
-          style_placeholder: '',
+          style_placeholder: 'font-style: italic;',
           textarea: false,
-          active_label: true,
+          active_label: false,
           initLabelPos: 3,
           endLabelPos: -25,
           text_label: 'Title',
@@ -46,7 +59,7 @@ class Home {
           value: ``,
           topContent: '',
           botContent: '',
-          placeholder: ''
+          placeholder: 'Title'
         }));
 
 
@@ -54,11 +67,11 @@ class Home {
 
     const renderTitle = obj_ => `
 
-         <div class='in' style='color: white; background: red; font-size: 24px; padding: 15px;'>
+         <div class='in' style='color: white; background: red; font-size: 20px; padding: 5px;'>
              `+obj_.title+`
          </div>
-         <div class='in' style='color: white; background: red; font-size: 18px; padding: 15px;'>
-             `+obj_.date+`
+         <div class='in' style='color: white; background: red; font-size: 18px; padding: 5px;'>
+             `+obj_.date.split('.')[0].replace('T', ' ')+`
          </div>
 
     `;
@@ -81,6 +94,16 @@ class Home {
               background: #c7c9c7;
               color: black;
             `,
+            placeholder: `
+              color: red;
+              content: attr(data-placeholder);
+              font-style: normal;
+              left: 15px;
+              pointer-events: none;
+              position: absolute;
+              right: 15px;
+              font-style: italic;
+            `
         },
         fontDefault: 'retro-font',
         fonts: ['gothic', 'retro-font', 'arial', 'Verdana', 'Times'],

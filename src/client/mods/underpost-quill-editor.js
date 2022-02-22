@@ -61,6 +61,13 @@ class UnderpostQuillEditor {
              }
              `).join(' ')+`
 
+
+          .ql-editor.ql-blank::before {
+
+          `+obj.style.placeholder+`
+
+          }
+
           </style>
           <div id='standalone-container'>
             <div id='toolbar-container'>
