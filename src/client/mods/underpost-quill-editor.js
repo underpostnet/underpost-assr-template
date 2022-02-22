@@ -227,6 +227,9 @@ if(obj.table){
 
 
        setTimeout( () => {
+
+         s('.ql-editor').classList.add(obj.idContentEditable);
+
          s(obj.idBtnSend).onclick = async () => {
 
                let value = s('.ql-editor').outerHTML;

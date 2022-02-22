@@ -11,6 +11,7 @@ class Editor {
 
     const sizeTitle = 15;
     const sizeContent = 15;
+    const idContentEditable = 'ql-editor-main';
 
     append('body', renderInput({
       underpostClass: 'in',
@@ -98,8 +99,10 @@ class Editor {
           video: true,
           table: true,
           idBtnSend: '.btn-send-underpost',
+          idContentEditable,
           interactQuill: new UnderpostInteract( {
-            type: 'quill'
+            type: 'quill',
+            idContentEditable
           }),
           onSubmit: async (value, quillLength) => {
 
@@ -162,7 +165,7 @@ class Editor {
           }
       });
 
-      s('.ql-editor').classList.add('ql-editor-main');
+
 
 
       const idContentDashBoard = 'dashboard-post';

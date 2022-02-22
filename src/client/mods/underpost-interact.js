@@ -3,6 +3,7 @@ import '/lib/interact.min.js';
 class UnderpostInteract {
 
    constructor(obj){
+     this.obj = obj;
      switch (obj.type) {
        case 'quill':
          this.initQuillModule();
@@ -39,7 +40,7 @@ class UnderpostInteract {
       this.currentsImgWithResizableDraggable = [];
 
          setInterval( () =>
-         getAllChillNodeDataByDiv('.ql-editor-main').forEach((item, i) =>
+         getAllChillNodeDataByDiv('.'+this.obj.idContentEditable).forEach((item, i) =>
             (()=>{
               if(item.localName=='img'||item.nodeName=='IMG'){
                 if(!this.currentsImgWithResizableDraggable.includes(item.classList[0])){
