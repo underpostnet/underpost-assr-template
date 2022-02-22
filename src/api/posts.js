@@ -9,34 +9,36 @@ from '../../underpost_modules/underpost.js';
 class Posts {
 
   constructor(MainProcess){
+      this.JSON_POSTS_PATH = './data/posts.json';
       this.postPost(MainProcess, '/posts');
       this.getPosts(MainProcess, '/posts');
+  }
+
+  readDataPosts(MainProcess){
+    return JSON.parse(fs.readFileSync(this.JSON_POSTS_PATH, MainProcess.data.charset));
+  }
+  writeDataPosts(MainProcess, newData){
+    fs.writeFileSync( this.JSON_POSTS_PATH, util.jsonSave(newData), MainProcess.data.charset);
+  }
+  checkDataDir(MainProcess){
+    ! fs.existsSync( this.JSON_POSTS_PATH ) ?
+    this.writeDataPosts(MainProcess, []) : null;
   }
 
   getPosts(MainProcess, uri){
     MainProcess.app.get(uri, (req, res) => {
       info.api(req, { uri, apiModule: 'Posts' } );
       try {
-
-        console.log(colors.yellow(' BODY -> '));
-        console.log(colors.green(util.jsonSave(req.body)));
-
-        const JSON_POSTS_PATH = './data/posts.json';
-
-        ! fs.existsSync( JSON_POSTS_PATH ) ?
-        fs.writeFileSync( JSON_POSTS_PATH, '[]', MainProcess.data.charset)
-        : null;
-
-        let JSON_POSTS_DATA = JSON.parse(fs.readFileSync(JSON_POSTS_PATH, MainProcess.data.charset));
-
+        // console.log(colors.yellow(' BODY -> '));
+        // console.log(colors.green(util.jsonSave(req.body)));
+        this.checkDataDir(MainProcess);
         res.writeHead( 200, {
           'Content-Type': ('application/json; charset='+MainProcess.data.charset),
           'Content-Language': '*'
         });
-
         return res.end(JSON.stringify({
           success: true,
-          data: JSON_POSTS_DATA
+          data: this.readDataPosts(MainProcess)
         }));
       }catch(error){
         console.log(colors.red(error));
@@ -56,26 +58,16 @@ class Posts {
     MainProcess.app.post(uri, (req, res) => {
       info.api(req, { uri, apiModule: 'Posts' } );
       try {
-
-        console.log(colors.yellow(' BODY -> '));
-        console.log(colors.green(util.jsonSave(req.body)));
-
-        const JSON_POSTS_PATH = './data/posts.json';
-
-        ! fs.existsSync( JSON_POSTS_PATH ) ?
-        fs.writeFileSync( JSON_POSTS_PATH, '[]', MainProcess.data.charset)
-        : null;
-
-        let JSON_POSTS_DATA = JSON.parse(fs.readFileSync(JSON_POSTS_PATH, MainProcess.data.charset));
-
+        // console.log(colors.yellow(' BODY -> '));
+        // console.log(colors.green(util.jsonSave(req.body)));
+        this.checkDataDir(MainProcess);
+        let JSON_POSTS_DATA = this.readDataPosts(MainProcess);
         res.writeHead( 200, {
           'Content-Type': ('application/json; charset='+MainProcess.data.charset),
           'Content-Language': '*'
         });
-
         JSON_POSTS_DATA.push(req.body);
-
-        fs.writeFileSync( JSON_POSTS_PATH, util.jsonSave(JSON_POSTS_DATA), MainProcess.data.charset);
+        this.writeDataPosts(MainProcess, JSON_POSTS_DATA);
         return res.end(JSON.stringify({
           success: true,
           data: JSON_POSTS_DATA
