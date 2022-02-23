@@ -25,6 +25,8 @@ class Editor {
           padding: 12px 15px;
           font-family: retro-font;
           font-size: `+sizeTitle+`px;
+          background: black;
+          color: white;
 
       `,
       style_label: 'color: red; font-size: 12px;',
@@ -70,7 +72,9 @@ class Editor {
               `,
               ql_editor: `
                 min-height: 300px;
-                background: #ebeceb;
+                /* background: #ebeceb; */
+                background: black;
+                color: white;
                 overflow: hidden !important;
               `,
               standalone_container: `
@@ -127,7 +131,7 @@ class Editor {
                            }
 
                            value = value.replace('contenteditable="true"', 'style="background: none"');
-                           // value = value.replaceAll('transform: translate', 'none: ');
+                           value = value.replaceAll('transform: translate', 'none: ');
                            value = value.replace('ql-editor-main', '');
 
                            const date = new Date().toISOString();

@@ -62,6 +62,11 @@ class UnderpostQuillEditor {
              `).join(' ')+`
 
 
+             .ql-container.ql-snow  {
+               border: none !important;
+             }
+
+
           .ql-editor.ql-blank::before {
 
           `+obj.style.placeholder+`
@@ -111,7 +116,9 @@ class UnderpostQuillEditor {
                 <button class='ql-header' value='1'></button>
                 <button class='ql-header' value='2'></button>
                 <button class='ql-blockquote'></button>
+                <!--
                 <button class='ql-code-block'></button>
+                -->
               </span>
               <span class='ql-formats'>
                 <button class='ql-list' value='ordered'></button>
@@ -242,6 +249,7 @@ if(obj.table){
 
                                // movimiento a los videos
                                // ajustar margenes de tabla manualmente
+                               // habilitar ql-code
          };
 
        }, 0);
