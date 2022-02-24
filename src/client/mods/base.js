@@ -17,17 +17,18 @@ class Base {
 
         `);
 
-        const fontSizeNotifi = 20;
+        const fontSizeNotifiIcon = 30;
+        const fontSizeNotifi = 18;
         notifi.load({
         			 AttrRender: {
         				 error: `
 
-        							<i class="fas fa-times" style='font-size: `+fontSizeNotifi+`px;'></i>
+        							<i class="fas fa-times" style='font-size: `+fontSizeNotifiIcon+`px; color: red;'></i>
 
         				 `,
         				 success: `
 
-        						<i class="fas fa-check"></i>
+        						<i class="fas fa-check" style='font-size: `+fontSizeNotifiIcon+`px; color: green;'></i>
 
         				 `
         			 },

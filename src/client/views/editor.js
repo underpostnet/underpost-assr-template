@@ -12,6 +12,7 @@ class Editor {
     const sizeTitle = 15;
     const sizeContent = 15;
     const idContentEditable = 'ql-editor-main';
+    const backgroundNotifi = 'rgba(0, 0, 0, 0.9)';
 
     append('body', renderInput({
       underpostClass: 'in',
@@ -50,16 +51,80 @@ class Editor {
 
 
 
-      const renderTitle = obj_ => `
+      append('body', `
 
-           <div class='in' style='color: white; background: red; font-size: 20px; padding: 5px;'>
-               `+obj_.title+`
-           </div>
-           <div class='in' style='color: white; background: red; font-size: 18px; padding: 5px;'>
-               `+obj_.date.split('.')[0].replace('T', ' ')+`
-           </div>
+          <style>
 
-      `;
+                .btn-cards {
+                  background: black;
+                  color: white;
+                  transition: .3s;
+                  cursor: pointer;
+                  font-size: 15px;
+                  width: 50px;
+                  height: 50px;
+                  top: -10px;
+                }
+
+                .btn-cards-delete:hover {
+                  font-size: 17px;
+                  color: red;
+                }
+
+                .btn-cards-edit:hover {
+                  font-size: 17px;
+                  color: yellow;
+                }
+
+          </style>
+
+      `);
+
+
+      const renderHeader = obj_ => ( () => {
+
+        const id = makeid(5);
+
+        setTimeout(()=>{
+          s('.btn-edit-'+id).onclick = () =>
+          alert('edit'),
+          s('.btn-delete-'+id).onclick = () =>
+          alert('del')
+        }, 0);
+
+        return `
+          <div class='in' style='color: white; background: rgb(198, 0, 0); min-height: 60px;'>
+
+                <div class='fl'>
+
+                    <div class='in fll' style='width: 85%;'>
+
+                        <div class='in' style='font-size: 20px; padding: 5px;'>
+                            `+obj_.title+`
+                        </div>
+                        <div class='in' style='font-size: 10px; padding: 5px;'>
+                            `+obj_.date.split('.')[0].replace('T', ' ')+`
+                        </div>
+
+                    </div>
+
+                    <div class='in fll' style='width: 15%; text-align: center;'>
+
+                            <div class='inl btn-cards btn-cards-edit btn-edit-`+id+`'>
+                                  <i class="fas fa-edit abs center"></i>
+                            </div>
+
+                            <div class='inl btn-cards btn-cards-delete btn-delete-`+id+`'>
+                                  <i class="fas fa-trash abs center"></i>
+                            </div>
+
+                    </div>
+
+                </div>
+
+           </div>
+        `;
+      })();
       this.editor = new UnderpostQuillEditor({
           divContent: 'body',
           style:  {
@@ -114,7 +179,7 @@ class Editor {
 
                            if(quillLength<=1){
                              return   notifi.display(
-                                'rgb(22, 22, 22)',
+                                backgroundNotifi,
                                 'Empty content',
                                 2000,
                                 'error'
@@ -123,7 +188,7 @@ class Editor {
 
                            if(title==''){
                              return   notifi.display(
-                                'rgb(22, 22, 22)',
+                                backgroundNotifi,
                                 'Empty title',
                                 2000,
                                 'error'
@@ -136,7 +201,7 @@ class Editor {
 
                            const date = new Date().toISOString();
 
-                           prepend('.'+idContentDashBoard, renderTitle({title, date}) + value);
+                           prepend('.'+idContentDashBoard, renderHeader({title, date}) + value);
 
                            const dataPost  = {
                              title,
@@ -153,7 +218,7 @@ class Editor {
                            if(response.success===true){
                              this.editor.reset();
                              return notifi.display(
-                                'rgb(22, 22, 22)',
+                                backgroundNotifi,
                                 'Success',
                                 2000,
                                 'success'
@@ -161,7 +226,7 @@ class Editor {
                            }
 
                            return notifi.display(
-                              'rgb(22, 22, 22)',
+                              backgroundNotifi,
                               'Error service',
                               2000,
                               'error'
@@ -221,7 +286,7 @@ class Editor {
           console.log(getSizeJSON(currentsPost));
 
           currentsPost.data.reverse().map(dataPost =>
-            append('.'+idContentDashBoard, renderTitle(dataPost)+deBase64(dataPost.base64Html))
+            append('.'+idContentDashBoard, renderHeader(dataPost)+deBase64(dataPost.base64Html))
           );
 
       })();
