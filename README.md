@@ -44,3 +44,9 @@ https://underpost.net
 
 
 `npm run reset`
+
+
+- create docker image
+
+
+`docker build . -t underpost-assr-template`

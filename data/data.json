@@ -3,7 +3,7 @@
    "server":{
       "host":"http://localhost",
       "visiblePort": true,
-      "httpPort":5000,
+      "httpPort":5500,
       "log_all_ms_response": false,
       "limitSizeJSON":"25mb"
    },
