@@ -25,12 +25,28 @@ class Posts {
     this.writeDataPosts(MainProcess, []) : null;
   }
 
+  searchPostByTitle(MainProcess, searchTerm){
+    let posts = [];
+    this.readDataPosts(MainProcess).map( post => {
+      let valid = false;
+      for(let titlePart of post.title.split(' ')){
+        for(let search of searchTerm.split(' ')){
+            if(titlePart==search){
+              valid = true;
+            }
+        }
+      }
+      if(valid){
+        posts.push(post);
+      }
+    });
+    return posts;
+  }
+
   getPosts(MainProcess, uri){
     MainProcess.app.get(uri, (req, res) => {
       info.api(req, { uri, apiModule: 'Posts' } );
       try {
-        // console.log(colors.yellow(' BODY -> '));
-        // console.log(colors.green(util.jsonSave(req.body)));
         this.checkDataDir(MainProcess);
         res.writeHead( 200, {
           'Content-Type': ('application/json; charset='+MainProcess.data.charset),
@@ -38,7 +54,9 @@ class Posts {
         });
         return res.end(JSON.stringify({
           success: true,
-          data: this.readDataPosts(MainProcess)
+          data: req.query.s ?
+            this.searchPostByTitle(MainProcess, req.query.s):
+            this.readDataPosts(MainProcess)
         }));
       }catch(error){
         console.log(colors.red(error));

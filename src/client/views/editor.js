@@ -279,7 +279,7 @@ class Editor {
 
       (async ()=>{
 
-          const currentsPost = await new Rest().FETCH('/posts', 'get');
+          const currentsPost = await new Rest().FETCH('/posts/'+getRawQuery(), 'get');
           console.log('currentsPost ->');
           console.log(currentsPost);
           console.log('currentsPost Size ->');
