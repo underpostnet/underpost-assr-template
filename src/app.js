@@ -55,6 +55,7 @@ class MainProcess {
     this.server = server.Server(this.app)
     .listen(this.data.server.httpPort);
 
+    // process.env
     console.log(process.argv);
     console.log(
       colors.yellow(

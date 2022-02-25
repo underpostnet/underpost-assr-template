@@ -134,7 +134,11 @@ class UnderpostQuillEditor {
                 <button class='ql-link'></button>
                 `+(obj.image?`<button class='ql-image'></button>`:'')+`
                 `+(obj.video?`<button class='ql-video'></button>`:'')+`
-                `+(obj.scientific_tools?`<button class='ql-formula'></button>`:'')+`
+                `+(obj.scientific_tools?`
+                  <!-- no base64 compatible
+                  <button class='ql-formula'></button>
+                    -->
+                  `:'')+`
               </span>
               <span class='ql-formats'>
                 <button class='ql-clean'></button>

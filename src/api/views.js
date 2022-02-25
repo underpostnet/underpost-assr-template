@@ -2,6 +2,7 @@
 'use strict';
 
 import colors from 'colors/safe.js';
+import fs from 'fs';
 
 import { util, navi, rest, files, info }
 from '../../underpost_modules/underpost.js';
@@ -21,8 +22,8 @@ class Views {
           // console.log(colors.green('set static path:'+uri));
           // console.log(srcPath);
           switch (uri) {
-            case '/views/home.js':
-                console.log(' '.repeat(9)+'Load View: '+colors.green('Home'));
+            case '/views/editor.js':
+                console.log(' '.repeat(9)+'Load View: '+colors.green('Editor'));
           }
           MainProcess.app.get(uri, (req, res) => res.sendFile(srcPath));
         });
@@ -49,6 +50,11 @@ class Views {
       MainProcess.app.get(path.uri, (req, res) => {
         // npm response-time
         // console.log(req);
+
+              // console.log('query ->');
+              // console.log(req.query); // .params .body
+              // req.query.s ? console.log('search'):console.log('no search');
+
         info.view(req, util.newInstance(path));
         try {
           res.writeHead( 200, {
@@ -76,11 +82,51 @@ class Views {
       `
     }
 
+    readMicrodata(MainProcess, type){
+      return JSON.parse(
+        fs.readFileSync('./data/microdata.json', MainProcess.charset)
+      ).find(microdata=>microdata["'@type'"]==type);
+    }
+
+    microdata(MainProcess, path){
+      return path.microdata.map( microdata =>
+        this.readMicrodata(MainProcess, microdata["@type"]) != undefined ?
+          (()=>{
+            microdata = this.readMicrodata(MainProcess, microdata["@type"]);
+            switch (microdata["@type"]) {
+              case "WebSite":
+                  microdata["@id"] = MainProcess.util.buildUrl();
+                  microdata["url"] = MainProcess.util.buildUrl();
+                  microdata["name"] = path.tile;
+                  microdata["description"] = path.description;
+                  microdata["inLanguage"] = path.lang;
+                  microdata.potentialAction.push(JSON.parse(`{
+                       "@type":"SearchAction",
+                       "target":"`+MainProcess.util.buildUrl()+`?s={search_term_string}",
+                       "query-input":"required name=search_term_string"
+                  }`));
+                break;
+              default:
+                console.log(colors.red('error | microdata(path, MainProcess) => not found type microdata'));
+                return '';
+            }
+            return `
+               <script type="application/ld+json">
+                 `+JSON.stringify(microdata)+`
+               </script>`;
+        })():
+        (()=>{
+          console.log(colors.red('error | microdata(path, MainProcess) => not found microdata'));
+          return '';
+        })()
+      ).join('');
+    }
+
     view(MainProcess, path){ return `
         <!DOCTYPE html>
         <html dir='`+path.dir+`' lang='`+path.lang+`'>
           <head>
-              <meta charset='`+MainProcess.data.charset+`'>
+              <meta charset='`+MainProcess.data.charset+`'>`+this.microdata(MainProcess, path)+`
               <title>`+path.title+`</title>
               <link rel='canonical' href='`+MainProcess.util.buildUrl(path.uri)+`'>
               <link rel='icon' type='image/png' href='`+MainProcess.util.buildUrl()+path.favicon+`'>
