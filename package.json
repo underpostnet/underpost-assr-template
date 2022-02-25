@@ -45,6 +45,7 @@
     "superagent": "latest",
     "mocha": "latest",
     "cors": "latest",
-    "javascript-obfuscator": "latest"
+    "javascript-obfuscator": "latest",
+    "jsonschema": "latest"
   }
 }

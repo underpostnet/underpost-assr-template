@@ -1,0 +1,32 @@
+[
+  {
+     "id": "/WebSite",
+     "type": "object",
+     "@type":{"type": "string"},
+     "@id": {"type": "string"},
+     "url": {"type": "string"},
+     "name": {"type": "string"},
+     "description": {"type": "string"},
+     "potentialAction": {
+       "type": "array",
+       "items": {
+          "properties": {
+              "@type": { "type": "string" },
+              "target": { "type": "string" },
+              "query-input": { "type": "string" }
+          },
+          "required": ["@type", "target", "query-input"]
+        }
+     },
+     "inLanguage": {"type": "string"},
+     "required": [
+              "@type",
+              "@id",
+              "url",
+              "name",
+              "description",
+              "potentialAction",
+              "inLanguage"
+          ]
+  }
+]
