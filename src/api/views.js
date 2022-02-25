@@ -30,6 +30,20 @@ class Views {
       });
 
       // -------------------------------------------------------------------------
+      // virtual robots txt
+      // -------------------------------------------------------------------------
+
+      MainProcess.app.get('/robots.txt', function(req, res) {
+        res.writeHead( 200, {
+          'Content-Type': ('text/plain; charset='+MainProcess.data.charset)
+        });
+        return res.end(fs.readFileSync('./data/robots.txt', MainProcess.data.charset)
+        .replace('{{Sitemap}}', MainProcess.util.buildUrl('/sitemap.xml')));
+      });
+
+      this.getSitemap(MainProcess, '/sitemap.xml');
+
+      // -------------------------------------------------------------------------
       // instance virtual src styles
       // -------------------------------------------------------------------------
 
@@ -48,13 +62,6 @@ class Views {
 
       MainProcess.data.views.map( path =>
       MainProcess.app.get(path.uri, (req, res) => {
-        // npm response-time
-        // console.log(req);
-
-              // console.log('query ->');
-              // console.log(req.query); // .params .body
-              // req.query.s ? console.log('search'):console.log('no search');
-
         info.view(req, util.newInstance(path));
         try {
           res.writeHead( 200, {
@@ -155,6 +162,42 @@ class Views {
           </body>
       </html>
       `
+  }
+
+  getSitemap(MainProcess, uri){
+
+    let sitemap = '';
+    for(let renderSitemap of MainProcess.data.views){
+      if(renderSitemap.sitemap.active){
+        sitemap += `
+        <url>
+              <loc>`+MainProcess.util.buildUrl(renderSitemap.uri)+`</loc>
+              <lastmod>`+renderSitemap.sitemap.lastmod+`</lastmod>
+              <changefreq>`+renderSitemap.sitemap.changefreq+`</changefreq>
+              <priority>`+renderSitemap.sitemap.priority+`</priority>
+        </url>
+        `;
+      }
+    }
+
+    let baseSitemap = fs.readFileSync(
+    './underpost_modules/underpost-library/xml/sitemap.xml', MainProcess.data.charset)
+    .split('</urlset>');
+    sitemap = baseSitemap[0].replace(
+      '{sitemap-xsl-url}',
+      MainProcess.util.buildUrl(uri.replace('xml','xsl'))) + sitemap + '</urlset>';
+
+    MainProcess.app.get(uri.replace('xml','xsl'), (req, res) =>
+      res.sendFile(navi('../underpost_modules/underpost-library/xml/sitemap.xsl'))
+    );
+
+    MainProcess.app.get(uri, (req, res) => {
+      res.writeHead( 200, {
+        'Content-Type': ('application/xml; charset='+MainProcess.data.charset)
+      });
+      return res.end(sitemap);
+    });
+
   }
 
 }

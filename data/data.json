@@ -38,7 +38,13 @@
          "image":"/img/underpost-social.jpg",
          "favicon": "/img/underpost.png",
          "view": "editor.js",
-         "microdata": ["WebSite"]
+         "microdata": ["WebSite"],
+         "sitemap": {
+           "active": true,
+           "lastmod": "2022-02-24",
+           "changefreq": "weekly",
+           "priority": 1
+         }
       }
    ]
 }
