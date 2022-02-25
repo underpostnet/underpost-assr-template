@@ -85,14 +85,14 @@ class Views {
     readMicrodata(MainProcess, type){
       return JSON.parse(
         fs.readFileSync('./data/microdata.json', MainProcess.charset)
-      ).find(microdata=>microdata["'@type'"]==type);
+      ).find(microdata=>microdata["@type"]==type);
     }
 
     microdata(MainProcess, path){
-      return path.microdata.map( microdata =>
-        this.readMicrodata(MainProcess, microdata["@type"]) != undefined ?
+      return path.microdata.map( microdataType =>
+        this.readMicrodata(MainProcess, microdataType) != undefined ?
           (()=>{
-            microdata = this.readMicrodata(MainProcess, microdata["@type"]);
+            const microdata = this.readMicrodata(MainProcess, microdataType);
             switch (microdata["@type"]) {
               case "WebSite":
                   microdata["@id"] = MainProcess.util.buildUrl();
@@ -102,7 +102,7 @@ class Views {
                   microdata["inLanguage"] = path.lang;
                   microdata.potentialAction.push(JSON.parse(`{
                        "@type":"SearchAction",
-                       "target":"`+MainProcess.util.buildUrl()+`?s={search_term_string}",
+                       "target":"`+MainProcess.util.buildUrl('/')+`?s={search_term_string}",
                        "query-input":"required name=search_term_string"
                   }`));
                 break;
@@ -110,10 +110,9 @@ class Views {
                 console.log(colors.red('error | microdata(path, MainProcess) => not found type microdata'));
                 return '';
             }
-            return `
-               <script type="application/ld+json">
-                 `+JSON.stringify(microdata)+`
-               </script>`;
+            return `<script type="application/ld+json">
+                       `+util.jsonSave(microdata)+`
+                    </script>`;
         })():
         (()=>{
           console.log(colors.red('error | microdata(path, MainProcess) => not found microdata'));
@@ -126,7 +125,8 @@ class Views {
         <!DOCTYPE html>
         <html dir='`+path.dir+`' lang='`+path.lang+`'>
           <head>
-              <meta charset='`+MainProcess.data.charset+`'>`+this.microdata(MainProcess, path)+`
+              <meta charset='`+MainProcess.data.charset+`'>
+              `+this.microdata(MainProcess, path)+`
               <title>`+path.title+`</title>
               <link rel='canonical' href='`+MainProcess.util.buildUrl(path.uri)+`'>
               <link rel='icon' type='image/png' href='`+MainProcess.util.buildUrl()+path.favicon+`'>
