@@ -3,6 +3,7 @@
 
 import colors from 'colors/safe.js';
 import fs from 'fs';
+import javaScriptObfuscator from 'javascript-obfuscator';
 
 import { util, navi, rest, files, info }
 from '../../underpost_modules/underpost.js';
@@ -15,17 +16,34 @@ class Views {
       // statics paths
       // -------------------------------------------------------------------------
 
+      const validateUriJs = uri => (
+        uri.split('.').pop()=='js' &&
+        uri.split('/')[1]!='lib' &&
+        uri.split('/')[1]!='quill' &&
+        uri.split('/')[1]!='js' &&
+        MainProcess.dev === false
+      );
+
       MainProcess.data.statics.map( dir => {
         files.readRecursive( '../'+dir, outDir => {
           const uri = outDir.split(dir)[1];
           const srcPath = navi('../'+dir+uri);
           // console.log(colors.green('set static path:'+uri));
           // console.log(srcPath);
-          switch (uri) {
-            case '/views/editor.js':
-                console.log(' '.repeat(9)+'Load View: '+colors.green('Editor'));
+          if(validateUriJs(uri)){
+            console.log(' Load Static JS: '+colors.green(uri));
+            const jsObfData = javaScriptObfuscator.obfuscate(
+              fs.readFileSync(outDir, MainProcess.data.charset)
+            )._obfuscatedCode;
+            MainProcess.app.get(uri, (req, res) => {
+              res.writeHead( 200, {
+                'Content-Type': ('application/javascript; charset='+MainProcess.data.charset)
+              });
+              return res.end(jsObfData);
+            });
+          }else{
+            MainProcess.app.get(uri, (req, res) => res.sendFile(srcPath));
           }
-          MainProcess.app.get(uri, (req, res) => res.sendFile(srcPath));
         });
       });
 
@@ -33,13 +51,17 @@ class Views {
       // virtual robots txt
       // -------------------------------------------------------------------------
 
-      MainProcess.app.get('/robots.txt', function(req, res) {
+      MainProcess.app.get('/robots.txt', (req, res) => {
         res.writeHead( 200, {
           'Content-Type': ('text/plain; charset='+MainProcess.data.charset)
         });
         return res.end(fs.readFileSync('./data/robots.txt', MainProcess.data.charset)
         .replace('{{Sitemap}}', MainProcess.util.buildUrl('/sitemap.xml')));
       });
+
+      // -------------------------------------------------------------------------
+      // instance sitemap
+      // -------------------------------------------------------------------------
 
       this.getSitemap(MainProcess, '/sitemap.xml');
 

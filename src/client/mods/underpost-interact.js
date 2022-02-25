@@ -107,7 +107,9 @@ class UnderpostInteract {
                  endOnly: true
                })
              ]
-           });
+           }).on('dragend', () =>
+           console.warn('dragend -> '+obj.divContent));
+
 
    }
 
