@@ -31,7 +31,7 @@ class Posts {
       let valid = false;
       for(let titlePart of post.title.split(' ')){
         for(let search of searchTerm.split(' ')){
-            if(titlePart==search){
+            if(util.tl(titlePart)==util.tl(search)){
               valid = true;
             }
         }
