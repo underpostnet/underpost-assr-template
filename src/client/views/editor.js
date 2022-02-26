@@ -81,24 +81,26 @@ class Editor {
       `);
 
 
-      const renderHeader = obj_ => ( () => {
-
-        const id = makeid(5);
+      const renderCard = obj_ => ( () => {
 
         setTimeout(()=>{
-          s('.btn-edit-'+id).onclick = () =>
+          s('.btn-edit-'+obj_.íd).onclick = () =>
           {
             htmls('.'+idContentEditable, deBase64(obj_.B64HTMLeditble).replaceAll(
               'class="underpost-child-', 'reset="'
             ));
             s('html').scrollTop = s('body').offsetTop;
             s('.underpost-ql-title').value = obj_.title;
+            s('.card-'+obj_.íd).remove();
           },
-          s('.btn-delete-'+id).onclick = () =>
+          s('.btn-delete-'+obj_.íd).onclick = () =>
           alert('del')
         }, 0);
 
         return `
+
+        <div class='card-`+obj_.íd+`'>
+
           <div class='in' style='color: white; background: rgb(198, 0, 0); min-height: 60px;'>
 
                 <div class='fl'>
@@ -116,11 +118,11 @@ class Editor {
 
                     <div class='in fll' style='width: 15%; text-align: center;'>
 
-                            <div class='inl btn-cards btn-cards-edit btn-edit-`+id+`'>
+                            <div class='inl btn-cards btn-cards-edit btn-edit-`+obj_.íd+`'>
                                   <i class="fas fa-edit abs center"></i>
                             </div>
 
-                            <div class='inl btn-cards btn-cards-delete btn-delete-`+id+`'>
+                            <div class='inl btn-cards btn-cards-delete btn-delete-`+obj_.íd+`'>
                                   <i class="fas fa-trash abs center"></i>
                             </div>
 
@@ -129,6 +131,8 @@ class Editor {
                 </div>
 
            </div>
+        `+ deBase64(obj_.B64HTMLdisplay) + `
+        </div>
         `;
       })();
       this.editor = new UnderpostQuillEditor({
@@ -212,10 +216,10 @@ class Editor {
                              date,
                              B64HTMLdisplay: enBase64(displayValue),
                              B64HTMLeditble: enBase64(editableValue),
-                             id: getHash().replaceAll('-', '')
+                             id: makeid(6)
                            };
 
-                           prepend('.'+idContentDashBoard, renderHeader(dataPost)+deBase64(dataPost.B64HTMLdisplay));
+                           prepend('.'+idContentDashBoard, renderCard(dataPost));
 
                            const response = await new Rest().FETCH('/posts', 'post', dataPost);
 
@@ -293,7 +297,7 @@ class Editor {
           console.log(getSizeJSON(currentsPost));
 
           currentsPost.data.reverse().map(dataPost =>
-            append('.'+idContentDashBoard, renderHeader(dataPost)+deBase64(dataPost.B64HTMLdisplay))
+            append('.'+idContentDashBoard, renderCard(dataPost))
           );
 
       })();
