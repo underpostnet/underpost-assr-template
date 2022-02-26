@@ -87,7 +87,13 @@ class Editor {
 
         setTimeout(()=>{
           s('.btn-edit-'+id).onclick = () =>
-          alert('edit'),
+          {
+            htmls('.'+idContentEditable, deBase64(obj_.B64HTMLeditble).replaceAll(
+              'class="underpost-child-', 'reset="'
+            ));
+            s('html').scrollTop = s('body').offsetTop;
+            s('.underpost-ql-title').value = obj_.title;
+          },
           s('.btn-delete-'+id).onclick = () =>
           alert('del')
         }, 0);
@@ -173,7 +179,7 @@ class Editor {
             type: 'quill',
             idContentEditable
           }),
-          onSubmit: async (value, quillLength) => {
+          onSubmit: async (displayValue, editableValue, quillLength) => {
 
                         const title = s('.underpost-ql-title').value;
 
@@ -195,20 +201,21 @@ class Editor {
                               );
                            }
 
-                           value = value.replace('contenteditable="true"', 'style="background: none"');
-                           value = value.replaceAll('transform: translate', 'none: ');
-                           value = value.replace('ql-editor-main', '');
+                           displayValue = displayValue.replace('contenteditable="true"', 'style="background: none"');
+                           displayValue = displayValue.replaceAll('transform: translate', 'none: ');
+                           displayValue = displayValue.replace('ql-editor-main', '');
 
                            const date = new Date().toISOString();
-
-                           prepend('.'+idContentDashBoard, renderHeader({title, date}) + value);
 
                            const dataPost  = {
                              title,
                              date,
-                             base64Html: enBase64(value),
+                             B64HTMLdisplay: enBase64(displayValue),
+                             B64HTMLeditble: enBase64(editableValue),
                              id: getHash().replaceAll('-', '')
                            };
+
+                           prepend('.'+idContentDashBoard, renderHeader(dataPost)+deBase64(dataPost.B64HTMLdisplay));
 
                            const response = await new Rest().FETCH('/posts', 'post', dataPost);
 
@@ -286,7 +293,7 @@ class Editor {
           console.log(getSizeJSON(currentsPost));
 
           currentsPost.data.reverse().map(dataPost =>
-            append('.'+idContentDashBoard, renderHeader(dataPost)+deBase64(dataPost.base64Html))
+            append('.'+idContentDashBoard, renderHeader(dataPost)+deBase64(dataPost.B64HTMLdisplay))
           );
 
       })();

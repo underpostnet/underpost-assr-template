@@ -243,17 +243,22 @@ if(obj.table){
 
          s(obj.idBtnSend).onclick = async () => {
 
-               let value = s('.ql-editor').outerHTML;
+               const displayValue = s('.ql-editor').outerHTML;
+               const editableValue = s('.ql-editor').innerHTML;
 
                obj.interactQuill.currentsImgWithResizableDraggable
                .map(id_ => obj.interactQuill.remove('.'+id_));
 
-               await obj.onSubmit(value, this.editor.getLength());
+               await obj.onSubmit(
+                 displayValue,
+                 editableValue,
+                 this.editor.getLength()
+               );
 
-
-                               // movimiento a los videos
-                               // ajustar margenes de tabla manualmente
-                               // habilitar ql-code
+             // movimiento a los videos
+             // ajustar margenes de tabla manualmente
+             // habilitar ql-code
+             // formulas katex no funciona b64
          };
 
        }, 0);
