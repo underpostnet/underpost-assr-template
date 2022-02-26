@@ -6,6 +6,8 @@ import fs from 'fs';
 import javaScriptObfuscator from 'javascript-obfuscator';
 import jsonschema from 'jsonschema';
 
+import Handlebars from 'handlebars';
+
 import { util, navi, rest, files, info }
 from '../../underpost_modules/underpost.js';
 
@@ -56,8 +58,12 @@ class Views {
         res.writeHead( 200, {
           'Content-Type': ('text/plain; charset='+MainProcess.data.charset)
         });
-        return res.end(fs.readFileSync('./structs/robots.txt', MainProcess.data.charset)
-        .replace('{{Sitemap}}', MainProcess.util.buildUrl('/sitemap.xml')));
+        let robotsTemplate = Handlebars.compile(
+          fs.readFileSync('./handlebars/robots.txt', MainProcess.data.charset)
+        );
+        return res.end(robotsTemplate({
+          Sitemap: MainProcess.util.buildUrl('/sitemap.xml')
+        }));
       });
 
       // -------------------------------------------------------------------------
