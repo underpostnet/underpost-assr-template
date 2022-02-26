@@ -165,7 +165,7 @@ class Views {
                                `+util.jsonSave(websiteMicrodata)+`
                             </script>`
                   }
-                  
+
                 break;
               default:
                 console.log(colors.red('error | microdata(path, MainProcess) => not found type microdata'));
@@ -238,8 +238,17 @@ class Views {
       '{sitemap-xsl-url}',
       MainProcess.util.buildUrl(uri.replace('xml','xsl'))) + sitemap + '</urlset>';
 
+    const xmlStyleData = fs.readFileSync(
+      navi('../underpost_modules/underpost-library/xml/sitemap.xsl'), MainProcess.data.charset
+    ).replace('https://www.nexodev.org/api/sitemap', MainProcess.util.buildUrl('/xml'));
+
     MainProcess.app.get(uri.replace('xml','xsl'), (req, res) =>
-      res.sendFile(navi('../underpost_modules/underpost-library/xml/sitemap.xsl'))
+      {
+        res.writeHead( 200, {
+          'Content-Type': ('application/vnd.ms-excel; charset='+MainProcess.data.charset)
+        });
+        return res.end(xmlStyleData);
+      }
     );
 
     MainProcess.app.get(uri, (req, res) => {
