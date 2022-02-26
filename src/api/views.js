@@ -4,9 +4,9 @@
 import colors from 'colors/safe.js';
 import fs from 'fs';
 import javaScriptObfuscator from 'javascript-obfuscator';
-import jsonschema from 'jsonschema';
 
 import Handlebars from 'handlebars';
+import Ajv from 'ajv';
 
 import { util, navi, rest, files, info }
 from '../../underpost_modules/underpost.js';
@@ -121,48 +121,56 @@ class Views {
     readMicrodata(MainProcess, type){
       return JSON.parse(
         fs.readFileSync('./structs/microdata.json', MainProcess.charset)
-      ).find(microdata=>microdata["id"]==("/"+type));
+      ).find(microdata=>microdata["$id"] == type);
     }
 
     microdata(MainProcess, path){
-      let microdataSchema;
-      let microdata;
-      let Validator;
-      Validator = jsonschema.Validator;
-      Validator = new Validator();
       return path.microdata.map( microdataType =>
         this.readMicrodata(MainProcess, microdataType) != undefined ?
           (()=>{
             switch (microdataType) {
               case "WebSite":
-                  microdataSchema = this.readMicrodata(MainProcess, microdataType);
-                  microdata = {};
-                  microdata["@type"] = microdataType;
-                  microdata["@id"] = MainProcess.util.buildUrl();
-                  microdata["url"] = MainProcess.util.buildUrl();
-                  microdata["name"] = path.title;
-                  microdata["description"] = path.description;
-                  microdata["inLanguage"] = path.lang;
-                  microdata["potentialAction"] = [JSON.parse(`{
+
+                  const websiteMicrodataSchema =
+                  this.readMicrodata(MainProcess, microdataType);
+                  const potentialActionMicrodataSchema =
+                  this.readMicrodata(MainProcess, "potentialAction");
+
+                  let websiteMicrodata = {};
+                  websiteMicrodata["@type"] = microdataType;
+                  websiteMicrodata["@id"] = MainProcess.util.buildUrl();
+                  websiteMicrodata["url"] = MainProcess.util.buildUrl();
+                  websiteMicrodata["name"] = path.title;
+                  websiteMicrodata["description"] = path.description;
+                  websiteMicrodata["inLanguage"] = path.lang;
+
+                  websiteMicrodata["potentialAction"] = [JSON.parse(`{
                        "@type":"SearchAction",
                        "target":"`+MainProcess.util.buildUrl('/')+`?s={search_term_string}",
                        "query-input":"required name=search_term_string"
                   }`)];
-                  const validateMicrodata =
-                  Validator.validate(microdata, microdataSchema, {required: true}).errors;
-                  if(util.l(validateMicrodata)>0){
+
+                  const ajv = new Ajv({schemas: [
+                    websiteMicrodataSchema,
+                    potentialActionMicrodataSchema
+                  ]});
+
+                  const validate = ajv.getSchema(microdataType);
+
+                  if(!validate(websiteMicrodata)){
                     console.log(colors.red('error | microdata(path, MainProcess) => invalid microdata Schema'));
-                    console.log(colors.red(validateMicrodata.map(x=>x.message).join(' \n')));
                     return '';
+                  }else{
+                    return `<script type="application/ld+json">
+                               `+util.jsonSave(websiteMicrodata)+`
+                            </script>`
                   }
+                  
                 break;
               default:
                 console.log(colors.red('error | microdata(path, MainProcess) => not found type microdata'));
                 return '';
             }
-            return `<script type="application/ld+json">
-                       `+util.jsonSave(microdata)+`
-                    </script>`;
         })():
         (()=>{
           console.log(colors.red('error | microdata(path, MainProcess) => not found microdata'));

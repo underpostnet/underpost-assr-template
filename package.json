@@ -46,7 +46,7 @@
     "mocha": "latest",
     "cors": "latest",
     "javascript-obfuscator": "latest",
-    "jsonschema": "latest",
+    "ajv": "latest",
     "handlebars": "latest"
   }
 }
