@@ -13,7 +13,7 @@ import { UtilMod } from '../src/mods/util.js';
 class MochaApiTest {
   constructor(){
 
-    this.data = JSON.parse(fs.readFileSync(navi('../../../data/global.json'), 'utf8'));
+    this.data = JSON.parse(fs.readFileSync(navi('../../../data/params/global.json'), 'utf8'));
 
     new UtilMod(this);
 

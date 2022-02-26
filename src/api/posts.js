@@ -9,7 +9,7 @@ from '../../underpost_modules/underpost.js';
 class Posts {
 
   constructor(MainProcess){
-      this.JSON_POSTS_PATH = './data/posts.json';
+      this.JSON_POSTS_PATH = './data/raw/posts.json';
       this.postPost(MainProcess, '/posts');
       this.getPosts(MainProcess, '/posts');
   }

@@ -1,0 +1,25 @@
+{
+   "$id":"post",
+   "type":"object",
+   "properties":{
+      "title":{
+         "type":"string"
+      },
+      "date":{
+         "type":"string"
+      },
+      "base64Html":{
+         "type":"string"
+      },
+      "id":{
+         "type":"string"
+      }
+   },
+   "required":[
+      "title",
+      "date",
+      "base64Html",
+      "id"
+   ],
+   "additionalProperties":false
+}

@@ -59,7 +59,7 @@ class Views {
           'Content-Type': ('text/plain; charset='+MainProcess.data.charset)
         });
         let robotsTemplate = Handlebars.compile(
-          fs.readFileSync('./handlebars/robots.txt', MainProcess.data.charset)
+          fs.readFileSync('./data/handlebars/robots.txt', MainProcess.data.charset)
         );
         return res.end(robotsTemplate({
           Sitemap: MainProcess.util.buildUrl('/sitemap.xml')
@@ -120,7 +120,7 @@ class Views {
 
     readMicrodata(MainProcess, type){
       return JSON.parse(
-        fs.readFileSync('./structs/microdata.json', MainProcess.charset)
+        fs.readFileSync('./data/structs/microdata.json', MainProcess.charset)
       ).find(microdata=>microdata["$id"] == type);
     }
 
