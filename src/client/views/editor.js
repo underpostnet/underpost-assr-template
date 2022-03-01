@@ -117,8 +117,34 @@ class Editor {
             s('.card-'+obj_.id).style.display = 'none';
             lastIDedit = obj_.id;
           },
-          s('.btn-delete-'+obj_.id).onclick = () =>
-          alert('del')
+          s('.btn-delete-'+obj_.id).onclick = async () => {
+            obj_.del = true;
+            const response = await new Rest().FETCH('/posts', 'post', obj_);
+            if(response.success === true){
+              s('.card-'+obj_.id).remove();
+              let indPost = 0;
+              for(let post of currentsPost){
+                  if(post.id==obj_.id){
+                    currentsPost.splice(indPost, 1);
+                    break
+                  }
+                  indPost++;
+              }
+              return   notifi.display(
+                 backgroundNotifi,
+                 'Success delete',
+                 2000,
+                 'success'
+               );
+            }else{
+              return   notifi.display(
+                 backgroundNotifi,
+                 'Error service',
+                 2000,
+                 'error'
+               );
+            }
+          }
         }, 0);
 
         return `

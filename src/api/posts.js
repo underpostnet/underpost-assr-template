@@ -84,11 +84,15 @@ class Posts {
           'Content-Type': ('application/json; charset='+MainProcess.data.charset),
           'Content-Language': '*'
         });
-        if(req.body.id!=undefined){
+        if(req.body.id!=undefined || req.body.del!=undefined){
           let indPost = 0;
           for(let post of JSON_POSTS_DATA){
             if(req.body.id == post.id){
-              JSON_POSTS_DATA[indPost] = req.body;
+              if(req.body.del!=undefined){
+                JSON_POSTS_DATA.splice(indPost, 1);
+              }else{
+                JSON_POSTS_DATA[indPost] = req.body;
+              }
               break;
             }
             indPost++;
