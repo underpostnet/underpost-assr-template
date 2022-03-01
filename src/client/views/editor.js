@@ -15,6 +15,8 @@ class Editor {
     const backgroundNotifi = 'rgba(0, 0, 0, 0.9)';
     let lastIDedit = null;
     let currentsPost = [];
+    const contentDisplayEditor = 'display-editor';
+    const idContentDashBoard = 'dashboard-post';
 
     const renderAllPost = () => {
       console.log('currentsPost ->');
@@ -36,8 +38,6 @@ class Editor {
       );
 
     };
-
-    const contentDisplayEditor = 'display-editor';
 
     append('body', `
 
@@ -198,6 +198,15 @@ class Editor {
         </div>
         `;
       })();
+
+      const toDashBoard = () =>{
+        s('.'+contentDisplayEditor).style.display = 'none';
+        s('.btn-send-underpost').style.display = 'none';
+        s('.btn-cancel-send-underpost').style.display = 'none';
+        fadeGlobal(true, '.btn-new-post', 250, 'inline-table', 'inline-table');
+        fadeGlobal(true, '.'+idContentDashBoard, 250, 'block', 'block');
+      };
+
       this.editor = new UnderpostQuillEditor({
           divContent: '.'+contentDisplayEditor,
           style:  {
@@ -304,10 +313,7 @@ class Editor {
                                  indPost++;
                                }
                              }
-                            s('.'+contentDisplayEditor).style.display = 'none';
-                            s('.btn-send-underpost').style.display = 'none';
-                            fadeGlobal(true, '.btn-new-post', 250, 'inline-table', 'inline-table');
-                            fadeGlobal(true, '.'+idContentDashBoard, 250, 'block', 'block');                            
+                            toDashBoard();
                             prepend('.'+idContentDashBoard, renderCard(dataPost, 'new'));
                              this.editor.reset();
                              return notifi.display(
@@ -327,19 +333,13 @@ class Editor {
           }
       });
 
-
-
-
-      const idContentDashBoard = 'dashboard-post';
-
-
       append('body', `
 
 
 
           <style>
 
-                .btn-send-underpost, .btn-new-post {
+                .btn-send-underpost, .btn-new-post, .btn-cancel-send-underpost {
 
                   transition: .3s;
                   padding: 15px;
@@ -350,7 +350,7 @@ class Editor {
                   font-family: retro-font;
 
                 }
-                .btn-send-underpost:hover, .btn-new-post:hover {
+                .btn-send-underpost:hover, .btn-new-post:hover, .btn-cancel-send-underpost:hover {
                   background: rgba(212, 0, 0, 1);
                 }
           </style>
@@ -361,7 +361,13 @@ class Editor {
 
           </div>
 
-          <div class='inl btn-send-underpost' style='display: none;'>
+          <div class='inl btn-cancel-send-underpost' style='display: none; padding: 10px; top: 2px;'>
+
+                <i class="fas fa-times" style='font-size: 23px;'></i>
+
+          </div>
+
+          <div class='inl btn-send-underpost' style='display: none; left: -20px;'>
 
                 SEND
 
@@ -371,16 +377,18 @@ class Editor {
 
           </div>
 
-
-
       `);
 
+      s('.btn-cancel-send-underpost').onclick = () => toDashBoard();
+
       s('.btn-new-post').onclick = () => {
-        fadeGlobal(true, '.'+contentDisplayEditor, 250, 'block', 'block');
-        fadeGlobal(true, '.btn-send-underpost', 250, 'inline-table', 'inline-table');
+        const fadeInTime = 250;
+        fadeGlobal(true, '.'+contentDisplayEditor, fadeInTime, 'block', 'block');
+        fadeGlobal(true, '.btn-send-underpost', fadeInTime, 'inline-table', 'inline-table');
+        fadeGlobal(true, '.btn-cancel-send-underpost', fadeInTime, 'inline-table', 'inline-table');
         s('.'+idContentDashBoard).style.display = 'none';
         s('.btn-new-post').style.display = 'none';
-      }
+      };
 
       (async () => {
 
