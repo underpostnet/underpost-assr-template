@@ -14,6 +14,28 @@ class Editor {
     const idContentEditable = 'ql-editor-main';
     const backgroundNotifi = 'rgba(0, 0, 0, 0.9)';
     let lastIDedit = null;
+    let currentsPost = [];
+
+    const renderAllPost = () => {
+      console.log('currentsPost ->');
+      console.log(currentsPost);
+      console.log('currentsPost Size ->');
+      console.log(getSizeJSON(currentsPost));
+
+      let orderPost = newInstance(currentsPost).map(dataPost => {
+        dataPost.date = new Date(dataPost.date).getTime();
+        return dataPost;
+      });
+      orderPost = orderArrayFromAttrInt(orderPost, "date", false);
+      orderPost = orderPost.map(dataPost => {
+        dataPost.date = new Date(dataPost.date).toISOString();
+        return dataPost;
+      });
+      orderPost.map(dataPost =>
+        append('.'+idContentDashBoard, renderCard(dataPost))
+      );
+
+    };
 
     append('body', renderInput({
       underpostClass: 'in',
@@ -92,7 +114,7 @@ class Editor {
             ));
             s('html').scrollTop = s('body').offsetTop;
             s('.underpost-ql-title').value = obj_.title;
-            s('.card-'+obj_.id).remove();
+            s('.card-'+obj_.id).style.display = 'none';
             lastIDedit = obj_.id;
           },
           s('.btn-delete-'+obj_.id).onclick = () =>
@@ -113,7 +135,7 @@ class Editor {
                             `+obj_.title+`
                         </div>
                         <div class='in' style='font-size: 10px; padding: 5px;'>
-                            `+obj_.date.split('.')[0].replace('T', ' ')+`
+                            Last Update: `+obj_.date.split('.')[0].replace('T', ' ')+`
                         </div>
 
                     </div>
@@ -211,7 +233,7 @@ class Editor {
                            displayValue = displayValue.replaceAll('transform: translate', 'none: ');
                            displayValue = displayValue.replace('ql-editor-main', '');
 
-                           const date = new Date().toISOString();
+                           const date = new Date((new Date().getTime()-offTime())).toISOString();
 
                            let dataPost  = {
                              title,
@@ -231,9 +253,20 @@ class Editor {
 
                            if(response.success===true){
                              dataPost.id = response.data.id;
-                             prepend('.'+idContentDashBoard, renderCard(dataPost));
+                             if(lastIDedit!=null){
+                               lastIDedit = null;
+                               let indPost = 0;
+                               for(let post of currentsPost){
+                                 if(post.id==lastIDedit){
+                                   currentsPost[indPost] = dataPost;
+                                   s('.card-'+post.id).remove();
+                                   break;
+                                 }
+                                 indPost++;
+                               }
+                             }
+                            prepend('.'+idContentDashBoard, renderCard(dataPost));
                              this.editor.reset();
-                             lastIDedit = null;
                              return notifi.display(
                                 backgroundNotifi,
                                 'Success',
@@ -293,22 +326,10 @@ class Editor {
 
       `);
 
-
-      let currentsPost = [];
-
-      const renderAllPost = () => {
-        console.log('currentsPost ->');
-        console.log(currentsPost);
-        console.log('currentsPost Size ->');
-        console.log(getSizeJSON(currentsPost));
-        currentsPost.data.reverse().map(dataPost =>
-          append('.'+idContentDashBoard, renderCard(dataPost))
-        );
-      };
-
       (async () => {
 
-          currentsPost = await new Rest().FETCH('/posts/'+getRawQuery(), 'get');
+          const responsePosts = await new Rest().FETCH('/posts/'+getRawQuery(), 'get');
+          currentsPost = responsePosts.data;
           renderAllPost();
 
       })();
