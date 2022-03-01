@@ -1,6 +1,6 @@
-import { Rest } from '../mods/rest.js';
-import { UnderpostQuillEditor } from '../mods/underpost-quill-editor.js';
-import { UnderpostInteract } from '../mods/underpost-interact.js';
+import { Rest } from '/mods/rest.js';
+import { UnderpostQuillEditor } from '/mods/underpost-quill-editor.js';
+import { UnderpostInteract } from '/mods/underpost-interact.js';
 import { Base } from '../mods/base.js';
 
 
