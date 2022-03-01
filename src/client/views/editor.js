@@ -134,8 +134,11 @@ class Editor {
                         <div class='in' style='font-size: 20px; padding: 5px;'>
                             `+obj_.title+`
                         </div>
-                        <div class='in' style='font-size: 10px; padding: 5px;'>
-                            Last Update: `+obj_.date.split('.')[0].replace('T', ' ')+`
+                        <div class='in' style='font-size: 10px; padding: 5px; color: yellow;'>
+                            Last Update: `+timeSince(new Date(obj_.date), "en", -1)+`
+                        </div>
+                        <div class='in' style='font-size: 10px; padding: 5px; color: #c1c1c1;'>
+                            `+obj_.date.split('.')[0].replace('T', ' ')+`
                         </div>
 
                     </div>
