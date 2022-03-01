@@ -13,6 +13,7 @@ class Editor {
     const sizeContent = 15;
     const idContentEditable = 'ql-editor-main';
     const backgroundNotifi = 'rgba(0, 0, 0, 0.9)';
+    let lastIDedit = null;
 
     append('body', renderInput({
       underpostClass: 'in',
@@ -84,22 +85,23 @@ class Editor {
       const renderCard = obj_ => ( () => {
 
         setTimeout(()=>{
-          s('.btn-edit-'+obj_.íd).onclick = () =>
+          s('.btn-edit-'+obj_.id).onclick = () =>
           {
             htmls('.'+idContentEditable, deBase64(obj_.B64HTMLeditble).replaceAll(
               'class="underpost-child-', 'reset="'
             ));
             s('html').scrollTop = s('body').offsetTop;
             s('.underpost-ql-title').value = obj_.title;
-            s('.card-'+obj_.íd).remove();
+            s('.card-'+obj_.id).remove();
+            lastIDedit = obj_.id;
           },
-          s('.btn-delete-'+obj_.íd).onclick = () =>
+          s('.btn-delete-'+obj_.id).onclick = () =>
           alert('del')
         }, 0);
 
         return `
 
-        <div class='card-`+obj_.íd+`'>
+        <div class='card-`+obj_.id+`'>
 
           <div class='in' style='color: white; background: rgb(198, 0, 0); min-height: 60px;'>
 
@@ -118,11 +120,11 @@ class Editor {
 
                     <div class='in fll' style='width: 15%; text-align: center;'>
 
-                            <div class='inl btn-cards btn-cards-edit btn-edit-`+obj_.íd+`'>
+                            <div class='inl btn-cards btn-cards-edit btn-edit-`+obj_.id+`'>
                                   <i class="fas fa-edit abs center"></i>
                             </div>
 
-                            <div class='inl btn-cards btn-cards-delete btn-delete-`+obj_.íd+`'>
+                            <div class='inl btn-cards btn-cards-delete btn-delete-`+obj_.id+`'>
                                   <i class="fas fa-trash abs center"></i>
                             </div>
 
@@ -211,15 +213,16 @@ class Editor {
 
                            const date = new Date().toISOString();
 
-                           const dataPost  = {
+                           let dataPost  = {
                              title,
                              date,
                              B64HTMLdisplay: enBase64(displayValue),
-                             B64HTMLeditble: enBase64(editableValue),
-                             id: makeid(6)
+                             B64HTMLeditble: enBase64(editableValue)
                            };
 
-                           prepend('.'+idContentDashBoard, renderCard(dataPost));
+                           if(lastIDedit!=null){
+                             dataPost.id = lastIDedit;
+                           }
 
                            const response = await new Rest().FETCH('/posts', 'post', dataPost);
 
@@ -227,7 +230,10 @@ class Editor {
                            console.log(response);
 
                            if(response.success===true){
+                             dataPost.id = response.data.id;
+                             prepend('.'+idContentDashBoard, renderCard(dataPost));
                              this.editor.reset();
+                             lastIDedit = null;
                              return notifi.display(
                                 backgroundNotifi,
                                 'Success',
@@ -288,17 +294,22 @@ class Editor {
       `);
 
 
-      (async ()=>{
+      let currentsPost = [];
 
-          const currentsPost = await new Rest().FETCH('/posts/'+getRawQuery(), 'get');
-          console.log('currentsPost ->');
-          console.log(currentsPost);
-          console.log('currentsPost Size ->');
-          console.log(getSizeJSON(currentsPost));
+      const renderAllPost = () => {
+        console.log('currentsPost ->');
+        console.log(currentsPost);
+        console.log('currentsPost Size ->');
+        console.log(getSizeJSON(currentsPost));
+        currentsPost.data.reverse().map(dataPost =>
+          append('.'+idContentDashBoard, renderCard(dataPost))
+        );
+      };
 
-          currentsPost.data.reverse().map(dataPost =>
-            append('.'+idContentDashBoard, renderCard(dataPost))
-          );
+      (async () => {
+
+          currentsPost = await new Rest().FETCH('/posts/'+getRawQuery(), 'get');
+          renderAllPost();
 
       })();
 

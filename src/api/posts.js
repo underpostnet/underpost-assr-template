@@ -84,11 +84,23 @@ class Posts {
           'Content-Type': ('application/json; charset='+MainProcess.data.charset),
           'Content-Language': '*'
         });
-        JSON_POSTS_DATA.push(req.body);
+        if(req.body.id!=undefined){
+          let indPost = 0;
+          for(let post of JSON_POSTS_DATA){
+            if(req.body.id == post.id){
+              JSON_POSTS_DATA[indPost] = req.body;
+              break;
+            }
+            indPost++;
+          }
+        }else{
+          req.body.id = util.makeid(1) + '-' + util.getHash().split('-').pop();
+          JSON_POSTS_DATA.push(req.body);
+        }
         this.writeDataPosts(MainProcess, JSON_POSTS_DATA);
         return res.end(JSON.stringify({
           success: true,
-          data: JSON_POSTS_DATA
+          data: req.body
         }));
       }catch(error){
         console.log(colors.red(error));
