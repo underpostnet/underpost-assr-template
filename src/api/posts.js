@@ -3,6 +3,8 @@
 
 import colors from 'colors/safe.js';
 import fs from 'fs';
+import Ajv from 'ajv';
+
 import { util, navi, rest, files, info }
 from '../../underpost_modules/underpost.js';
 
@@ -10,6 +12,7 @@ class Posts {
 
   constructor(MainProcess){
       this.JSON_POSTS_PATH = './data/raw/posts.json';
+      this.JSON_STRUCT_PATH = './data/structs/post.json';
       this.postPost(MainProcess, '/posts');
       this.getPosts(MainProcess, '/posts');
   }
@@ -72,6 +75,13 @@ class Posts {
     });
   }
 
+  validateStruct(MainProcess, post){
+    const postStruct = JSON.parse(fs.readFileSync(this.JSON_STRUCT_PATH, MainProcess.charset));
+    const ajv = new Ajv({schemas: [postStruct]});
+    const validate = ajv.getSchema(postStruct["$id"]);
+    return validate(post);
+  }
+
   postPost(MainProcess, uri){
     MainProcess.app.post(uri, (req, res) => {
       info.api(req, { uri, apiModule: 'Posts' } );
@@ -84,6 +94,7 @@ class Posts {
           'Content-Type': ('application/json; charset='+MainProcess.data.charset),
           'Content-Language': '*'
         });
+        let success = true;
         if(req.body.id!=undefined || req.body.del!=undefined){
           let indPost = 0;
           for(let post of JSON_POSTS_DATA){
@@ -91,7 +102,8 @@ class Posts {
               if(req.body.del!=undefined){
                 JSON_POSTS_DATA.splice(indPost, 1);
               }else{
-                JSON_POSTS_DATA[indPost] = req.body;
+                success = this.validateStruct(MainProcess, req.body);
+                success ? JSON_POSTS_DATA[indPost] = req.body: req.body = 'struct error';
               }
               break;
             }
@@ -99,11 +111,12 @@ class Posts {
           }
         }else{
           req.body.id = util.makeid(1) + '-' + util.getHash().split('-').pop();
-          JSON_POSTS_DATA.push(req.body);
+          success = this.validateStruct(MainProcess, req.body);
+          success ? JSON_POSTS_DATA.push(req.body): req.body = 'struct error';
         }
         this.writeDataPosts(MainProcess, JSON_POSTS_DATA);
         return res.end(JSON.stringify({
-          success: true,
+          success,
           data: req.body
         }));
       }catch(error){
