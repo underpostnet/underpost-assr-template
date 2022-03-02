@@ -179,7 +179,7 @@ class Editor {
                             `+obj_.title+`
                         </div>
                         <div class='in' style='font-size: 10px; padding: 5px; color: yellow;'>
-                            Last Update: `+timeSince(new Date(obj_.date), "en", -1)+`
+                            Last Update: <span class='time-since-`+obj_.id+`'>`+timeSince(new Date(obj_.date), "en", -1)+`</span>
                         </div>
                         <div class='in' style='font-size: 10px; padding: 5px; color: #c1c1c1;'>
                             `+obj_.date.split('.')[0].replace('T', ' ')+`
@@ -315,7 +315,6 @@ class Editor {
                            if(response.success===true){
                              dataPost.id = response.data.id;
                              if(lastIDedit!=null){
-                               lastIDedit = null;
                                let indPost = 0;
                                for(let post of currentsPost){
                                  if(post.id==lastIDedit){
@@ -325,6 +324,9 @@ class Editor {
                                  }
                                  indPost++;
                                }
+                               lastIDedit = null;
+                             }else {
+                               currentsPost.push(response.data);
                              }
                             toDashBoard();
                             prepend('.'+idContentDashBoard, renderCard(dataPost, 'new'));
@@ -409,7 +411,21 @@ class Editor {
           currentsPost = responsePosts.data;
           renderAllPost();
 
+          const renderTimeSinces = () => currentsPost.map( post =>
+            htmls('.time-since-'+post.id, timeSince(new Date(post.date), "en", -1))
+          );
+          const intervalUpdateTimeSince = 5000;
+
+          renderTimeSinces();
+          setInterval(() => renderTimeSinces(), intervalUpdateTimeSince);
+
+
+
       })();
+
+
+
+
 
   }
 }
