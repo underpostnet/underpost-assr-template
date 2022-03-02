@@ -112,7 +112,7 @@ class Editor {
 
       `);
 
-
+      let lastNew = null;
       const renderCard = (obj_, state) => ( () => {
 
         setTimeout(()=>{
@@ -156,6 +156,14 @@ class Editor {
             }
           }
         }, 0);
+
+
+        if(state=='new'){
+          if(lastNew!=null){
+            s('.card-'+lastNew).style.border = 'none';
+          }
+          lastNew = obj_.id;
+        }
 
         return `
 
@@ -205,6 +213,11 @@ class Editor {
         s('.btn-cancel-send-underpost').style.display = 'none';
         fadeGlobal(true, '.btn-new-post', 250, 'inline-table', 'inline-table');
         fadeGlobal(true, '.'+idContentDashBoard, 250, 'block', 'block');
+        if(lastIDedit!=null){
+          s('.card-'+lastIDedit).style.display = 'block';
+          s('.underpost-ql-title').value = '';
+          htmls('.'+idContentEditable,'');
+        }
       };
 
       this.editor = new UnderpostQuillEditor({
