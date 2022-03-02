@@ -118,62 +118,62 @@ class Views {
       `
     }
 
-    readMicrodata(MainProcess, type){
+    readJSONLD(MainProcess, type){
       return JSON.parse(
-        fs.readFileSync('./data/structs/microdata.json', MainProcess.charset)
-      ).find(microdata=>microdata["$id"] == type);
+        fs.readFileSync('./data/structs/jsonld.json', MainProcess.charset)
+      ).find(jsonld=>jsonld["$id"] == type);
     }
 
-    microdata(MainProcess, path){
-      return path.microdata.map( microdataType =>
-        this.readMicrodata(MainProcess, microdataType) != undefined ?
+    jsonld(MainProcess, path){
+      return path.jsonld.map( jsonldType =>
+        this.readJSONLD(MainProcess, jsonldType) != undefined ?
           (()=>{
-            switch (microdataType) {
+            switch (jsonldType) {
               case "WebSite":
 
-                  const websiteMicrodataSchema =
-                  this.readMicrodata(MainProcess, microdataType);
-                  const potentialActionMicrodataSchema =
-                  this.readMicrodata(MainProcess, "potentialAction");
+                  const websiteJSONLDSchema =
+                  this.readJSONLD(MainProcess, jsonldType);
+                  const potentialActionJSONLDSchema =
+                  this.readJSONLD(MainProcess, "potentialAction");
 
-                  let websiteMicrodata = {};
-                  websiteMicrodata["@type"] = microdataType;
-                  websiteMicrodata["@id"] = MainProcess.util.buildUrl();
-                  websiteMicrodata["url"] = MainProcess.util.buildUrl();
-                  websiteMicrodata["name"] = path.title;
-                  websiteMicrodata["description"] = path.description;
-                  websiteMicrodata["inLanguage"] = path.lang;
+                  let websiteJSONLD = {};
+                  websiteJSONLD["@type"] = jsonldType;
+                  websiteJSONLD["@id"] = MainProcess.util.buildUrl();
+                  websiteJSONLD["url"] = MainProcess.util.buildUrl();
+                  websiteJSONLD["name"] = path.title;
+                  websiteJSONLD["description"] = path.description;
+                  websiteJSONLD["inLanguage"] = path.lang;
 
-                  websiteMicrodata["potentialAction"] = [JSON.parse(`{
+                  websiteJSONLD["potentialAction"] = [JSON.parse(`{
                        "@type":"SearchAction",
                        "target":"`+MainProcess.util.buildUrl('/')+`?s={search_term_string}",
                        "query-input":"required name=search_term_string"
                   }`)];
 
                   const ajv = new Ajv({schemas: [
-                    websiteMicrodataSchema,
-                    potentialActionMicrodataSchema
+                    websiteJSONLDSchema,
+                    potentialActionJSONLDSchema
                   ]});
 
-                  const validate = ajv.getSchema(microdataType);
+                  const validate = ajv.getSchema(jsonldType);
 
-                  if(!validate(websiteMicrodata)){
-                    console.log(colors.red('error | microdata(path, MainProcess) => invalid microdata Schema'));
+                  if(!validate(websiteJSONLD)){
+                    console.log(colors.red('error | jsonld(path, MainProcess) => invalid jsonld Schema'));
                     return '';
                   }else{
                     return `<script type="application/ld+json">
-                               `+util.jsonSave(websiteMicrodata)+`
+                               `+util.jsonSave(websiteJSONLD)+`
                             </script>`
                   }
 
                 break;
               default:
-                console.log(colors.red('error | microdata(path, MainProcess) => not found type microdata'));
+                console.log(colors.red('error | jsonld(path, MainProcess) => not found type jsonld'));
                 return '';
             }
         })():
         (()=>{
-          console.log(colors.red('error | microdata(path, MainProcess) => not found microdata'));
+          console.log(colors.red('error | jsonld(path, MainProcess) => not found jsonld'));
           return '';
         })()
       ).join('');
@@ -184,7 +184,7 @@ class Views {
         <html dir='`+path.dir+`' lang='`+path.lang+`'>
           <head>
               <meta charset='`+MainProcess.data.charset+`'>
-              `+this.microdata(MainProcess, path)+`
+              `+this.jsonld(MainProcess, path)+`
               <title>`+path.title+`</title>
               <link rel='canonical' href='`+MainProcess.util.buildUrl(path.uri)+`'>
               <link rel='icon' type='image/png' href='`+MainProcess.util.buildUrl()+path.favicon+`'>
