@@ -6,7 +6,8 @@
          "type":"string"
       },
       "date":{
-         "type":"string"
+         "type":"string",
+         "format":"date-ISO8601"
       },
       "B64HTMLdisplay":{
          "type":"string"

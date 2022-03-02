@@ -76,8 +76,12 @@ class Posts {
   }
 
   validateStruct(MainProcess, post){
+    // https://thabo-ambrose.medium.com/use-custom-date-time-format-for-ajv-schema-validation-38e336dbd6ed
     const postStruct = JSON.parse(fs.readFileSync(this.JSON_STRUCT_PATH, MainProcess.charset));
     const ajv = new Ajv({schemas: [postStruct]});
+    ajv.addFormat('date-ISO8601', {
+      validate: dateTimeString => util.isoDateRegex().test(dateTimeString)
+    });
     const validate = ajv.getSchema(postStruct["$id"]);
     return validate(post);
   }
