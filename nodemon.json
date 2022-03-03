@@ -1,6 +1,6 @@
 {
   "watch": [
-    "./src", "../underpost.net", "./data/data.json", "./structs"
+    "./src", "../underpost.net", "./data/params", "./data/structs", "./data/handlebars"
   ],
   "ext": "js,json",
   "delay": "0",
