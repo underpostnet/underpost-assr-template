@@ -160,7 +160,9 @@ class Editor {
 
         if(state=='new'){
           if(lastNew!=null){
-            s('.card-'+lastNew).style.border = 'none';
+            if(s('.card-'+lastNew)){
+              s('.card-'+lastNew).style.border = 'none';
+            }            
           }
           lastNew = obj_.id;
         }
