@@ -16,7 +16,7 @@ class Network {
     MainProcess.app.get(uri, (req, res) => {
       info.api(req, { uri, apiModule: 'Network' } );
       try {
-        const path = MainProcess.data.network.consolePath+'/src/data';
+        const path = '../../underpost-console/data/network';
         res.writeHead( 200, {
           'Content-Type': ('application/json; charset='+MainProcess.data.charset),
           'Content-Language': '*'

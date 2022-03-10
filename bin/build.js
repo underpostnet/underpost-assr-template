@@ -64,6 +64,29 @@ const build = async () => {
   console.log(colors.yellow(' build -> underpost-library'));
   await copyDir('../underpost-library', './underpost_modules/underpost-library', ignore);
 
+  console.log(colors.yellow(' build -> underpost-data-template'));
+  await copyDir('../underpost-data-template', './underpost_modules/underpost-data-template', ignore);
+
+
+
+  _fs.writeFileSync(
+    './data/handlebars/robots.txt',
+    _fs.readFileSync( './underpost_modules/underpost-data-template/handlebars/robots.txt', charset ),
+    charset
+  );
+
+  _fs.writeFileSync(
+    './data/structs/jsonld.json',
+    _fs.readFileSync( './underpost_modules/underpost-data-template/structs/jsonld.json', charset ),
+    charset
+  );
+
+  _fs.writeFileSync(
+    './data/structs/post.json',
+    _fs.readFileSync( './underpost_modules/underpost-data-template/structs/post.json', charset ),
+    charset
+  );
+
   if(dev === true){
     shell.exec('node src/app d');
     // eslint formatter npm rename files js

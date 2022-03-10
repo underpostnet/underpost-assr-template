@@ -7,9 +7,6 @@
       "log_all_ms_response": false,
       "limitSizeJSON":"25mb"
    },
-   "network": {
-     "consolePath": "../../underpost-console"
-   },
    "charset":"utf-8",
    "statics":[
       "/underpost_modules/underpost-library",
