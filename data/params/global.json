@@ -1,10 +1,10 @@
 {
-   "author": "https://github.com/underpostnet",
+   "author":"https://github.com/underpostnet",
    "server":{
       "host":"http://localhost",
-      "visiblePort": true,
+      "visiblePort":true,
       "httpPort":5500,
-      "log_all_ms_response": false,
+      "log_all_ms_response":false,
       "limitSizeJSON":"25mb"
    },
    "charset":"utf-8",
@@ -13,34 +13,45 @@
       "/underpost_modules/fontawesome",
       "/src/client"
    ],
-   "fonts": [
-       {
-           "name": "retro-font",
-           "url": "/fonts/retro/PressStart2P.ttf",
-           "type": "truetype"
-       },
-       {
-           "name": "gothic",
-           "url": "/fonts/gothic/GOTHIC.ttf",
-           "type": "truetype"
-       }
+   "fonts":[
+      {
+         "name":"retro-font",
+         "url":"/fonts/retro/PressStart2P.ttf",
+         "type":"truetype"
+      },
+      {
+         "name":"gothic",
+         "url":"/fonts/gothic/GOTHIC.ttf",
+         "type":"truetype"
+      }
    ],
    "views":[
       {
-         "lang":"en",
+         "langs":[
+            "en",
+            "es"
+         ],
          "dir":"ltr",
          "uri":"/",
-         "title":"underpost.net",
-         "description":"underpost interface",
+         "title":{
+            "en":"underpost.net",
+            "es":"underpost.net"
+         },
+         "description":{
+            "en":"underpost interface",
+            "es":"underpost interface"
+         },
          "image":"/img/underpost-social.jpg",
-         "favicon": "/img/underpost.png",
-         "view": "editor.js",
-         "jsonld": ["WebSite"],
-         "sitemap": {
-           "active": true,
-           "lastmod": "2022-02-24",
-           "changefreq": "weekly",
-           "priority": 1
+         "favicon":"/img/underpost.png",
+         "view":"home.js",
+         "jsonld":[
+            "WebSite"
+         ],
+         "sitemap":{
+            "active":true,
+            "lastmod":"2022-02-24",
+            "changefreq":"weekly",
+            "priority":1
          }
       }
    ]

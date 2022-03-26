@@ -27,6 +27,8 @@ class Views {
         MainProcess.dev === false
       );
 
+      const loadStatic = uri => console.log(' Load Static JS: '+colors.green(uri));
+
       MainProcess.data.statics.map( dir => {
         files.readRecursive( '../'+dir, outDir => {
           const uri = outDir.split(dir)[1];
@@ -34,7 +36,7 @@ class Views {
           // console.log(colors.green('set static path:'+uri));
           // console.log(srcPath);
           if(validateUriJs(uri)){
-            console.log(' Load Static JS: '+colors.green(uri));
+            loadStatic(uri);
             const jsObfData = javaScriptObfuscator.obfuscate(
               fs.readFileSync(outDir, MainProcess.data.charset)
             )._obfuscatedCode;
@@ -48,6 +50,25 @@ class Views {
             return MainProcess.app.get(uri, (req, res) => res.sendFile(srcPath));
           }
         });
+      });
+
+      // -------------------------------------------------------------------------
+      // init view data
+      // -------------------------------------------------------------------------
+
+      const uriInitData = '/init.js';
+      loadStatic(uriInitData);
+      MainProcess.app.get(uriInitData, (req, res) => {
+        let initData = MainProcess.dev ? '':`
+            console.log = function(){};
+        `;
+        validateUriJs(uriInitData) ? initData =
+        javaScriptObfuscator.obfuscate(initData)._obfuscatedCode
+        : null;
+        res.writeHead( 200, {
+          'Content-Type': ('application/javascript; charset='+MainProcess.data.charset)
+        });
+        return res.end(initData);
       });
 
       // -------------------------------------------------------------------------
@@ -91,18 +112,18 @@ class Views {
 
       MainProcess.data.views.map( path =>
       MainProcess.app.get(path.uri, (req, res) => {
-        info.view(req, util.newInstance(path));
         try {
+          const agentData = info.view(req, util.newInstance(path));
           res.writeHead( 200, {
             'Content-Type': ('text/html; charset='+MainProcess.data.charset),
-            'Content-Language': path.lang
+            'Content-Language': agentData.lang
           });
-          return res.end(this.view(MainProcess, path));
+          return res.end(this.view(MainProcess, path, agentData));
         }catch(error){
           console.log(colors.red(error));
           res.writeHead( 500, {
             'Content-Type': ('text/html; charset='+MainProcess.data.charset),
-            'Content-Language': path.lang
+            'Content-Language': 'en'
           });
           return res.end('Error 500');
         }
@@ -124,7 +145,7 @@ class Views {
       ).find(jsonld=>jsonld["$id"] == type);
     }
 
-    jsonld(MainProcess, path){
+    jsonld(MainProcess, path, agentData){
       return path.jsonld.map( jsonldType =>
         this.readJSONLD(MainProcess, jsonldType) != undefined ?
           (()=>{
@@ -140,9 +161,9 @@ class Views {
                   websiteJSONLD["@type"] = jsonldType;
                   websiteJSONLD["@id"] = MainProcess.util.buildUrl();
                   websiteJSONLD["url"] = MainProcess.util.buildUrl();
-                  websiteJSONLD["name"] = path.title;
-                  websiteJSONLD["description"] = path.description;
-                  websiteJSONLD["inLanguage"] = path.lang;
+                  websiteJSONLD["name"] = path.title[agentData.lang];
+                  websiteJSONLD["description"] = path.description[agentData.lang];
+                  websiteJSONLD["inLanguage"] = agentData.lang;
 
                   websiteJSONLD["potentialAction"] = [JSON.parse(`{
                        "@type":"SearchAction",
@@ -179,20 +200,20 @@ class Views {
       ).join('');
     }
 
-    view(MainProcess, path){ return `
+    view(MainProcess, path, agentData){ return `
         <!DOCTYPE html>
-        <html dir='`+path.dir+`' lang='`+path.lang+`'>
+        <html dir='`+path.dir+`' lang='`+agentData.lang+`'>
           <head>
               <meta charset='`+MainProcess.data.charset+`'>
-              `+this.jsonld(MainProcess, path)+`
-              <title>`+path.title+`</title>
+              `+this.jsonld(MainProcess, path, agentData)+`
+              <title>`+path.title[agentData.lang]+`</title>
               <link rel='canonical' href='`+MainProcess.util.buildUrl(path.uri)+`'>
               <link rel='icon' type='image/png' href='`+MainProcess.util.buildUrl()+path.favicon+`'>
-              <meta name ='title' content='`+path.title+`'>
-              <meta name ='description' content='`+path.description+`'>
+              <meta name ='title' content='`+path.title[agentData.lang]+`'>
+              <meta name ='description' content='`+path.description[agentData.lang]+`'>
               <meta name='author' content='`+MainProcess.data.author+`' />
-              <meta property='og:title' content='`+path.title+`'>
-              <meta property='og:description' content='`+path.description+`'>
+              <meta property='og:title' content='`+path.title[agentData.lang]+`'>
+              <meta property='og:description' content='`+path.description[agentData.lang]+`'>
               <meta property='og:image' content='`+MainProcess.util.buildUrl()+path.image+`'>
               <meta property='og:url' content='`+MainProcess.util.buildUrl(path.uri)+`'>
               <meta name='twitter:card' content='summary_large_image'>
@@ -202,13 +223,14 @@ class Views {
               <link rel='stylesheet' href='/style/simple.css'>
               <link rel='stylesheet' href='/style/place-bar-select.css'>
               <link rel='stylesheet' href='/fonts.css'>
+              <script src='/init.js'></script>
               <script src='/util.js'></script>
               <script src='/vanilla.js'></script>
               <script type='module' src='/views/`+path.view+`'></script>
           </head>
           <body>
               <div style='display: none;'>
-                <h1>`+path.title+`</h1> <h2>`+path.description+`</h2>
+                <h1>`+path.title[agentData.lang]+`</h1> <h2>`+path.description[agentData.lang]+`</h2>
               </div>
           </body>
       </html>

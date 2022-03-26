@@ -1,13 +1,11 @@
-import { Rest } from '/mods/rest.js';
+
 import { UnderpostQuillEditor } from '/mods/underpost-quill-editor.js';
 import { UnderpostInteract } from '/mods/underpost-interact.js';
-import { Base } from '../mods/base.js';
-
+import { Rest } from '/mods/rest.js';
 
 class Editor {
-  constructor(){
 
-    new Base();
+  constructor(){
 
     const sizeTitle = 15;
     const sizeContent = 15;
@@ -41,7 +39,7 @@ class Editor {
 
     append('body', `
 
-            <div class='in `+contentDisplayEditor+`' style='display: none;'>
+            <div class='in `+contentDisplayEditor+`' style='display: none; padding: 5px;'>
 
             </div>
     `);
@@ -58,13 +56,13 @@ class Editor {
           padding: 12px 15px;
           font-family: retro-font;
           font-size: `+sizeTitle+`px;
-          background: black;
+          background: #1d1d1c;
           color: white;
 
       `,
       style_label: 'color: red; font-size: 12px;',
       style_outline: true,
-      style_placeholder: 'font-style: italic;',
+      style_placeholder: '',
       textarea: false,
       active_label: false,
       initLabelPos: 3,
@@ -77,7 +75,7 @@ class Editor {
       value: ``,
       topContent: '',
       botContent: '',
-      placeholder: 'Title'
+      placeholder: renderLang({en: 'Title', es: 'Titulo' })
     }));
 
 
@@ -121,11 +119,12 @@ class Editor {
             htmls('.'+idContentEditable, deBase64(obj_.B64HTMLeditble).replaceAll(
               'class="underpost-child-', 'reset="'
             ));
-            s('html').scrollTop = s('body').offsetTop;
+            // s('html').scrollTop = s('.underpost-ql-title').offsetTop;
             s('.underpost-ql-title').value = obj_.title;
             s('.card-'+obj_.id).style.display = 'none';
             s('.btn-new-post').click();
             lastIDedit = obj_.id;
+            setTimeout( ()=> s('.underpost-ql-title').click(), 500);
           },
           s('.btn-delete-'+obj_.id).onclick = async () => {
             obj_.del = true;
@@ -142,14 +141,14 @@ class Editor {
               }
               return   notifi.display(
                  backgroundNotifi,
-                 'Success delete',
+                 renderLang({es: 'Eliminado', en: 'Success delete'}),
                  2000,
                  'success'
                );
             }else{
               return   notifi.display(
                  backgroundNotifi,
-                 'Error service',
+                 renderLang({es: 'Error en el Servicio', en: 'Error service'}),
                  2000,
                  'error'
                );
@@ -162,7 +161,7 @@ class Editor {
           if(lastNew!=null){
             if(s('.card-'+lastNew)){
               s('.card-'+lastNew).style.border = 'none';
-            }            
+            }
           }
           lastNew = obj_.id;
         }
@@ -181,7 +180,7 @@ class Editor {
                             `+obj_.title+`
                         </div>
                         <div class='in' style='font-size: 10px; padding: 5px; color: yellow;'>
-                            Last Update: <span class='time-since-`+obj_.id+`'>`+timeSince(new Date(obj_.date), "en", -1)+`</span>
+                            `+renderLang({en: 'Last Update', es:'Actualizado hace'})+` <span class='time-since-`+obj_.id+`'>`+timeSince(new Date(obj_.date), s('html').lang, -1)+`</span>
                         </div>
                         <div class='in' style='font-size: 10px; padding: 5px; color: #c1c1c1;'>
                             `+obj_.date.split('.')[0].replace('T', ' ')+`
@@ -235,7 +234,7 @@ class Editor {
               ql_editor: `
                 min-height: 300px;
                 /* background: #ebeceb; */
-                background: black;
+                background: #1d1d1c;
                 color: white;
                 overflow: hidden !important;
               `,
@@ -251,12 +250,11 @@ class Editor {
                 pointer-events: none;
                 position: absolute;
                 right: 15px;
-                font-style: italic;
               `
           },
           fontDefault: 'retro-font',
           fonts: ['gothic', 'retro-font', 'arial', 'Verdana', 'Times'],
-          placeholder: 'Compose an epic...',
+          placeholder: renderLang({es: 'Componer una epopeya...', en: 'Compose an epic...' }),
           initContent: '',
           sizeDefault: sizeContent,
           text_sizes: range(1, 80).filter(size_=>size_%5==0).map(size_=>size_+'px'),
@@ -277,7 +275,7 @@ class Editor {
                            if(quillLength<=1){
                              return   notifi.display(
                                 backgroundNotifi,
-                                'Empty content',
+                                renderLang({en: 'Empty content', es: 'Sin Contenido'}),
                                 2000,
                                 'error'
                               );
@@ -286,7 +284,7 @@ class Editor {
                            if(title==''){
                              return   notifi.display(
                                 backgroundNotifi,
-                                'Empty title',
+                                renderLang({en: 'Empty title', es: 'Sin Titulo'}),
                                 2000,
                                 'error'
                               );
@@ -335,7 +333,7 @@ class Editor {
                              this.editor.reset();
                              return notifi.display(
                                 backgroundNotifi,
-                                'Success',
+                                renderLang({en: 'Success', es: 'Enviado'}),
                                 2000,
                                 'success'
                               );
@@ -343,7 +341,7 @@ class Editor {
 
                            return notifi.display(
                               backgroundNotifi,
-                              'Error service',
+                              renderLang({es: 'Error en el Servicio', en: 'Error service'}),
                               2000,
                               'error'
                             );
@@ -354,39 +352,21 @@ class Editor {
 
 
 
-          <style>
+          <div class='inl btn-underpost btn-new-post'>
 
-                .btn-send-underpost, .btn-new-post, .btn-cancel-send-underpost {
-
-                  transition: .3s;
-                  padding: 15px;
-                  margin: 5px;
-                  background: rgba(212, 0, 0, 0.8);
-                  cursor: pointer;
-                  font-size: 13px;
-                  font-family: retro-font;
-
-                }
-                .btn-send-underpost:hover, .btn-new-post:hover, .btn-cancel-send-underpost:hover {
-                  background: rgba(212, 0, 0, 1);
-                }
-          </style>
-
-          <div class='inl btn-new-post'>
-
-                NEW POST <i class="fas fa-comment-alt"></i>
+                `+renderLang({en: 'NEW POST', es: 'NUEVO POST'})+` <i class="fas fa-comment-alt"></i>
 
           </div>
 
-          <div class='inl btn-cancel-send-underpost' style='display: none; padding: 10px; top: 2px;'>
+          <div class='inl btn-underpost btn-cancel-send-underpost' style='display: none; padding: 10px; top: 2px;'>
 
                 <i class="fas fa-times" style='font-size: 23px;'></i>
 
           </div>
 
-          <div class='inl btn-send-underpost' style='display: none; left: -20px;'>
+          <div class='inl btn-underpost btn-send-underpost' style='display: none; left: -20px;'>
 
-                SEND
+                `+renderLang({en: 'SEND', es: 'ENVIAR'})+`
 
           </div>
 
@@ -414,7 +394,7 @@ class Editor {
           renderAllPost();
 
           const renderTimeSinces = () => currentsPost.map( post =>
-            htmls('.time-since-'+post.id, timeSince(new Date(post.date), "en", -1))
+            htmls('.time-since-'+post.id, timeSince(new Date(post.date), s('html').lang, -1))
           );
           const intervalUpdateTimeSince = 5000;
 
@@ -425,11 +405,7 @@ class Editor {
 
       })();
 
-
-
-
-
   }
 }
 
-new Editor();
+export { Editor };
