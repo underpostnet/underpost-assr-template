@@ -87,6 +87,37 @@ class Views {
         }));
       });
 
+
+      // -------------------------------------------------------------------------
+      // PWA instances
+      // -------------------------------------------------------------------------
+
+      let PWA = JSON.parse(fs.readFileSync('./data/params/pwa.json'), MainProcess.data.charset);
+      PWA.START_URL = MainProcess.util.buildUrl();
+      PWA.URL = MainProcess.util.buildUrl('/assets/pwa');
+      const webmanifest = Handlebars.compile(
+        fs.readFileSync('./data/handlebars/site.webmanifest', MainProcess.data.charset)
+      );
+      const browserconfig = Handlebars.compile(
+        fs.readFileSync('./data/handlebars/browserconfig.xml', MainProcess.data.charset)
+      );
+
+      const uri_webmanifest = '/site.webmanifest';
+      MainProcess.app.get(uri_webmanifest, (req, res) => {
+        res.writeHead( 200, {
+          'Content-Type': ('application/manifest+json; charset='+MainProcess.data.charset)
+        });
+        return res.end(webmanifest(PWA));
+      });
+
+      const uri_browserconfig = '/browserconfig.xml';
+      MainProcess.app.get(uri_browserconfig, (req, res) => {
+        res.writeHead( 200, {
+          'Content-Type': ('application/xml; charset='+MainProcess.data.charset)
+        });
+        return res.end(browserconfig(PWA));
+      });
+
       // -------------------------------------------------------------------------
       // instance sitemap
       // -------------------------------------------------------------------------
@@ -200,11 +231,45 @@ class Views {
       ).join('');
     }
 
+    renderPWA(MainProcess, path, agentData){
+      return `
+
+      <meta name ='theme-color' content = '`+path.color+`' />
+
+      <link rel='apple-touch-icon' sizes='180x180' href='/assets/pwa/apple-touch-icon.png'>
+      <link rel='icon' type='image/png' sizes='32x32' href='/assets/pwa/favicon-32x32.png'>
+      <link rel='icon' type='image/png' sizes='16x16' href='/assets/pwa/favicon-16x16.png'>
+
+      <link rel='icon' type='image/png' sizes='36x36' href='/assets/pwa/android-chrome-36x36.png'>
+      <link rel='icon' type='image/png' sizes='48x48' href='/assets/pwa/android-chrome-48x48.png'>
+      <link rel='icon' type='image/png' sizes='72x72' href='/assets/pwa/android-chrome-72x72.png'>
+      <link rel='icon' type='image/png' sizes='96x96' href='/assets/pwa/android-chrome-96x96.png'>
+      <link rel='icon' type='image/png' sizes='144x144' href='/assets/pwa/android-chrome-144x144.png'>
+      <link rel='icon' type='image/png' sizes='192x192' href='/assets/pwa/android-chrome-192x192.png'>
+      <link rel='icon' type='image/png' sizes='256x256' href='/assets/pwa/android-chrome-256x256.png'>
+      <!-- <link rel='icon' type='image/png' sizes='384x384' href='/assets/pwa/android-chrome-384x384.png'> -->
+
+      <link rel='icon' type='image/png' sizes='16x16' href='/assets/pwa/favicon-16x16.png'>
+      <link rel='manifest' href='/site.webmanifest'>
+      <link rel='mask-icon' href='/assets/pwa/safari-pinned-tab.svg' color='`+path.color+`'>
+
+      <meta name='apple-mobile-web-app-title' content='`+path.title[agentData.lang]+`'>
+      <meta name='application-name' content='`+path.title[agentData.lang]+`'>
+      <meta name='msapplication-config' content='/browserconfig.xml' />
+      <meta name='msapplication-TileColor' content='`+path.color+`'>
+      <meta name='msapplication-TileImage' content='/assets/pwa/mstile-144x144.png'>
+      <meta name='theme-color' content='`+path.color+`'>
+
+      `;
+    }
+
     view(MainProcess, path, agentData){ return `
         <!DOCTYPE html>
         <html dir='`+path.dir+`' lang='`+agentData.lang+`'>
           <head>
               <meta charset='`+MainProcess.data.charset+`'>
+              <meta name='viewport' content='initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
+              <meta name='viewport' content='width=device-width, user-scalable=no'>
               `+this.jsonld(MainProcess, path, agentData)+`
               <title>`+path.title[agentData.lang]+`</title>
               <link rel='canonical' href='`+MainProcess.util.buildUrl(path.uri)+`'>
@@ -217,8 +282,7 @@ class Views {
               <meta property='og:image' content='`+MainProcess.util.buildUrl()+path.image+`'>
               <meta property='og:url' content='`+MainProcess.util.buildUrl(path.uri)+`'>
               <meta name='twitter:card' content='summary_large_image'>
-              <meta name='viewport' content='initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
-              <meta name='viewport' content='width=device-width, user-scalable=no'>
+              `+(path.pwa===true?this.renderPWA(MainProcess, path, agentData):'')+`
               <link rel='stylesheet' href='/css/all.min.css'>
               <link rel='stylesheet' href='/style/simple.css'>
               <link rel='stylesheet' href='/style/place-bar-select.css'>

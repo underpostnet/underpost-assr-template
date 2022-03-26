@@ -14,7 +14,7 @@ class Home {
 
     <br>
     <br>
-    <img class='in' src='/img/underpost-social.jpg' style='width: 300px; margin: auto; height: auto;'>
+    <img class='in' alt='underpost.net' src='/img/underpost-social.jpg' style='width: 300px; margin: auto; height: auto;'>
 
     <br>
     <br>

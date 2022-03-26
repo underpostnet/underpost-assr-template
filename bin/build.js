@@ -76,6 +76,18 @@ const build = async () => {
   );
 
   _fs.writeFileSync(
+    './data/handlebars/browserconfig.xml',
+    _fs.readFileSync( './underpost_modules/underpost-data-template/handlebars/browserconfig.xml', charset ),
+    charset
+  );
+
+  _fs.writeFileSync(
+    './data/handlebars/site.webmanifest',
+    _fs.readFileSync( './underpost_modules/underpost-data-template/handlebars/site.webmanifest', charset ),
+    charset
+  );
+
+  _fs.writeFileSync(
     './data/structs/jsonld.json',
     _fs.readFileSync( './underpost_modules/underpost-data-template/structs/jsonld.json', charset ),
     charset
