@@ -25,6 +25,13 @@
          "type":"truetype"
       }
    ],
+   "pwa":{
+      "display":"standalone",
+      "orientation":"any",
+      "theme_color":"#0a0a0a",
+      "background_color":"#0a0a0a",
+      "assets":"/assets/pwa"
+   },
    "views":[
       {
          "langs":[
@@ -33,8 +40,7 @@
          ],
          "dir":"ltr",
          "uri":"/",
-         "pwa": true,
-         "color": "#0a0a0a",
+         "pwa":true,
          "title":{
             "en":"underpost.net",
             "es":"underpost.net"
@@ -46,6 +52,7 @@
          "image":"/img/underpost-social.jpg",
          "favicon":"/img/underpost.png",
          "view":"home.js",
+         "short_name": "underpost-home",
          "jsonld":[
             "WebSite"
          ],

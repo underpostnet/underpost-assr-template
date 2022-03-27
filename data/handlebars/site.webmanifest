@@ -3,50 +3,52 @@
     "short_name": "{{SHORT_NAME}}",
     "icons": [
         {
-            "src": "{{URL}}/android-chrome-36x36.png",
+            "src": "{{ASSETS_URL}}/android-chrome-36x36.png",
             "sizes": "36x36",
-            "type": "image/png",
-            "purpose": "any maskable"
+            "type": "image/png"
         },
         {
-            "src": "{{URL}}/android-chrome-48x48.png",
+            "src": "{{ASSETS_URL}}/android-chrome-48x48.png",
             "sizes": "48x48",
-            "type": "image/png",
-            "purpose": "any maskable"
+            "type": "image/png"
         },
         {
-            "src": "{{URL}}/android-chrome-72x72.png",
+            "src": "{{ASSETS_URL}}/android-chrome-72x72.png",
             "sizes": "72x72",
-            "type": "image/png",
-            "purpose": "any maskable"
+            "type": "image/png"
         },
         {
-            "src": "{{URL}}/android-chrome-96x96.png",
+            "src": "{{ASSETS_URL}}/android-chrome-96x96.png",
             "sizes": "96x96",
-            "type": "image/png",
-            "purpose": "any maskable"
+            "type": "image/png"
         },
         {
-            "src": "{{URL}}/android-chrome-144x144.png",
+            "src": "{{ASSETS_URL}}/android-chrome-144x144.png",
             "sizes": "144x144",
-            "type": "image/png",
-            "purpose": "any maskable"
+            "type": "image/png"
         },
         {
-            "src": "{{URL}}/android-chrome-192x192.png",
+            "src": "{{ASSETS_URL}}/android-chrome-192x192.png",
             "sizes": "192x192",
-            "type": "image/png",
-            "purpose": "any maskable"
+            "type": "image/png"
         },
         {
-            "src": "{{URL}}/android-chrome-256x256.png",
+            "src": "{{ASSETS_URL}}/android-chrome-256x256.png",
             "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "{{ASSETS_URL}}/android-chrome-512x512.png",
+            "sizes": "512x512",
             "type": "image/png",
-            "purpose": "any maskable"
+            "purpose": "maskable"
         }
     ],
     "theme_color": "{{COLOR}}",
     "background_color": "{{BACKGROUND_COLOR}}",
     "start_url": "{{START_URL}}",
-    "display": "{{DISPLAY}}"
+    "display": "{{DISPLAY}}",
+    "description": "{{DESCRIPTION}}",
+    "scope": "{{START_URL}}",
+    "orientation": "{{ORIENTATION}}"
 }

@@ -75,48 +75,12 @@ class Views {
       // virtual robots txt
       // -------------------------------------------------------------------------
 
-      MainProcess.app.get('/robots.txt', (req, res) => {
-        res.writeHead( 200, {
-          'Content-Type': ('text/plain; charset='+MainProcess.data.charset)
-        });
-        let robotsTemplate = Handlebars.compile(
-          fs.readFileSync('./data/handlebars/robots.txt', MainProcess.data.charset)
-        );
-        return res.end(robotsTemplate({
-          Sitemap: MainProcess.util.buildUrl('/sitemap.xml')
-        }));
+      const robotsSource = Handlebars.compile(
+        fs.readFileSync('./data/handlebars/robots.txt', MainProcess.data.charset)
+      )({
+        Sitemap: MainProcess.util.buildUrl('/sitemap.xml')
       });
-
-
-      // -------------------------------------------------------------------------
-      // PWA instances
-      // -------------------------------------------------------------------------
-
-      let PWA = JSON.parse(fs.readFileSync('./data/params/pwa.json'), MainProcess.data.charset);
-      PWA.START_URL = MainProcess.util.buildUrl();
-      PWA.URL = MainProcess.util.buildUrl('/assets/pwa');
-      const webmanifest = Handlebars.compile(
-        fs.readFileSync('./data/handlebars/site.webmanifest', MainProcess.data.charset)
-      );
-      const browserconfig = Handlebars.compile(
-        fs.readFileSync('./data/handlebars/browserconfig.xml', MainProcess.data.charset)
-      );
-
-      const uri_webmanifest = '/site.webmanifest';
-      MainProcess.app.get(uri_webmanifest, (req, res) => {
-        res.writeHead( 200, {
-          'Content-Type': ('application/manifest+json; charset='+MainProcess.data.charset)
-        });
-        return res.end(webmanifest(PWA));
-      });
-
-      const uri_browserconfig = '/browserconfig.xml';
-      MainProcess.app.get(uri_browserconfig, (req, res) => {
-        res.writeHead( 200, {
-          'Content-Type': ('application/xml; charset='+MainProcess.data.charset)
-        });
-        return res.end(browserconfig(PWA));
-      });
+      MainProcess.app.get('/robots.txt', (req, res) => res.end(robotsSource));
 
       // -------------------------------------------------------------------------
       // instance sitemap
@@ -128,12 +92,13 @@ class Views {
       // instance virtual src styles
       // -------------------------------------------------------------------------
 
+      const fontsSource = MainProcess.data.fonts.map( dataFont => this.font(dataFont) ).join('');
       MainProcess.app.get('/fonts.css', (req, res) =>
         {
           res.writeHead( 200, {
             'Content-Type': ('text/css; charset='+MainProcess.data.charset)
           });
-          return res.end(MainProcess.data.fonts.map( dataFont => this.font(dataFont) ).join(''));
+          return res.end(fontsSource);
         }
       );
 
@@ -141,24 +106,77 @@ class Views {
       // views paths
       // -------------------------------------------------------------------------
 
-      MainProcess.data.views.map( path =>
-      MainProcess.app.get(path.uri, (req, res) => {
-        try {
-          const agentData = info.view(req, util.newInstance(path));
-          res.writeHead( 200, {
-            'Content-Type': ('text/html; charset='+MainProcess.data.charset),
-            'Content-Language': agentData.lang
+      MainProcess.data.views.map( (path, index, array) => {
+
+          // -------------------------------------------------------------------------
+          // PWA instance
+          // -------------------------------------------------------------------------
+
+          index === 0 ? ( () => {
+
+            const browserconfig = Handlebars.compile(
+              fs.readFileSync('./data/handlebars/browserconfig.xml', MainProcess.data.charset)
+            )({
+              ASSETS_URL: MainProcess.data.pwa.assets,
+              COLOR: MainProcess.data.pwa.theme_color
+            });
+
+            const uri_browserconfig = '/browserconfig.xml';
+
+            MainProcess.app.get(uri_browserconfig, (req, res) => {
+              res.writeHead( 200, {
+                'Content-Type': ('application/xml; charset='+MainProcess.data.charset)
+              });
+              return res.end(browserconfig);
+            });
+
+          })() : null;
+
+          const webmanifest = Handlebars.compile(
+            fs.readFileSync('./data/handlebars/site.webmanifest', MainProcess.data.charset)
+          )({
+            NAME: path.title[path.langs[0]],
+            SHORT_NAME: path.short_name,
+            ASSETS_URL: MainProcess.data.pwa.assets,
+            COLOR: MainProcess.data.pwa.theme_color,
+            BACKGROUND_COLOR: MainProcess.data.pwa.background_color,
+            DISPLAY: MainProcess.data.pwa.display,
+            DESCRIPTION: path.description[path.langs[0]],
+            START_URL: path.uri,
+            ORIENTATION: MainProcess.data.pwa.orientation
           });
-          return res.end(this.view(MainProcess, path, agentData));
-        }catch(error){
-          console.log(colors.red(error));
-          res.writeHead( 500, {
-            'Content-Type': ('text/html; charset='+MainProcess.data.charset),
-            'Content-Language': 'en'
+
+          const uri_webmanifest = '/'+path.short_name+'.webmanifest';
+          MainProcess.app.get(uri_webmanifest, (req, res) => {
+            res.writeHead( 200, {
+              'Content-Type': ('application/manifest+json; charset='+MainProcess.data.charset)
+            });
+            return res.end(webmanifest);
           });
-          return res.end('Error 500');
-        }
-      }) );
+
+          // -------------------------------------------------------------------------
+          // View path Instance
+          // -------------------------------------------------------------------------
+
+          MainProcess.app.get(path.uri, (req, res) => {
+            try {
+              const agentData = info.view(req, util.newInstance(path));
+              res.writeHead( 200, {
+                'Content-Type': ('text/html; charset='+MainProcess.data.charset),
+                'Content-Language': agentData.lang
+              });
+              return res.end(this.view(MainProcess, path, agentData));
+            }catch(error){
+              console.log(colors.red(error));
+              res.writeHead( 500, {
+                'Content-Type': ('text/html; charset='+MainProcess.data.charset),
+                'Content-Language': 'en'
+              });
+              return res.end('Error 500');
+            }
+          })
+
+      });
 
     }
 
@@ -234,31 +252,32 @@ class Views {
     renderPWA(MainProcess, path, agentData){
       return `
 
-      <meta name ='theme-color' content = '`+path.color+`' />
+      <meta name ='theme-color' content = '`+MainProcess.data.pwa.theme_color+`' />
 
-      <link rel='apple-touch-icon' sizes='180x180' href='/assets/pwa/apple-touch-icon.png'>
-      <link rel='icon' type='image/png' sizes='32x32' href='/assets/pwa/favicon-32x32.png'>
-      <link rel='icon' type='image/png' sizes='16x16' href='/assets/pwa/favicon-16x16.png'>
+      <link rel='apple-touch-icon' sizes='180x180' href='`+MainProcess.data.pwa.assets+`/apple-touch-icon.png'>
+      <link rel='icon' type='image/png' sizes='32x32' href='`+MainProcess.data.pwa.assets+`/favicon-32x32.png'>
+      <link rel='icon' type='image/png' sizes='16x16' href='`+MainProcess.data.pwa.assets+`/favicon-16x16.png'>
 
-      <link rel='icon' type='image/png' sizes='36x36' href='/assets/pwa/android-chrome-36x36.png'>
-      <link rel='icon' type='image/png' sizes='48x48' href='/assets/pwa/android-chrome-48x48.png'>
-      <link rel='icon' type='image/png' sizes='72x72' href='/assets/pwa/android-chrome-72x72.png'>
-      <link rel='icon' type='image/png' sizes='96x96' href='/assets/pwa/android-chrome-96x96.png'>
-      <link rel='icon' type='image/png' sizes='144x144' href='/assets/pwa/android-chrome-144x144.png'>
-      <link rel='icon' type='image/png' sizes='192x192' href='/assets/pwa/android-chrome-192x192.png'>
-      <link rel='icon' type='image/png' sizes='256x256' href='/assets/pwa/android-chrome-256x256.png'>
-      <!-- <link rel='icon' type='image/png' sizes='384x384' href='/assets/pwa/android-chrome-384x384.png'> -->
+      <link rel='icon' type='image/png' sizes='36x36' href='`+MainProcess.data.pwa.assets+`/android-chrome-36x36.png'>
+      <link rel='icon' type='image/png' sizes='48x48' href='`+MainProcess.data.pwa.assets+`/android-chrome-48x48.png'>
+      <link rel='icon' type='image/png' sizes='72x72' href='`+MainProcess.data.pwa.assets+`/android-chrome-72x72.png'>
+      <link rel='icon' type='image/png' sizes='96x96' href='`+MainProcess.data.pwa.assets+`/android-chrome-96x96.png'>
+      <link rel='icon' type='image/png' sizes='144x144' href='`+MainProcess.data.pwa.assets+`/android-chrome-144x144.png'>
+      <link rel='icon' type='image/png' sizes='192x192' href='`+MainProcess.data.pwa.assets+`/android-chrome-192x192.png'>
+      <link rel='icon' type='image/png' sizes='256x256' href='`+MainProcess.data.pwa.assets+`/android-chrome-256x256.png'>
+      <link rel='icon' type='image/png' sizes='512x512' href='`+MainProcess.data.pwa.assets+`/android-chrome-512x512.png'>
+      <!-- <link rel='icon' type='image/png' sizes='384x384' href='`+MainProcess.data.pwa.assets+`/android-chrome-384x384.png'> -->
 
-      <link rel='icon' type='image/png' sizes='16x16' href='/assets/pwa/favicon-16x16.png'>
-      <link rel='manifest' href='/site.webmanifest'>
-      <link rel='mask-icon' href='/assets/pwa/safari-pinned-tab.svg' color='`+path.color+`'>
+      <link rel='icon' type='image/png' sizes='16x16' href='`+MainProcess.data.pwa.assets+`/favicon-16x16.png'>
+      <link rel='manifest' href='/`+path.short_name+`.webmanifest'>
+      <link rel='mask-icon' href='`+MainProcess.data.pwa.assets+`/safari-pinned-tab.svg' color='`+MainProcess.data.pwa.theme_color+`'>
 
       <meta name='apple-mobile-web-app-title' content='`+path.title[agentData.lang]+`'>
       <meta name='application-name' content='`+path.title[agentData.lang]+`'>
       <meta name='msapplication-config' content='/browserconfig.xml' />
-      <meta name='msapplication-TileColor' content='`+path.color+`'>
-      <meta name='msapplication-TileImage' content='/assets/pwa/mstile-144x144.png'>
-      <meta name='theme-color' content='`+path.color+`'>
+      <meta name='msapplication-TileColor' content='`+MainProcess.data.pwa.theme_color+`'>
+      <meta name='msapplication-TileImage' content='`+MainProcess.data.pwa.assets+`/mstile-144x144.png'>
+      <meta name='theme-color' content='`+MainProcess.data.pwa.theme_color+`'>
 
       `;
     }

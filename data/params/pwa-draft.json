@@ -1,0 +1,25 @@
+{
+   "shortcuts":[
+      {
+         "name":"{{NAME}}",
+         "description":"{{DESCRIPTION}}",
+         "url":"{{START_URL}}",
+         "icons":[
+            {
+               "src":"{{URL}}/android-chrome-144x144.png",
+               "sizes":"144x144",
+               "type":"image/png",
+               "purpose":"any"
+            }
+         ]
+      }
+   ],
+   "share_target":{
+      "action":"{{START_URL}}",
+      "params":{
+         "title":"{{NAME}}",
+         "text":"{{DESCRIPTION}}",
+         "url":"{{START_URL}}"
+      }
+   }
+}
