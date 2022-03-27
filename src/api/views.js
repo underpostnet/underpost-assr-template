@@ -106,57 +106,23 @@ class Views {
       // views paths
       // -------------------------------------------------------------------------
 
+      const browserconfig = Handlebars.compile(
+        fs.readFileSync('./data/handlebars/browserconfig.xml', MainProcess.data.charset)
+      )({
+        ASSETS_URL: MainProcess.data.pwa.assets,
+        COLOR: MainProcess.data.pwa.theme_color
+      });
+
+      MainProcess.app.get('/browserconfig.xml', (req, res) => {
+        res.writeHead( 200, {
+          'Content-Type': ('application/xml; charset='+MainProcess.data.charset)
+        });
+        return res.end(browserconfig);
+      });
+
       MainProcess.data.views.map( (path, index, array) => {
 
-          // -------------------------------------------------------------------------
-          // PWA instance
-          // -------------------------------------------------------------------------
-
-          index === 0 ? ( () => {
-
-            const browserconfig = Handlebars.compile(
-              fs.readFileSync('./data/handlebars/browserconfig.xml', MainProcess.data.charset)
-            )({
-              ASSETS_URL: MainProcess.data.pwa.assets,
-              COLOR: MainProcess.data.pwa.theme_color
-            });
-
-            const uri_browserconfig = '/browserconfig.xml';
-
-            MainProcess.app.get(uri_browserconfig, (req, res) => {
-              res.writeHead( 200, {
-                'Content-Type': ('application/xml; charset='+MainProcess.data.charset)
-              });
-              return res.end(browserconfig);
-            });
-
-          })() : null;
-
-          const webmanifest = Handlebars.compile(
-            fs.readFileSync('./data/handlebars/site.webmanifest', MainProcess.data.charset)
-          )({
-            NAME: path.title[path.langs[0]],
-            SHORT_NAME: path.short_name,
-            ASSETS_URL: MainProcess.data.pwa.assets,
-            COLOR: MainProcess.data.pwa.theme_color,
-            BACKGROUND_COLOR: MainProcess.data.pwa.background_color,
-            DISPLAY: MainProcess.data.pwa.display,
-            DESCRIPTION: path.description[path.langs[0]],
-            START_URL: path.uri,
-            ORIENTATION: MainProcess.data.pwa.orientation
-          });
-
-          const uri_webmanifest = '/'+path.short_name+'.webmanifest';
-          MainProcess.app.get(uri_webmanifest, (req, res) => {
-            res.writeHead( 200, {
-              'Content-Type': ('application/manifest+json; charset='+MainProcess.data.charset)
-            });
-            return res.end(webmanifest);
-          });
-
-          // -------------------------------------------------------------------------
-          // View path Instance
-          // -------------------------------------------------------------------------
+          path.pwa === true ? this.renderPathPwaManifest(MainProcess, path) : null;
 
           MainProcess.app.get(path.uri, (req, res) => {
             try {
@@ -247,6 +213,29 @@ class Views {
           return '';
         })()
       ).join('');
+    }
+
+    renderPathPwaManifest(MainProcess, path){
+      const webmanifest = Handlebars.compile(
+        fs.readFileSync('./data/handlebars/site.webmanifest', MainProcess.data.charset)
+      )({
+        NAME: path.title[path.langs[0]],
+        SHORT_NAME: path.short_name,
+        ASSETS_URL: MainProcess.data.pwa.assets,
+        COLOR: MainProcess.data.pwa.theme_color,
+        BACKGROUND_COLOR: MainProcess.data.pwa.background_color,
+        DISPLAY: MainProcess.data.pwa.display,
+        DESCRIPTION: path.description[path.langs[0]],
+        START_URL: path.uri,
+        ORIENTATION: MainProcess.data.pwa.orientation
+      });
+
+      MainProcess.app.get('/'+path.short_name+'.webmanifest', (req, res) => {
+        res.writeHead( 200, {
+          'Content-Type': ('application/manifest+json; charset='+MainProcess.data.charset)
+        });
+        return res.end(webmanifest);
+      });
     }
 
     renderPWA(MainProcess, path, agentData){
