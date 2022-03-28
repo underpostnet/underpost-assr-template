@@ -27,7 +27,14 @@ class Views {
         MainProcess.dev === false
       );
 
-      const loadStatic = uri => console.log(' Load Static JS: '+colors.green(uri));
+      const validateUriCss = uri => (
+        uri.split('.').pop()=='css' &&
+        uri.split('/')[1]=='style'
+      );
+
+      const logStatic = uri => console.log(' Load Static : '+colors.green(uri));
+
+      const readRaw = outDir => fs.readFileSync(outDir, MainProcess.data.charset);
 
       MainProcess.data.statics.map( dir => {
         files.readRecursive( '../'+dir, outDir => {
@@ -36,15 +43,25 @@ class Views {
           // console.log(colors.green('set static path:'+uri));
           // console.log(srcPath);
           if(validateUriJs(uri)){
-            loadStatic(uri);
+            logStatic(uri);
+            const renderJS = MainProcess.dev ? readRaw(outDir) : this.reduce(readRaw(outDir));
             const jsObfData = javaScriptObfuscator.obfuscate(
-              fs.readFileSync(outDir, MainProcess.data.charset)
+              renderJS
             )._obfuscatedCode;
             MainProcess.app.get(uri, (req, res) => {
               res.writeHead( 200, {
                 'Content-Type': ('application/javascript; charset='+MainProcess.data.charset)
               });
               return res.end(jsObfData);
+            });
+          }else if(validateUriCss(uri)){
+            logStatic(uri);
+            const renderCss = MainProcess.dev ? readRaw(outDir) : this.reduce(readRaw(outDir));
+            MainProcess.app.get(uri, (req, res) => {
+              res.writeHead( 200, {
+                'Content-Type': ('text/css; charset='+MainProcess.data.charset)
+              });
+              return res.end(renderCss);
             });
           }else{
             return MainProcess.app.get(uri, (req, res) => res.sendFile(srcPath));
@@ -57,14 +74,12 @@ class Views {
       // -------------------------------------------------------------------------
 
       const uriInitData = '/init.js';
-      loadStatic(uriInitData);
+      const initData = MainProcess.dev ? '' :
+      javaScriptObfuscator.obfuscate(this.reduce(`
+          console.log = function(){};
+      `))._obfuscatedCode;
+      logStatic(uriInitData);
       MainProcess.app.get(uriInitData, (req, res) => {
-        let initData = MainProcess.dev ? '':`
-            console.log = function(){};
-        `;
-        validateUriJs(uriInitData) ? initData =
-        javaScriptObfuscator.obfuscate(initData)._obfuscatedCode
-        : null;
         res.writeHead( 200, {
           'Content-Type': ('application/javascript; charset='+MainProcess.data.charset)
         });
@@ -92,13 +107,25 @@ class Views {
       // instance virtual src styles
       // -------------------------------------------------------------------------
 
-      const fontsSource = MainProcess.data.fonts.map( dataFont => this.font(dataFont) ).join('');
+      let fontsSource = MainProcess.data.fonts.map( dataFont => this.font(dataFont) ).join('');
+      MainProcess.dev ? null : fontsSource = this.reduce(fontsSource);
       MainProcess.app.get('/fonts.css', (req, res) =>
         {
           res.writeHead( 200, {
             'Content-Type': ('text/css; charset='+MainProcess.data.charset)
           });
           return res.end(fontsSource);
+        }
+      );
+
+      let cursorsSource = MainProcess.data.cursors.map( dataCursor => this.cursor(dataCursor) ).join('');
+      MainProcess.dev ? null : cursorsSource = this.reduce(cursorsSource);
+      MainProcess.app.get('/cursors.css', (req, res) =>
+        {
+          res.writeHead( 200, {
+            'Content-Type': ('text/css; charset='+MainProcess.data.charset)
+          });
+          return res.end(cursorsSource);
         }
       );
 
@@ -123,7 +150,8 @@ class Views {
       MainProcess.data.views.map( (path, index, array) => {
 
           path.pwa === true ? this.renderPathPwaManifest(MainProcess, path) : null;
-
+          let sourceView = this.view(MainProcess, path);
+          MainProcess.dev ? null : sourceView = this.reduce(sourceView);
           MainProcess.app.get(path.uri, (req, res) => {
             try {
               const agentData = info.view(req, util.newInstance(path));
@@ -131,7 +159,7 @@ class Views {
                 'Content-Type': ('text/html; charset='+MainProcess.data.charset),
                 'Content-Language': agentData.lang
               });
-              return res.end(this.view(MainProcess, path, agentData));
+              return res.end(this.viewCompiler(MainProcess, path, agentData, sourceView));
             }catch(error){
               console.log(colors.red(error));
               res.writeHead( 500, {
@@ -154,13 +182,21 @@ class Views {
       `
     }
 
+    cursor(dataCursor){
+      return `
+      `+dataCursor.class+` {
+        cursor: url('`+dataCursor.url+`') `+dataCursor.x+` `+dataCursor.y+`, auto;
+      }
+      `
+    }
+
     readJSONLD(MainProcess, type){
       return JSON.parse(
         fs.readFileSync('./data/structs/jsonld.json', MainProcess.charset)
       ).find(jsonld=>jsonld["$id"] == type);
     }
 
-    jsonld(MainProcess, path, agentData){
+    jsonld(MainProcess, path){
       return path.jsonld.map( jsonldType =>
         this.readJSONLD(MainProcess, jsonldType) != undefined ?
           (()=>{
@@ -176,9 +212,9 @@ class Views {
                   websiteJSONLD["@type"] = jsonldType;
                   websiteJSONLD["@id"] = MainProcess.util.buildUrl();
                   websiteJSONLD["url"] = MainProcess.util.buildUrl();
-                  websiteJSONLD["name"] = path.title[agentData.lang];
-                  websiteJSONLD["description"] = path.description[agentData.lang];
-                  websiteJSONLD["inLanguage"] = agentData.lang;
+                  websiteJSONLD["name"] = "{{title}}";
+                  websiteJSONLD["description"] = "{{description}}";
+                  websiteJSONLD["inLanguage"] = "{{lang}}";
 
                   websiteJSONLD["potentialAction"] = [JSON.parse(`{
                        "@type":"SearchAction",
@@ -238,7 +274,7 @@ class Views {
       });
     }
 
-    renderPWA(MainProcess, path, agentData){
+    renderPWA(MainProcess, path){
       return `
 
       <meta name ='theme-color' content = '`+MainProcess.data.pwa.theme_color+`' />
@@ -261,8 +297,8 @@ class Views {
       <link rel='manifest' href='/`+path.short_name+`.webmanifest'>
       <link rel='mask-icon' href='`+MainProcess.data.pwa.assets+`/safari-pinned-tab.svg' color='`+MainProcess.data.pwa.theme_color+`'>
 
-      <meta name='apple-mobile-web-app-title' content='`+path.title[agentData.lang]+`'>
-      <meta name='application-name' content='`+path.title[agentData.lang]+`'>
+      <meta name='apple-mobile-web-app-title' content='{{title}}'>
+      <meta name='application-name' content='{{title}}'>
       <meta name='msapplication-config' content='/browserconfig.xml' />
       <meta name='msapplication-TileColor' content='`+MainProcess.data.pwa.theme_color+`'>
       <meta name='msapplication-TileImage' content='`+MainProcess.data.pwa.assets+`/mstile-144x144.png'>
@@ -271,30 +307,31 @@ class Views {
       `;
     }
 
-    view(MainProcess, path, agentData){ return `
+    view(MainProcess, path){ return `
         <!DOCTYPE html>
-        <html dir='`+path.dir+`' lang='`+agentData.lang+`'>
+        <html dir='`+path.dir+`' lang='{{lang}}'>
           <head>
               <meta charset='`+MainProcess.data.charset+`'>
               <meta name='viewport' content='initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
               <meta name='viewport' content='width=device-width, user-scalable=no'>
-              `+this.jsonld(MainProcess, path, agentData)+`
-              <title>`+path.title[agentData.lang]+`</title>
+              `+this.jsonld(MainProcess, path)+`
+              <title>{{title}}</title>
               <link rel='canonical' href='`+MainProcess.util.buildUrl(path.uri)+`'>
-              <link rel='icon' type='image/png' href='`+MainProcess.util.buildUrl()+path.favicon+`'>
-              <meta name ='title' content='`+path.title[agentData.lang]+`'>
-              <meta name ='description' content='`+path.description[agentData.lang]+`'>
+              <link rel='icon' type='image/png' href='`+MainProcess.util.buildUrl(path.favicon)+`'>
+              <meta name ='title' content='{{title}}'>
+              <meta name ='description' content='{{description}}'>
               <meta name='author' content='`+MainProcess.data.author+`' />
-              <meta property='og:title' content='`+path.title[agentData.lang]+`'>
-              <meta property='og:description' content='`+path.description[agentData.lang]+`'>
-              <meta property='og:image' content='`+MainProcess.util.buildUrl()+path.image+`'>
+              <meta property='og:title' content='{{title}}'>
+              <meta property='og:description' content='{{description}}'>
+              <meta property='og:image' content='`+MainProcess.util.buildUrl(path.image)+`'>
               <meta property='og:url' content='`+MainProcess.util.buildUrl(path.uri)+`'>
               <meta name='twitter:card' content='summary_large_image'>
-              `+(path.pwa===true?this.renderPWA(MainProcess, path, agentData):'')+`
+              `+(path.pwa===true?this.renderPWA(MainProcess, path):'')+`
               <link rel='stylesheet' href='/css/all.min.css'>
               <link rel='stylesheet' href='/style/simple.css'>
               <link rel='stylesheet' href='/style/place-bar-select.css'>
               <link rel='stylesheet' href='/fonts.css'>
+              <link rel='stylesheet' href='/cursors.css'>
               <script src='/init.js'></script>
               <script src='/util.js'></script>
               <script src='/vanilla.js'></script>
@@ -302,11 +339,19 @@ class Views {
           </head>
           <body>
               <div style='display: none;'>
-                <h1>`+path.title[agentData.lang]+`</h1> <h2>`+path.description[agentData.lang]+`</h2>
+                <h1>{{title}}</h1> <h2>{{description}}</h2>
               </div>
           </body>
       </html>
       `
+  }
+
+  viewCompiler(MainProcess, path, agentData, viewRender){
+    return Handlebars.compile(viewRender)({
+      lang: agentData.lang,
+      title: path.title[agentData.lang],
+      description: path.description[agentData.lang]
+    });
   }
 
   getSitemap(MainProcess, uri){
@@ -352,6 +397,10 @@ class Views {
       return res.end(sitemap);
     });
 
+  }
+
+  reduce(render){
+    return render.replace(/\n|\t/g, ' ');
   }
 
 }

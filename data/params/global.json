@@ -25,6 +25,14 @@
          "type":"truetype"
       }
    ],
+   "cursors": [
+     {
+       "url": "/cursors/black-default.png",
+       "x": -30,
+       "y": -30,
+       "class": "body"
+     }
+   ],
    "pwa":{
       "display":"standalone",
       "orientation":"any",
