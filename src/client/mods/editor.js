@@ -37,7 +37,7 @@ class Editor {
 
     };
 
-    append('body', `
+    append('render', `
 
             <div class='in `+contentDisplayEditor+`' style='display: none; padding: 5px;'>
 
@@ -348,7 +348,7 @@ class Editor {
           }
       });
 
-      append('body', `
+      append('render', `
 
 
 

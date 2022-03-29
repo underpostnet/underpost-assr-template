@@ -5,7 +5,7 @@ class LogIn {
 
   constructor(){
 
-    append('body', `
+    append('render', `
 
 
 
@@ -137,7 +137,7 @@ class LogIn {
           <div class='in' style='text-align: center;'>
 
                 <div class='inl btn-underpost btn-signin' style='margin: 10px;'>
-                    `+renderLang({es: 'SIGN IN', es: 'INICIAR SESIÓN'})+`
+                    `+renderLang({en: 'SIGN IN', es: 'INICIAR SESIÓN'})+`
                 </div>
 
           </div>
@@ -163,7 +163,7 @@ class LogIn {
 
 
 
-    append('body', spr('<br>', 5));
+    append('render', spr('<br>', 5));
 
     s('html').onkeydown = () => {
     		switch (window.event.keyCode) {

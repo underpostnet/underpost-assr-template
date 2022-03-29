@@ -26,7 +26,7 @@ class Test {
           const over = 'over'+i;
           const obj = 'obj'+i;
 
-          append('body', `
+          append('render', `
 
               <div class='in fll `+over+`'
               style='

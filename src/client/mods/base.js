@@ -5,7 +5,7 @@ class Base {
   constructor(){
 
 
-        append('body', `
+        append('render', `
 
             <style>
 

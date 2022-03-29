@@ -4,7 +4,7 @@
 
 class Style {
   constructor(){
-    append('body', `
+    append('render', `
 
 
               <style>

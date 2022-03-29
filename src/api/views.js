@@ -23,18 +23,25 @@ class Views {
         uri.split('.').pop()=='js' &&
         uri.split('/')[1]!='lib' &&
         uri.split('/')[1]!='quill' &&
-        uri.split('/')[1]!='js' &&
-        MainProcess.dev === false
+        uri.split('/')[1]!='js'
       );
 
       const validateUriCss = uri => (
         uri.split('.').pop()=='css' &&
-        uri.split('/')[1]=='style'
+        (
+          uri.split('/')[1]=='style'
+          ||
+          uri.split('/')[1]=='quill'
+          ||
+          uri.split('/')[1]=='css'
+        )
       );
 
       const logStatic = uri => console.log(' Load Static : '+colors.green(uri));
 
       const readRaw = outDir => fs.readFileSync(outDir, MainProcess.data.charset);
+
+      this.renderCss = '';
 
       MainProcess.data.statics.map( dir => {
         files.readRecursive( '../'+dir, outDir => {
@@ -44,8 +51,14 @@ class Views {
           // console.log(srcPath);
           if(validateUriJs(uri)){
             logStatic(uri);
-            const renderJS = MainProcess.dev ? readRaw(outDir) : this.reduce(readRaw(outDir));
-            const jsObfData = javaScriptObfuscator.obfuscate(
+            const renderJS = MainProcess.dev ? readRaw(outDir) : this.reduce(readRaw(outDir), true);
+            // renderJS = renderJS.replace("append(div, html)", 'append(div, html, force)');
+            // renderJS = renderJS.replace(
+            //   "s(div).insertAdjacentHTML('beforeend', html)",
+            //   "force ? s(div).insertAdjacentHTML('beforeend', html):null"
+            // );
+            const jsObfData = MainProcess.dev ? renderJS:
+            javaScriptObfuscator.obfuscate(
               renderJS
             )._obfuscatedCode;
             MainProcess.app.get(uri, (req, res) => {
@@ -61,8 +74,9 @@ class Views {
               res.writeHead( 200, {
                 'Content-Type': ('text/css; charset='+MainProcess.data.charset)
               });
-              return res.end(renderCss);
+              return res.end('');
             });
+            this.renderCss += renderCss;
           }else{
             return MainProcess.app.get(uri, (req, res) => res.sendFile(srcPath));
           }
@@ -73,11 +87,27 @@ class Views {
       // init view data
       // -------------------------------------------------------------------------
 
+      /*
+
+      image/gif
+      image/jpg
+
+      const IMG_A = "data:[];base64,`+
+      fs.readFileSync(
+        './underpost_modules/underpost-library/img/underpost-social.jpg'
+      ).toString('base64')+`"
+
+
+      */
+
       const uriInitData = '/init.js';
       const initData = MainProcess.dev ? '' :
       javaScriptObfuscator.obfuscate(this.reduce(`
           console.log = function(){};
-      `))._obfuscatedCode;
+          var IMG_UNDERPOST_SOCIAL = 'data:image/png;base64,`+fs.readFileSync(
+            './underpost_modules/underpost-library/assets/underpost-600x600.png'
+          ).toString('base64')+`';
+          `, true))._obfuscatedCode;
       logStatic(uriInitData);
       MainProcess.app.get(uriInitData, (req, res) => {
         res.writeHead( 200, {
@@ -109,6 +139,8 @@ class Views {
 
       let fontsSource = MainProcess.data.fonts.map( dataFont => this.font(dataFont) ).join('');
       MainProcess.dev ? null : fontsSource = this.reduce(fontsSource);
+      this.renderCss += fontsSource;
+      /*
       MainProcess.app.get('/fonts.css', (req, res) =>
         {
           res.writeHead( 200, {
@@ -117,9 +149,12 @@ class Views {
           return res.end(fontsSource);
         }
       );
+      */
 
       let cursorsSource = MainProcess.data.cursors.map( dataCursor => this.cursor(dataCursor) ).join('');
       MainProcess.dev ? null : cursorsSource = this.reduce(cursorsSource);
+      this.renderCss += cursorsSource;
+      /*
       MainProcess.app.get('/cursors.css', (req, res) =>
         {
           res.writeHead( 200, {
@@ -128,6 +163,9 @@ class Views {
           return res.end(cursorsSource);
         }
       );
+      */
+
+      this.renderCss += ' render {display: none} .loading {width: 50px; height: 50px;}';
 
       // -------------------------------------------------------------------------
       // views paths
@@ -159,7 +197,7 @@ class Views {
                 'Content-Type': ('text/html; charset='+MainProcess.data.charset),
                 'Content-Language': agentData.lang
               });
-              return res.end(this.viewCompiler(MainProcess, path, agentData, sourceView));
+              return res.end(this.viewCompiler(path, agentData, sourceView));
             }catch(error){
               console.log(colors.red(error));
               res.writeHead( 500, {
@@ -307,13 +345,20 @@ class Views {
       `;
     }
 
-    view(MainProcess, path){ return `
+    view(MainProcess, path){
+      /*
+      <link rel='stylesheet' href='/css/all.min.css'>
+      <link rel='stylesheet' href='/style/simple.css'>
+      <link rel='stylesheet' href='/style/place-bar-select.css'>
+      <link rel='stylesheet' href='/fonts.css'>
+      <link rel='stylesheet' href='/cursors.css'>
+      */
+      return `
         <!DOCTYPE html>
         <html dir='`+path.dir+`' lang='{{lang}}'>
           <head>
               <meta charset='`+MainProcess.data.charset+`'>
-              <meta name='viewport' content='initial-scale=1.0, maximum-scale=1.0, user-scalable=0'>
-              <meta name='viewport' content='width=device-width, user-scalable=no'>
+              <meta content=width=device-width,initial-scale=1.0 name=viewport>
               `+this.jsonld(MainProcess, path)+`
               <title>{{title}}</title>
               <link rel='canonical' href='`+MainProcess.util.buildUrl(path.uri)+`'>
@@ -327,26 +372,29 @@ class Views {
               <meta property='og:url' content='`+MainProcess.util.buildUrl(path.uri)+`'>
               <meta name='twitter:card' content='summary_large_image'>
               `+(path.pwa===true?this.renderPWA(MainProcess, path):'')+`
-              <link rel='stylesheet' href='/css/all.min.css'>
-              <link rel='stylesheet' href='/style/simple.css'>
-              <link rel='stylesheet' href='/style/place-bar-select.css'>
-              <link rel='stylesheet' href='/fonts.css'>
-              <link rel='stylesheet' href='/cursors.css'>
-              <script src='/init.js'></script>
-              <script src='/util.js'></script>
-              <script src='/vanilla.js'></script>
-              <script type='module' src='/views/`+path.view+`'></script>
+              <style>
+              `+this.renderCss+`
+              </style>
+              <script defer src='/init.js'></script>
+              <script defer src='/util.js'></script>
+              <script defer src='/vanilla.js'></script>
+              <script defer type='module' src='/views/`+path.view+`'></script>
           </head>
           <body>
+              <img class='abs center loading' alt='loading' src='data:image/gif;base64,`+fs.readFileSync(
+                './underpost_modules/underpost-library/assets/loading-opt.gif'
+              ).toString('base64')+`'>
               <div style='display: none;'>
                 <h1>{{title}}</h1> <h2>{{description}}</h2>
               </div>
+              <render></render>
           </body>
       </html>
       `
+      // this.reduce(fs.readFileSync('./src/render.html', MainProcess.data.charset))
   }
 
-  viewCompiler(MainProcess, path, agentData, viewRender){
+  viewCompiler(path, agentData, viewRender){
     return Handlebars.compile(viewRender)({
       lang: agentData.lang,
       title: path.title[agentData.lang],
@@ -399,8 +447,10 @@ class Views {
 
   }
 
-  reduce(render){
-    return render.replace(/\n|\t/g, ' ');
+  reduce(render, blank){
+    return render.replace(/\n|\t/g, '');
+    // ! blank ? _return = _return.replace(/\s\s/g, '') : null;
+    // return _return;
   }
 
 }

@@ -8,13 +8,13 @@ import { Editor } from '../mods/editor.js';
 class Home {
   constructor(){
 
-    append('body', `
+    append('render', `
 
 
 
     <br>
     <br>
-    <img class='in' alt='underpost.net' src='/img/underpost-social.jpg' style='width: 300px; margin: auto; height: auto;'>
+    <img class='in' alt='underpost.net' src='`+IMG_UNDERPOST_SOCIAL+`' style='width: 300px; margin: auto; height: auto;'>
 
     <br>
     <br>
@@ -26,6 +26,13 @@ class Home {
     new Style();
     new LogIn();
     new Editor();
+
+    setTimeout( () => {
+      s('a.ql-action').href = '#';
+      s('a.ql-remove').href = '#';
+      s('.loading').style.display = 'none';
+      s('render').style.display = 'block';
+    }, 200);
 
   }
 }
