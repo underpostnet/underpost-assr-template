@@ -47,6 +47,7 @@
     "cors": "latest",
     "javascript-obfuscator": "latest",
     "ajv": "latest",
-    "handlebars": "latest"
+    "handlebars": "latest",
+    "compression": "latest"
   }
 }

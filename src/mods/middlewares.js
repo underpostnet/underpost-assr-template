@@ -6,6 +6,7 @@ import responseTime from 'response-time';
 import cors from 'cors';
 import express from 'express';
 import colors from 'colors/safe.js';
+import compression from 'compression';
 
 class Middlewares{
   constructor(MainProcess){
@@ -36,6 +37,19 @@ class Middlewares{
       +']['+colors.green(req.originalUrl))+']: '+colors.green(time+'ms'))
       :null;
     }));
+
+
+    MainProcess.app.use(compression({ filter: shouldCompress }))
+    function shouldCompress (req, res) {
+      if (req.headers['x-no-compression']) {
+        // don't compress responses with this request header
+        return false
+      }
+
+      // fallback to standard filter function
+      return compression.filter(req, res)
+    }
+
 
   }
 }
