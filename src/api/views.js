@@ -51,7 +51,10 @@ class Views {
           // console.log(srcPath);
           if(validateUriJs(uri)){
             logStatic(uri);
-            const renderJS = MainProcess.dev ? readRaw(outDir) : this.reduce(readRaw(outDir), true);
+            let renderJS = MainProcess.dev ? readRaw(outDir) : this.reduce(readRaw(outDir), true);
+
+            uri == '/sw.js' ? renderJS = `const _URL = '`+MainProcess.util.buildUrl()+`';` + renderJS : null;
+
             // renderJS = renderJS.replace("append(div, html)", 'append(div, html, force)');
             // renderJS = renderJS.replace(
             //   "s(div).insertAdjacentHTML('beforeend', html)",
@@ -103,7 +106,11 @@ class Views {
       const uriInitData = '/init.js';
       const initData = MainProcess.dev ? '' :
       javaScriptObfuscator.obfuscate(this.reduce(`
+          /*
           console.log = function(){};
+          console.warn = function(){};
+          console.error = function(){};
+          */
           var IMG_UNDERPOST_SOCIAL = 'data:image/png;base64,`+fs.readFileSync(
             './underpost_modules/underpost-library/assets/underpost-600x600.png'
           ).toString('base64')+`';

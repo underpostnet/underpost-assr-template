@@ -18,8 +18,15 @@ const CACHE_NAME = 'offline';
 // Customize this with a different URL if needed.
 const OFFLINE_URL = '/';
 
+const getURI = url => url.split(_URL)[1];
+
+console.warn('[Service Worker] Base URL ', _URL);
+
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
+
+    console.warn('[Service Worker] Install ', event);
+
     const cache = await caches.open(CACHE_NAME);
     // Setting {cache: 'reload'} in the new request will ensure that the response
     // isn't fulfilled from the HTTP cache; i.e., it will be from the network.
@@ -33,6 +40,9 @@ self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
     // Enable navigation preload if it's supported.
     // See https://developers.google.com/web/updates/2017/02/navigation-preload
+
+    console.warn('[Service Worker] Activate ', event);
+
     if ('navigationPreload' in self.registration) {
       await self.registration.navigationPreload.enable();
     }
@@ -45,16 +55,22 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   // We only want to call event.respondWith() if this is a navigation request
   // for an HTML page.
+
+  // console.warn('[Service Worker] Fetch ', event);
+  console.warn('[Service Worker] Fetch ', getURI(event.request.url));
+
   if (event.request.mode === 'navigate') {
     event.respondWith((async () => {
       try {
         // First, try to use the navigation preload response if it's supported.
         const preloadResponse = await event.preloadResponse;
         if (preloadResponse) {
+          console.warn('[Service Worker] [Navigator Middleware] [Preload Response]', event.request);
           return preloadResponse;
         }
 
         // Always try the network first.
+        console.warn('[Service Worker] [Navigator Middleware] [Network Response]', event.request);
         const networkResponse = await fetch(event.request);
         return networkResponse;
       } catch (error) {
@@ -63,6 +79,7 @@ self.addEventListener('fetch', (event) => {
         // If fetch() returns a valid HTTP response with a response code in
         // the 4xx or 5xx range, the catch() will NOT be called.
         console.log('Fetch failed; returning offline page instead.', error);
+        console.warn('[Service Worker] [Navigator Middleware] [Cached Response]', event.request);
 
         const cache = await caches.open(CACHE_NAME);
         const cachedResponse = await cache.match(OFFLINE_URL);
