@@ -21,16 +21,27 @@ const OFFLINE_URL = '/';
 const getURI = url => url.split(_URL)[1];
 
 console.warn('[Service Worker] Base URL ', _URL);
+console.warn('[Service Worker] Assets ', _ASSETS);
 
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
 
-    console.warn('[Service Worker] Install ', event);
+    console.warn('[Service Worker] Install ', CACHE_NAME);
 
     const cache = await caches.open(CACHE_NAME);
     // Setting {cache: 'reload'} in the new request will ensure that the response
     // isn't fulfilled from the HTTP cache; i.e., it will be from the network.
     await cache.add(new Request(OFFLINE_URL, {cache: 'reload'}));
+
+    for(let assetsSrc of _ASSETS){
+
+      console.warn('[Service Worker] Install ', assetsSrc);
+
+      const cacheAssetsSrc = await caches.open(assetsSrc);
+      // Setting {cache: 'reload'} in the new request will ensure that the response
+      // isn't fulfilled from the HTTP cache; i.e., it will be from the network.
+      await cacheAssetsSrc.add(new Request(assetsSrc, {cache: 'reload'}));
+    }
   })());
   // Force the waiting service worker to become the active service worker.
   self.skipWaiting();
@@ -58,8 +69,8 @@ self.addEventListener('fetch', (event) => {
 
   // console.warn('[Service Worker] Fetch ', event);
   console.warn('[Service Worker] Fetch ', getURI(event.request.url));
-
-  if (event.request.mode === 'navigate') {
+  const assetsValidator = _ASSETS.includes(getURI(event.request.url));
+  if (event.request.mode === 'navigate' || assetsValidator) {
     event.respondWith((async () => {
       try {
         // First, try to use the navigation preload response if it's supported.
@@ -78,12 +89,19 @@ self.addEventListener('fetch', (event) => {
         // due to a network error.
         // If fetch() returns a valid HTTP response with a response code in
         // the 4xx or 5xx range, the catch() will NOT be called.
-        console.log('Fetch failed; returning offline page instead.', error);
-        console.warn('[Service Worker] [Navigator Middleware] [Cached Response]', event.request);
-
-        const cache = await caches.open(CACHE_NAME);
-        const cachedResponse = await cache.match(OFFLINE_URL);
-        return cachedResponse;
+        // console.log('Fetch failed; returning offline page instead.', error);
+        // console.warn('[Service Worker] [Navigator Middleware] [Cached Response]', event.request);
+        if(assetsValidator){
+          console.warn('[Service Worker] [Navigator Middleware] [Cached Response] [Asset]', event.request);
+          const cacheAsset = await caches.open(getURI(event.request.url));
+          const cachedAssetResponse = await cacheAsset.match(getURI(event.request.url));
+          return cachedAssetResponse;
+        }else{
+          console.warn('[Service Worker] [Navigator Middleware] [Cached Response] [Url]', event.request);
+          const cache = await caches.open(CACHE_NAME);
+          const cachedResponse = await cache.match(OFFLINE_URL);
+          return cachedResponse;
+        }
       }
     })());
   }

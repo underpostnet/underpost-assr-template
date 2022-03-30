@@ -53,7 +53,14 @@ class Views {
             logStatic(uri);
             let renderJS = MainProcess.dev ? readRaw(outDir) : this.reduce(readRaw(outDir), true);
 
-            uri == '/sw.js' ? renderJS = `const _URL = '`+MainProcess.util.buildUrl()+`';` + renderJS : null;
+            uri == '/sw.js' ? renderJS = `
+            const _URL = '`+MainProcess.util.buildUrl()+`';
+            const _ASSETS = JSON.parse('`+JSON.stringify(
+              JSON.parse(
+                fs.readFileSync('./data/params/pwa-cache.json', MainProcess.data.charset)
+              )
+            )+`');
+            ` + renderJS : null;
 
             // renderJS = renderJS.replace("append(div, html)", 'append(div, html, force)');
             // renderJS = renderJS.replace(
