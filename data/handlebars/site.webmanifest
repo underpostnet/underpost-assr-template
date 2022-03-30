@@ -50,5 +50,6 @@
     "display": "{{DISPLAY}}",
     "description": "{{DESCRIPTION}}",
     "scope": "{{START_URL}}",
-    "orientation": "{{ORIENTATION}}"
+    "orientation": "{{ORIENTATION}}",
+    "prefer_related_applications": true
 }

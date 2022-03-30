@@ -4,6 +4,7 @@ import { Base } from '../mods/base.js';
 import { LogIn } from '../mods/login.js';
 import { Style } from '../mods/style.js';
 import { Editor } from '../mods/editor.js';
+import { UnderpostSW } from '../mods/underpost-sw.js';
 
 class Home {
   constructor(){
@@ -26,6 +27,7 @@ class Home {
     new Style();
     new LogIn();
     new Editor();
+    new UnderpostSW();
 
     setTimeout( () => {
       s('a.ql-action').href = '#';

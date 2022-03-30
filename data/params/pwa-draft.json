@@ -21,5 +21,11 @@
          "text":"{{DESCRIPTION}}",
          "url":"{{START_URL}}"
       }
-   }
+   },
+   "related_applications": [
+    {
+      "platform": "play",
+      "id": "com.google.samples.apps.iosched"
+    }
+  ]
 }
