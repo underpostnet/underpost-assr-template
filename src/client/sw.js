@@ -14,14 +14,14 @@ Copyright 2015, 2019, 2020, 2021 Google LLC. All Rights Reserved.
 // Incrementing OFFLINE_VERSION will kick off the install event and force
 // previously cached resources to be updated from the network.
 const OFFLINE_VERSION = 1;
-const CACHE_NAME = 'offline';
+const CACHE_NAME = 'Underpost-Service-Worker';
 // Customize this with a different URL if needed.
 const OFFLINE_URL = '/';
 
-const getURI = url => url.split(_URL)[1];
-
 console.warn('[Service Worker] Base URL ', _URL);
 console.warn('[Service Worker] Assets ', _ASSETS);
+console.warn('[Service Worker] Api ', _API);
+console.warn('[Service Worker] Dev ', _DEV);
 
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
@@ -63,26 +63,46 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
+// -----------------------------------------------------------------------------
+// INIT DATA
+// -----------------------------------------------------------------------------
+
+let POSTS = [];
+
+// -----------------------------------------------------------------------------
+// WORKER SERVER
+// -----------------------------------------------------------------------------
+
 self.addEventListener('fetch', (event) => {
   // We only want to call event.respondWith() if this is a navigation request
   // for an HTML page.
 
   // console.warn('[Service Worker] Fetch ', event);
-  console.warn('[Service Worker] Fetch ', getURI(event.request.url));
-  const assetsValidator = _ASSETS.includes(getURI(event.request.url));
-  if (event.request.mode === 'navigate' || assetsValidator) {
+
+  // GET URI REQ
+  const _URI = event.request.url.split(_URL)[1];
+
+  console.warn('[Service Worker] Fetch ', _URI);
+  const assetsValidator = _ASSETS.includes(_URI);
+  const apiValidator = _API.includes(_URI);
+  if (event.request.mode === 'navigate' || assetsValidator || apiValidator) {
+    const REQ = event.request.clone();
     event.respondWith((async () => {
       try {
+
+        if(apiValidator){
+          console.warn('[Service Worker] [API Request]', event);
+        }
         // First, try to use the navigation preload response if it's supported.
         const preloadResponse = await event.preloadResponse;
         if (preloadResponse) {
-          console.warn('[Service Worker] [Navigator Middleware] [Preload Response]', event.request);
+          console.warn('[Service Worker] [Navigator Middleware] [Preload Response]', _URI);
           return preloadResponse;
         }
 
         // Always try the network first.
-        console.warn('[Service Worker] [Navigator Middleware] [Network Response]', event.request);
         const networkResponse = await fetch(event.request);
+        console.warn('[Service Worker] [Navigator Middleware] [Network Response]', _URI);
         return networkResponse;
       } catch (error) {
         // catch is only triggered if an exception is thrown, which is likely
@@ -92,12 +112,53 @@ self.addEventListener('fetch', (event) => {
         // console.log('Fetch failed; returning offline page instead.', error);
         // console.warn('[Service Worker] [Navigator Middleware] [Cached Response]', event.request);
         if(assetsValidator){
-          console.warn('[Service Worker] [Navigator Middleware] [Cached Response] [Asset]', event.request);
-          const cacheAsset = await caches.open(getURI(event.request.url));
-          const cachedAssetResponse = await cacheAsset.match(getURI(event.request.url));
+          console.warn('[Service Worker] [Navigator Middleware] [Cached Response] [Asset]', _URI);
+          const cacheAsset = await caches.open(_URI);
+          const cachedAssetResponse = await cacheAsset.match(_URI);
           return cachedAssetResponse;
+        }else if(apiValidator){
+          console.warn('[Service Worker] [Navigator Middleware] [Cached Response] [Api] '+event.request.method+' -> ', _URI);
+
+          switch (_URI) {
+            case '/posts/':
+              if(event.request.method === 'GET'){
+                return new Response(JSON.stringify({
+                  success: true,
+                  data: []
+                }),{
+                     headers: { "Content-Type" : "application/json" }
+                 });
+              }
+            case '/posts':
+              if(event.request.method === 'POST'){
+
+                 // Clone headers as request headers are immutable
+
+                 // await REQ.arrayBuffer();
+                 // await REQ.blob();
+                 // await REQ.json();
+                 // await REQ.text();
+                 // await REQ.formData();
+
+                console.warn('BODY', await REQ.json());
+
+                return new Response(JSON.stringify({
+                  success: false,
+                  data: []
+                }),{
+                     headers: { "Content-Type" : "application/json" }
+                 });
+              }
+            default:
+              return new Response(JSON.stringify({
+                success: false,
+                data: []
+              }),{
+                   headers: { "Content-Type" : "application/json" }
+               });
+          }
         }else{
-          console.warn('[Service Worker] [Navigator Middleware] [Cached Response] [Url]', event.request);
+          console.warn('[Service Worker] [Navigator Middleware] [Cached Response] [Url]', _URI);
           const cache = await caches.open(CACHE_NAME);
           const cachedResponse = await cache.match(OFFLINE_URL);
           return cachedResponse;
@@ -112,3 +173,37 @@ self.addEventListener('fetch', (event) => {
   // event.respondWith(), the request will be handled by the browser as if there
   // were no service worker involvement.
 });
+
+
+
+
+
+
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------

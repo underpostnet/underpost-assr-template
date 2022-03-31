@@ -311,7 +311,7 @@ class Editor {
 
                            console.log('POST /posts ->');
                            console.log(response);
-
+                           // navigator.onLine ?
                            if(response.success===true){
                              dataPost.id = response.data.id;
                              if(lastIDedit!=null){

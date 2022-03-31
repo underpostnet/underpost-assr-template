@@ -54,12 +54,19 @@ class Views {
             let renderJS = MainProcess.dev ? readRaw(outDir) : this.reduce(readRaw(outDir), true);
 
             uri == '/sw.js' ? renderJS = `
+            const _DEV = `+(MainProcess.dev ? 'true' : 'false' )+`;
             const _URL = '`+MainProcess.util.buildUrl()+`';
             const _ASSETS = JSON.parse('`+JSON.stringify(
               JSON.parse(
-                fs.readFileSync('./data/params/pwa-cache.json', MainProcess.data.charset)
+                fs.readFileSync('./data/params/pwa-src.json', MainProcess.data.charset)
               )
             )+`');
+            const _API = JSON.parse('`+JSON.stringify(
+              JSON.parse(
+                fs.readFileSync('./data/params/pwa-api.json', MainProcess.data.charset)
+              )
+            )+`');
+            `+fs.readFileSync('./underpost_modules/underpost-library/util.js', MainProcess.data.charset)+`
             ` + renderJS : null;
 
             // renderJS = renderJS.replace("append(div, html)", 'append(div, html, force)');
@@ -111,16 +118,17 @@ class Views {
       */
 
       const uriInitData = '/init.js';
-      const initData = MainProcess.dev ? '' :
+      let initData = ` var IMG_UNDERPOST_SOCIAL = 'data:image/png;base64,`+fs.readFileSync(
+          './underpost_modules/underpost-library/assets/underpost-600x600.png'
+        ).toString('base64')+`';`;
+      initData += MainProcess.dev ? '' :
       javaScriptObfuscator.obfuscate(this.reduce(`
           /*
           console.log = function(){};
           console.warn = function(){};
           console.error = function(){};
           */
-          var IMG_UNDERPOST_SOCIAL = 'data:image/png;base64,`+fs.readFileSync(
-            './underpost_modules/underpost-library/assets/underpost-600x600.png'
-          ).toString('base64')+`';
+
           `, true))._obfuscatedCode;
       logStatic(uriInitData);
       MainProcess.app.get(uriInitData, (req, res) => {
