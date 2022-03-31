@@ -58,7 +58,7 @@ class Views {
             });
           }else if(validateUriCss(uri)){
             logStatic(uri);
-            const renderCss = MainProcess.dev ? fs.readFileSync(outDir, MainProcess.data.charset) : this.reduce(fs.readFileSync(outDir, MainProcess.data.charset));
+            const renderCss = MainProcess.dev ? fs.readFileSync(outDir, MainProcess.data.charset) : util.reduce(fs.readFileSync(outDir, MainProcess.data.charset));
             MainProcess.app.get(uri, (req, res) => {
               res.writeHead( 200, {
                 'Content-Type': ('text/css; charset='+MainProcess.data.charset)
@@ -94,14 +94,14 @@ class Views {
           './underpost_modules/underpost-library/assets/underpost-600x600.png'
         ).toString('base64')+`';`;
       initData += MainProcess.dev ? '' :
-      javaScriptObfuscator.obfuscate(this.reduce(`
+      javaScriptObfuscator.obfuscate(util.reduce(`
           /*
           console.log = function(){};
           console.warn = function(){};
           console.error = function(){};
           */
 
-          `, true))._obfuscatedCode;
+          `))._obfuscatedCode;
       logStatic(uriInitData);
       MainProcess.app.get(uriInitData, (req, res) => {
         res.writeHead( 200, {
@@ -132,7 +132,7 @@ class Views {
       // -------------------------------------------------------------------------
 
       let fontsSource = MainProcess.data.fonts.map( dataFont => this.font(dataFont) ).join('');
-      MainProcess.dev ? null : fontsSource = this.reduce(fontsSource);
+      MainProcess.dev ? null : fontsSource = util.reduce(fontsSource);
       this.renderCss += fontsSource;
       /*
       MainProcess.app.get('/fonts.css', (req, res) =>
@@ -146,7 +146,7 @@ class Views {
       */
 
       let cursorsSource = MainProcess.data.cursors.map( dataCursor => this.cursor(dataCursor) ).join('');
-      MainProcess.dev ? null : cursorsSource = this.reduce(cursorsSource);
+      MainProcess.dev ? null : cursorsSource = util.reduce(cursorsSource);
       this.renderCss += cursorsSource;
       /*
       MainProcess.app.get('/cursors.css', (req, res) =>
@@ -183,7 +183,7 @@ class Views {
 
           path.pwa === true ? this.renderPathPwaManifest(MainProcess, path) : null;
           let sourceView = this.view(MainProcess, path);
-          MainProcess.dev ? null : sourceView = this.reduce(sourceView);
+          MainProcess.dev ? null : sourceView = util.reduce(sourceView);
           MainProcess.app.get(path.uri, (req, res) => {
             try {
               const agentData = info.view(req, util.newInstance(path));
@@ -233,7 +233,7 @@ class Views {
       renderJS = this.renderServiceWorker(MainProcess, uri, renderJS);
       ! MainProcess.dev ? renderJS =
       javaScriptObfuscator.obfuscate(
-        this.reduce(renderJS, true)
+        util.reduce(renderJS)
       )._obfuscatedCode
         : null;
       return renderJS;
@@ -419,7 +419,6 @@ class Views {
           </body>
       </html>
       `
-      // this.reduce(fs.readFileSync('./src/render.html', MainProcess.data.charset))
   }
 
   viewCompiler(path, agentData, viewRender){
@@ -473,12 +472,6 @@ class Views {
       return res.end(sitemap);
     });
 
-  }
-
-  reduce(render, blank){
-    return render.replace(/\n|\t/g, '');
-    // ! blank ? _return = _return.replace(/\s\s/g, '') : null;
-    // return _return;
   }
 
 }
