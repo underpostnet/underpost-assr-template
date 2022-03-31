@@ -9,6 +9,12 @@ import { UnderpostSW } from '../mods/underpost-sw.js';
 class Home {
   constructor(){
 
+
+        new Style();
+        new UnderpostSW();
+        new Base();
+        new Editor();
+
     append('render', `
 
 
@@ -23,11 +29,7 @@ class Home {
 
     `);
 
-    new Base();
-    new Style();
     new LogIn();
-    new Editor();
-    new UnderpostSW();
 
     setTimeout( () => {
       s('a.ql-action').href = '#';

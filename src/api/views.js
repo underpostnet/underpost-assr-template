@@ -39,8 +39,6 @@ class Views {
 
       const logStatic = uri => console.log(' Load Static : '+colors.green(uri));
 
-      const readRaw = outDir => fs.readFileSync(outDir, MainProcess.data.charset);
-
       this.renderCss = '';
 
       MainProcess.data.statics.map( dir => {
@@ -51,42 +49,16 @@ class Views {
           // console.log(srcPath);
           if(validateUriJs(uri)){
             logStatic(uri);
-            let renderJS = MainProcess.dev ? readRaw(outDir) : this.reduce(readRaw(outDir), true);
-
-            uri == '/sw.js' ? renderJS = `
-            const _DEV = `+(MainProcess.dev ? 'true' : 'false' )+`;
-            const _URL = '`+MainProcess.util.buildUrl()+`';
-            const _ASSETS = JSON.parse('`+JSON.stringify(
-              JSON.parse(
-                fs.readFileSync('./data/params/pwa-src.json', MainProcess.data.charset)
-              )
-            )+`');
-            const _API = JSON.parse('`+JSON.stringify(
-              JSON.parse(
-                fs.readFileSync('./data/params/pwa-api.json', MainProcess.data.charset)
-              )
-            )+`');
-            `+fs.readFileSync('./underpost_modules/underpost-library/util.js', MainProcess.data.charset)+`
-            ` + renderJS : null;
-
-            // renderJS = renderJS.replace("append(div, html)", 'append(div, html, force)');
-            // renderJS = renderJS.replace(
-            //   "s(div).insertAdjacentHTML('beforeend', html)",
-            //   "force ? s(div).insertAdjacentHTML('beforeend', html):null"
-            // );
-            const jsObfData = MainProcess.dev ? renderJS:
-            javaScriptObfuscator.obfuscate(
-              renderJS
-            )._obfuscatedCode;
+            const renderJS = this.compilerJS(MainProcess, uri, outDir);
             MainProcess.app.get(uri, (req, res) => {
               res.writeHead( 200, {
                 'Content-Type': ('application/javascript; charset='+MainProcess.data.charset)
               });
-              return res.end(jsObfData);
+              return res.end(renderJS);
             });
           }else if(validateUriCss(uri)){
             logStatic(uri);
-            const renderCss = MainProcess.dev ? readRaw(outDir) : this.reduce(readRaw(outDir));
+            const renderCss = MainProcess.dev ? fs.readFileSync(outDir, MainProcess.data.charset) : this.reduce(fs.readFileSync(outDir, MainProcess.data.charset));
             MainProcess.app.get(uri, (req, res) => {
               res.writeHead( 200, {
                 'Content-Type': ('text/css; charset='+MainProcess.data.charset)
@@ -256,6 +228,17 @@ class Views {
       ).find(jsonld=>jsonld["$id"] == type);
     }
 
+    compilerJS(MainProcess, uri, outDir){
+      let renderJS = fs.readFileSync(outDir, MainProcess.data.charset);
+      renderJS = this.renderServiceWorker(MainProcess, uri, renderJS);
+      ! MainProcess.dev ? renderJS =
+      javaScriptObfuscator.obfuscate(
+        this.reduce(renderJS, true)
+      )._obfuscatedCode
+        : null;
+      return renderJS;
+    }
+
     jsonld(MainProcess, path){
       return path.jsonld.map( jsonldType =>
         this.readJSONLD(MainProcess, jsonldType) != undefined ?
@@ -365,6 +348,29 @@ class Views {
       <meta name='theme-color' content='`+MainProcess.data.pwa.theme_color+`'>
 
       `;
+    }
+
+    renderServiceWorker(MainProcess, uri, renderJS){
+      return uri == '/sw.js' ? `
+      const _DEV = `+(MainProcess.dev ? 'true' : 'false' )+`;
+      const _URL = '`+MainProcess.util.buildUrl()+`';
+      const _ASSETS = JSON.parse('`+JSON.stringify(
+        JSON.parse(
+          fs.readFileSync('./data/params/pwa-src.json', MainProcess.data.charset)
+        )
+      )+`');
+      const _VIEWS = JSON.parse('`+JSON.stringify(
+        JSON.parse(
+          fs.readFileSync('./data/params/global.json', MainProcess.data.charset)
+        ).views.map( viewData => viewData.uri )
+      )+`');
+      const _API = JSON.parse('`+JSON.stringify(
+        JSON.parse(
+          fs.readFileSync('./data/params/pwa-api.json', MainProcess.data.charset)
+        )
+      )+`');
+      `+fs.readFileSync('./underpost_modules/underpost-library/util.js', MainProcess.data.charset)+`
+      ` + renderJS : renderJS;
     }
 
     view(MainProcess, path){

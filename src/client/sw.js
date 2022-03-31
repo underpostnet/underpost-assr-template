@@ -14,34 +14,30 @@ Copyright 2015, 2019, 2020, 2021 Google LLC. All Rights Reserved.
 // Incrementing OFFLINE_VERSION will kick off the install event and force
 // previously cached resources to be updated from the network.
 const OFFLINE_VERSION = 1;
-const CACHE_NAME = 'Underpost-Service-Worker';
-// Customize this with a different URL if needed.
-const OFFLINE_URL = '/';
 
 console.warn('[Service Worker] Base URL ', _URL);
 console.warn('[Service Worker] Assets ', _ASSETS);
 console.warn('[Service Worker] Api ', _API);
 console.warn('[Service Worker] Dev ', _DEV);
+console.warn('[Service Worker] Views ', _VIEWS);
 
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
 
-    console.warn('[Service Worker] Install ', CACHE_NAME);
-
-    const cache = await caches.open(CACHE_NAME);
     // Setting {cache: 'reload'} in the new request will ensure that the response
     // isn't fulfilled from the HTTP cache; i.e., it will be from the network.
-    await cache.add(new Request(OFFLINE_URL, {cache: 'reload'}));
 
+    for(let viewSrc of _VIEWS){
+      console.warn('[Service Worker] Install View ', viewSrc);
+      const cache = await caches.open(viewSrc);
+      await cache.add(new Request(viewSrc, {cache: 'reload'}));
+    }
     for(let assetsSrc of _ASSETS){
-
-      console.warn('[Service Worker] Install ', assetsSrc);
-
+      console.warn('[Service Worker] Install Asset ', assetsSrc);
       const cacheAssetsSrc = await caches.open(assetsSrc);
-      // Setting {cache: 'reload'} in the new request will ensure that the response
-      // isn't fulfilled from the HTTP cache; i.e., it will be from the network.
       await cacheAssetsSrc.add(new Request(assetsSrc, {cache: 'reload'}));
     }
+
   })());
   // Force the waiting service worker to become the active service worker.
   self.skipWaiting();
@@ -62,12 +58,6 @@ self.addEventListener('activate', (event) => {
   // Tell the active service worker to take control of the page immediately.
   self.clients.claim();
 });
-
-// -----------------------------------------------------------------------------
-// INIT DATA
-// -----------------------------------------------------------------------------
-
-let POSTS = [];
 
 // -----------------------------------------------------------------------------
 // WORKER SERVER
@@ -142,6 +132,8 @@ self.addEventListener('fetch', (event) => {
 
                 console.warn('BODY', await REQ.json());
 
+                // almacenar y recuperar data en cache de posts
+
                 return new Response(JSON.stringify({
                   success: false,
                   data: []
@@ -159,8 +151,8 @@ self.addEventListener('fetch', (event) => {
           }
         }else{
           console.warn('[Service Worker] [Navigator Middleware] [Cached Response] [Url]', _URI);
-          const cache = await caches.open(CACHE_NAME);
-          const cachedResponse = await cache.match(OFFLINE_URL);
+          const cache = await caches.open(_URI);
+          const cachedResponse = await cache.match(_URI);
           return cachedResponse;
         }
       }
