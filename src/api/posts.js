@@ -5,9 +5,10 @@ import colors from 'colors/safe.js';
 import fs from 'fs';
 import Ajv from 'ajv';
 
-import { util, navi, rest, files, info }
+import { util, info }
 from '../../underpost_modules/underpost.js';
 
+/* WORKER */
 class Posts {
 
   constructor(MainProcess){
@@ -17,20 +18,20 @@ class Posts {
       this.getPosts(MainProcess, '/posts');
   }
 
-  readDataPosts(MainProcess){
-    return JSON.parse(fs.readFileSync(this.JSON_POSTS_PATH, MainProcess.data.charset));
+  async readDataPosts(MainProcess){
+    return JSON.parse(await fs.readFileSync(this.JSON_POSTS_PATH, MainProcess.data.charset));
   }
-  writeDataPosts(MainProcess, newData){
-    fs.writeFileSync( this.JSON_POSTS_PATH, util.jsonSave(newData), MainProcess.data.charset);
+  async writeDataPosts(MainProcess, newData){
+    await fs.writeFileSync( this.JSON_POSTS_PATH, util.jsonSave(newData), MainProcess.data.charset);
   }
-  checkDataDir(MainProcess){
-    ! fs.existsSync( this.JSON_POSTS_PATH ) ?
-    this.writeDataPosts(MainProcess, []) : null;
+  async checkDataDir(MainProcess){
+    ! await fs.existsSync( this.JSON_POSTS_PATH ) ?
+    await this.writeDataPosts(MainProcess, []) : null;
   }
 
-  searchPostByTitle(MainProcess, searchTerm){
+  async searchPostByTitle(MainProcess, searchTerm){
     let posts = [];
-    this.readDataPosts(MainProcess).map( post => {
+    await this.readDataPosts(MainProcess).map( post => {
       let valid = false;
       for(let titlePart of post.title.split(' ')){
         for(let search of searchTerm.split(' ')){
@@ -47,10 +48,10 @@ class Posts {
   }
 
   getPosts(MainProcess, uri){
-    MainProcess.app.get(uri, (req, res) => {
+    MainProcess.app.get(uri, async (req, res) => {
       info.api(req, { uri, apiModule: 'Posts' } );
       try {
-        this.checkDataDir(MainProcess);
+        await this.checkDataDir(MainProcess);
         res.writeHead( 200, {
           'Content-Type': ('application/json; charset='+MainProcess.data.charset),
           'Content-Language': '*'
@@ -58,8 +59,8 @@ class Posts {
         return res.end(JSON.stringify({
           success: true,
           data: req.query.s ?
-            this.searchPostByTitle(MainProcess, req.query.s):
-            this.readDataPosts(MainProcess)
+            await this.searchPostByTitle(MainProcess, req.query.s):
+            await this.readDataPosts(MainProcess)
         }));
       }catch(error){
         console.log(colors.red(error));
@@ -75,9 +76,9 @@ class Posts {
     });
   }
 
-  validateStruct(MainProcess, post){
+  async validateStruct(MainProcess, post){
     // https://thabo-ambrose.medium.com/use-custom-date-time-format-for-ajv-schema-validation-38e336dbd6ed
-    const postStruct = JSON.parse(fs.readFileSync(this.JSON_STRUCT_PATH, MainProcess.charset));
+    const postStruct = JSON.parse(await fs.readFileSync(this.JSON_STRUCT_PATH, MainProcess.charset));
     const ajv = new Ajv({schemas: [postStruct]});
     ajv.addFormat('date-ISO8601', {
       validate: dateTimeString => util.isoDateRegex().test(dateTimeString)
@@ -87,13 +88,13 @@ class Posts {
   }
 
   postPost(MainProcess, uri){
-    MainProcess.app.post(uri, (req, res) => {
+    MainProcess.app.post(uri, async (req, res) => {
       info.api(req, { uri, apiModule: 'Posts' } );
       try {
         // console.log(colors.yellow(' BODY -> '));
         // console.log(colors.green(util.jsonSave(req.body)));
-        this.checkDataDir(MainProcess);
-        let JSON_POSTS_DATA = this.readDataPosts(MainProcess);
+        await this.checkDataDir(MainProcess);
+        let JSON_POSTS_DATA = await this.readDataPosts(MainProcess);
         res.writeHead( 200, {
           'Content-Type': ('application/json; charset='+MainProcess.data.charset),
           'Content-Language': '*'
@@ -106,7 +107,7 @@ class Posts {
               if(req.body.del!=undefined){
                 JSON_POSTS_DATA.splice(indPost, 1);
               }else{
-                success = this.validateStruct(MainProcess, req.body);
+                success = await this.validateStruct(MainProcess, req.body);
                 success ? JSON_POSTS_DATA[indPost] = req.body: req.body = 'struct error';
               }
               break;
@@ -115,10 +116,10 @@ class Posts {
           }
         }else{
           req.body.id = util.makeid(1) + '-' + util.getHash().split('-').pop();
-          success = this.validateStruct(MainProcess, req.body);
+          success = await this.validateStruct(MainProcess, req.body);
           success ? JSON_POSTS_DATA.push(req.body): req.body = 'struct error';
         }
-        this.writeDataPosts(MainProcess, JSON_POSTS_DATA);
+        await this.writeDataPosts(MainProcess, JSON_POSTS_DATA);
         return res.end(JSON.stringify({
           success,
           data: req.body
@@ -138,5 +139,6 @@ class Posts {
   }
 
 }
+/* WORKER */
 
 export { Posts };

@@ -369,8 +369,14 @@ class Views {
           fs.readFileSync('./data/params/pwa-api.json', MainProcess.data.charset)
         )
       )+`');
-      `+fs.readFileSync('./underpost_modules/underpost-library/util.js', MainProcess.data.charset)+`
-      ` + renderJS : renderJS;
+
+      `+fs.readFileSync(
+        './underpost_modules/underpost-modules-v2/util.js',
+        MainProcess.data.charset).split('export default')[0]+`
+
+      ` + renderJS.replace('/* POSTS VIRTUAL API */', fs.readFileSync(
+        './src/api/posts.js',
+        MainProcess.data.charset).split('/* WORKER */')[1]) : renderJS;
     }
 
     view(MainProcess, path){

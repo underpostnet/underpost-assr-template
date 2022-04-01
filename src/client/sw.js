@@ -11,6 +11,87 @@ Copyright 2015, 2019, 2020, 2021 Google LLC. All Rights Reserved.
  limitations under the License.
 */
 
+// https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API
+// https://web.dev/cache-api-quick-guide/
+
+// -----------------------------------------------------------------------------
+// VIRTUAL EXPRESS SERVER
+// -----------------------------------------------------------------------------
+
+var _SERVICES = [];
+
+var MainProcess = {
+  app: {
+    post: (uri, service) => _SERVICES.push({method: 'POST', uri, service}),
+    get: (uri, service) => _SERVICES.push({method: 'GET', uri, service}),
+  },
+  data: {
+    charset: 'utf8'
+  }
+};
+
+var info = {
+  api: (req, obj) => null
+};
+
+var fs = {
+  readFileSync: async (JSON_POSTS_PATH, charset) => {
+    try {
+      console.log('readFileSync data:', JSON_POSTS_PATH);
+      const cacheAsset = await caches.open(JSON_POSTS_PATH);
+      const cachedAssetResponse = await cacheAsset.match(JSON_POSTS_PATH);
+      return JSON.stringify(await cachedAssetResponse.json());
+    }catch(error){
+      // console.error(error);
+      console.log('readFileSync return default JSON');
+      return JSON.stringify([]);
+    }
+  },
+  writeFileSync: async (JSON_POSTS_PATH, newData, charset) => {
+    try {
+      console.log('writeFileSync data:', JSON_POSTS_PATH);
+      console.log(newData);
+      const options = {
+         headers: {
+           'Content-Type': 'application/json'
+         }
+      };
+      const cache = await caches.open(JSON_POSTS_PATH);
+      await cache.put(JSON_POSTS_PATH, new Response(JSON.stringify(JSON.parse(newData)), options));
+    }catch(error){
+      console.error(error);
+      return;
+    }
+  },
+  existsSync: async (JSON_POSTS_PATH) => {
+    try {
+      console.log('existsSync data:', JSON_POSTS_PATH);
+      return caches.has(JSON_POSTS_PATH);
+    }catch(error){
+      console.error(error);
+      return false;
+    }
+  }
+};
+
+var colors = {
+  red: strLog => console.error('[Service Woker]', strLog),
+  yellow: strLog => console.warn('[Service Woker]', strLog),
+  green: strLog => console.log('[Service Woker]', strLog)
+};
+
+class Ajv {
+  constructor(){}
+  addFormat(){}
+  getSchema(){
+    return () => true;
+  }
+}
+
+/* POSTS VIRTUAL API */
+
+var POSTS_VIRTUAL_API = new Posts(MainProcess);
+
 // Incrementing OFFLINE_VERSION will kick off the install event and force
 // previously cached resources to be updated from the network.
 const OFFLINE_VERSION = 1;
@@ -20,6 +101,11 @@ console.warn('[Service Worker] Assets ', _ASSETS);
 console.warn('[Service Worker] Api ', _API);
 console.warn('[Service Worker] Dev ', _DEV);
 console.warn('[Service Worker] Views ', _VIEWS);
+console.warn('[Service Worker] Services ', _SERVICES);
+
+// -----------------------------------------------------------------------------
+// PWA INIT
+// -----------------------------------------------------------------------------
 
 self.addEventListener('install', (event) => {
   event.waitUntil((async () => {
@@ -109,15 +195,45 @@ self.addEventListener('fetch', (event) => {
         }else if(apiValidator){
           console.warn('[Service Worker] [Navigator Middleware] [Cached Response] [Api] '+event.request.method+' -> ', _URI);
 
+          let _HEADERS = {};
+          const execResponse = async _REQUEST => {
+            for(let apiObj of _SERVICES){
+              if((apiObj.uri == _URI || apiObj.uri+'/' == _URI) && (event.request.method==apiObj.method)){
+                let _DATA = await apiObj.service(
+                  // REQUEST OBJ
+                  _REQUEST,
+                  // RESPONSE OBJ
+                  {
+                    end: strResponse => strResponse,
+                    writeHead: (status, headers) => {
+                      _HEADERS = headers;
+                    }
+                  }
+                );
+                return new Response(_DATA, _HEADERS);
+
+              }
+            }
+          };
+
           switch (_URI) {
             case '/posts/':
               if(event.request.method === 'GET'){
+                return await execResponse({
+                  body: {},
+                  query: {
+                    s: undefined
+                  },
+                  params: {}
+                });
+                /*
                 return new Response(JSON.stringify({
                   success: true,
                   data: []
                 }),{
                      headers: { "Content-Type" : "application/json" }
                  });
+                 */
               }
             case '/posts':
               if(event.request.method === 'POST'){
@@ -130,16 +246,23 @@ self.addEventListener('fetch', (event) => {
                  // await REQ.text();
                  // await REQ.formData();
 
-                console.warn('BODY', await REQ.json());
+                // console.warn('BODY', await REQ.json());
 
-                // almacenar y recuperar data en cache de posts
+                return await execResponse({
+                  body: await REQ.json(),
+                  query: {},
+                  params: {}
+                });
 
+                //  almacenar y recuperar data en cache de posts
+                /*
                 return new Response(JSON.stringify({
                   success: false,
                   data: []
                 }),{
                      headers: { "Content-Type" : "application/json" }
                  });
+                 */
               }
             default:
               return new Response(JSON.stringify({
