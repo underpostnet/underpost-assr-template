@@ -13,6 +13,7 @@ Copyright 2015, 2019, 2020, 2021 Google LLC. All Rights Reserved.
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API
 // https://web.dev/cache-api-quick-guide/
+// https://developer.mozilla.org/en-US/docs/Web/API
 
 // -----------------------------------------------------------------------------
 // VIRTUAL EXPRESS SERVER
@@ -166,14 +167,20 @@ self.addEventListener('fetch', (event) => {
     event.respondWith((async () => {
       try {
 
-        if(apiValidator){
-          console.warn('[Service Worker] [API Request]', event);
-        }
         // First, try to use the navigation preload response if it's supported.
         const preloadResponse = await event.preloadResponse;
         if (preloadResponse) {
           console.warn('[Service Worker] [Navigator Middleware] [Preload Response]', _URI);
           return preloadResponse;
+        }
+
+        if(apiValidator){
+          console.warn('[Service Worker] [API Request]', event);
+          let REQUEST_HEADERS = {};
+          for (var pair of event.request.headers.entries()) {
+             REQUEST_HEADERS[pair[0]] = pair[1];
+          }
+          console.warn('[Service Worker] [Headers]', REQUEST_HEADERS);
         }
 
         // Always try the network first.
