@@ -139,6 +139,24 @@ self.addEventListener('activate', (event) => {
 
     if ('navigationPreload' in self.registration) {
       await self.registration.navigationPreload.enable();
+
+      /*
+      setInterval(()=>{
+
+
+            clients.matchAll().then( clientList => {
+                  clientList.map( client => {
+                        console.log(client);
+                        client.postMessage({
+                          test: 'test'
+                        });
+                  });
+            });
+
+
+      }, 2000);
+      */
+
     }
   })());
 

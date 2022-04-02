@@ -11,6 +11,11 @@ class UnderpostSW {
 
                     console.warn('[Service Worker] Already Registered');
 
+                    navigator.serviceWorker.addEventListener('message', event => {
+                      console.log('serviceWorker  msg ->');
+                      console.log(event.data);
+                    });
+
                 })
                 .catch( error => {
 
