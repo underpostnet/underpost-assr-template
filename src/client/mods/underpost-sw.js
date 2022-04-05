@@ -42,6 +42,31 @@ class UnderpostSW {
       registration.unregister()
     } })
   }
+
+  displayNotify(obj){
+    const options = {
+        body: obj.body,
+        icon: obj.img,
+        requireInteraction: obj.requireInteraction // booleano para cerrar de forma manual la notificacion
+    };
+    return new Notification(obj.title, options);
+  }
+
+  async reqNotify(){
+    return new Promise( (resolve, reject) =>
+      Notification.requestPermission().then(
+        result => {
+          if( result === 'granted' ) {
+              resolve(true)
+          } else {
+              reject(false);
+          }
+        }
+      )
+    )
+  }
+
+
 }
 
 export { UnderpostSW };

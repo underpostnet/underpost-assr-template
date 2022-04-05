@@ -12,8 +12,39 @@ Copyright 2015, 2019, 2020, 2021 Google LLC. All Rights Reserved.
 */
 
 // https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API
+
 // https://web.dev/cache-api-quick-guide/
+
 // https://developer.mozilla.org/en-US/docs/Web/API
+
+// https://developer.mozilla.org/es/docs/Web/Progressive_web_apps/Re-engageable_Notifications_Push
+
+// https://developer.mozilla.org/en-US/docs/Web/API/Notification/Notification
+
+
+/*
+
+There are MANY (2021 updated):
+I believe the information in this resource from google
+and/or this link will help you to find alternatives for
+saving information on the client-side.
+
+Basically... there are currently 4 different ways to
+ store data on client-side without using cookies:
+
+- Local Storage (Session and Local key/value pairs)
+- Web SQL (my favorite, it's a whole SQL Database, and it's NOT obsolete)
+- IndexedDB (another Database with different structure and acceptance)
+- Service Workers (Persistent background processing,
+even while offline, can asynchronously save files and many other things)
+
+I believe that for your specific need the Local Storage pairs are the easiest solution.
+
+A service worker is a type of local service
+that interact with operating native systems
+
+*/
+
 
 // -----------------------------------------------------------------------------
 // VIRTUAL EXPRESS SERVER
@@ -191,6 +222,26 @@ self.addEventListener('fetch', (event) => {
           console.warn('[Service Worker] [Navigator Middleware] [Preload Response]', _URI);
           return preloadResponse;
         }
+
+        // Exit early if we don't have access to the client.
+        // Eg, if it's cross-origin.
+        if (!event.clientId) return;
+
+        // Get the client.
+        const client = await clients.get(event.clientId);
+
+        // Exit early if we don't get the client.
+        // Eg, if it closed.
+        // console.warn('[Service Worker] [Request-Client]', client);
+        if (!client) return;
+
+        // Send a message to the client.
+        /*
+        client.postMessage({
+          msg: "Hey I just got a fetch from you!",
+          url: event.request.url
+        });
+        */
 
         if(apiValidator){
           console.warn('[Service Worker] [API Request]', event);
