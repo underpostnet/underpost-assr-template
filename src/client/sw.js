@@ -181,6 +181,8 @@ self.addEventListener('activate', (event) => {
                         client.postMessage({
                           test: 'test'
                         });
+                        // client -> document.visibilityState
+                        //           client.visibilityState
                   });
             });
 
