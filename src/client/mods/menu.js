@@ -6,6 +6,32 @@ class Menu {
 
   constructor(){
 
+    const renderMenuDiv = 'menu-content';
+    const factor_ = 0.95;
+    const intervalTimeMenuRender = 10;
+
+    append('render', `
+
+        <`+renderMenuDiv+` class='abs center' style='border: 2px solid gray;'>
+
+        </`+renderMenuDiv+`>
+
+
+    `);
+
+    this.MenuContentRenderController =
+    responsiveRender(intervalTimeMenuRender, (w_, h_) => {
+      if(w_>h_){
+        s(renderMenuDiv).style.width = h_*factor_ + 'px';
+        s(renderMenuDiv).style.width = h_*factor_ + 'px';
+      }else{
+        s(renderMenuDiv).style.width = w_*factor_ + 'px';
+        s(renderMenuDiv).style.width = w_*factor_ + 'px';
+      }
+    });
+
+
+
 
     const cellGrid = () => {
       return {
@@ -121,7 +147,7 @@ class Menu {
       id_cell: 'menu-cell',
       divRenderModal: 'menu-modal',
       dataCell: [{test: 'asd'},{test: 'asd'},{test: 'asd'}],
-      intervalRender: 500,
+      intervalRender: intervalTimeMenuRender,
       onCLick: (dataCell, idModal, id_cell_grid, idGrid) => {
             const dataInput = {
               dataCell,
@@ -137,7 +163,7 @@ class Menu {
 
     // this.processGrid != undefined ?
     // clearInterval(this.processGrid.intervalGridModal):null;
-    append('render', this.processGrid.render);
+    append(renderMenuDiv, this.processGrid.render);
 
     for(let rowId of range(1, dimGridMenu)){
       new Sortable(s('.row-content-'+rowId+'-'+this.processGrid.idGrid), {
