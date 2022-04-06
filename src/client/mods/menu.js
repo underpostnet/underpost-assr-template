@@ -12,15 +12,20 @@ class Menu {
 
     append('render', `
 
-        <`+renderMenuDiv+` class='abs center' style='border: 2px solid gray;'>
+        <`+renderMenuDiv+`-render class='in'>
 
-        </`+renderMenuDiv+`>
+                <`+renderMenuDiv+` class='abs center' style='border: 2px solid gray;'>
+
+                </`+renderMenuDiv+`>
+
+        </`+renderMenuDiv+`-render>
 
 
     `);
 
     this.MenuContentRenderController =
     responsiveRender(intervalTimeMenuRender, (w_, h_) => {
+      s(renderMenuDiv+'-render').style.height = h_ + 'px';
       if(w_>h_){
         s(renderMenuDiv).style.width = h_*factor_ + 'px';
         s(renderMenuDiv).style.width = h_*factor_ + 'px';
