@@ -356,7 +356,7 @@ class Views {
       const _URL = '`+MainProcess.util.buildUrl()+`';
       const _ASSETS = JSON.parse('`+JSON.stringify(
         JSON.parse(
-          fs.readFileSync('./data/params/pwa-src.json', MainProcess.data.charset)
+          fs.readFileSync('./data/params/pwa-cache.json', MainProcess.data.charset)
         )
       )+`');
       const _VIEWS = JSON.parse('`+JSON.stringify(

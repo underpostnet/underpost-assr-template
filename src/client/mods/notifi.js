@@ -1,21 +1,8 @@
 
 
-class Base {
+class Notifi {
 
   constructor(){
-
-
-        append('render', `
-
-            <style>
-
-              body {
-                font-family: retro-font;
-              }
-
-            </style>
-
-        `);
 
         const fontSizeNotifiIcon = 30;
         const fontSizeNotifi = 18;
@@ -71,4 +58,4 @@ class Base {
 }
 
 
-export { Base };
+export { Notifi };

@@ -9,6 +9,10 @@ class Style {
 
               <style>
 
+                    body {
+                      font-family: retro-font;
+                    }
+
                     .btn-underpost {
 
                       transition: .3s;

@@ -70,6 +70,66 @@
             "changefreq":"weekly",
             "priority":1
          }
+      },
+      {
+         "langs":[
+            "en",
+            "es"
+         ],
+         "dir":"ltr",
+         "uri":"/editor",
+         "pwa":true,
+         "title":{
+            "en":"editor - underpost.net",
+            "es":"editor - underpost.net"
+         },
+         "description":{
+            "en":"editor interface",
+            "es":"editor interface"
+         },
+         "image":"/img/underpost-social.jpg",
+         "favicon":"/img/underpost.png",
+         "view":"editor.js",
+         "short_name": "underpost-editor",
+         "jsonld":[
+            "WebSite"
+         ],
+         "sitemap":{
+            "active":true,
+            "lastmod":"2022-02-24",
+            "changefreq":"weekly",
+            "priority":1
+         }
+      },
+      {
+         "langs":[
+            "en",
+            "es"
+         ],
+         "dir":"ltr",
+         "uri":"/user",
+         "pwa":true,
+         "title":{
+            "en":"user - underpost.net",
+            "es":"user - underpost.net"
+         },
+         "description":{
+            "en":"user interface",
+            "es":"user interface"
+         },
+         "image":"/img/underpost-social.jpg",
+         "favicon":"/img/underpost.png",
+         "view":"user.js",
+         "short_name": "underpost-user",
+         "jsonld":[
+            "WebSite"
+         ],
+         "sitemap":{
+            "active":true,
+            "lastmod":"2022-02-24",
+            "changefreq":"weekly",
+            "priority":1
+         }
       }
    ]
 }

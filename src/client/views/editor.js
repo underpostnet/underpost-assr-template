@@ -2,7 +2,7 @@
 import { Style } from '../mods/style.js';
 import { UnderpostSW } from '../mods/underpost-sw.js';
 import { Notifi } from '../mods/notifi.js';
-import { Menu } from '../mods/menu.js';
+import { Editor } from '../mods/editor.js';
 
 class View {
   constructor(){
@@ -10,9 +10,11 @@ class View {
     new Style();
     new UnderpostSW();
     new Notifi();
-    new Menu();
+    new Editor();
     // Cumulative Layout Shift Controller
     setTimeout( () => {
+      s('a.ql-action').href = '#';
+      s('a.ql-remove').href = '#';
       s('.loading').style.display = 'none';
       s('render').style.display = 'block';
     }, 200);
