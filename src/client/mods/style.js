@@ -13,6 +13,11 @@ class Style {
                       font-family: retro-font;
                     }
 
+                    a {
+                      color: white;
+                      text-decoration: none;
+                    }
+
                     .btn-underpost {
 
                       transition: .3s;

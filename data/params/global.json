@@ -31,6 +31,12 @@
        "x": -30,
        "y": -30,
        "class": "body"
+     },
+     {
+       "url": "/cursors/black-pointer.png",
+       "x": -30,
+       "y": -30,
+       "class": ".underpost-pointer"
      }
    ],
    "pwa":{

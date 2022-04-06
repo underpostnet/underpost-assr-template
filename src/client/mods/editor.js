@@ -110,10 +110,48 @@ class Editor {
 
       `);
 
+      const renderTooltipEditor =  (_id, content_, value_) => renderTooltipV1({
+            idTooltip: _id,
+            tooltipStyle: '',
+            contentUnderpostClass: 'abs center',
+            originContent:  content_,
+            tooltipContent: `
+              <div class='abs center' style='top: -18px; width: 100px;'>
+                    <div class='inl' style='
+                    font-size: 8px;
+                    padding: 5px;
+                    background: rgba(0, 0, 0, 0.82);
+                    color: rgb(215, 215, 215);
+                    border-radius: 3px;
+                    '>
+                        `+value_+`
+                    </div>
+              </div>
+            `,
+            transition: {
+              active: false,
+              time: '.3s'
+            }
+          });
+
       let lastNew = null;
       const renderCard = (obj_, state) => ( () => {
 
         setTimeout(()=>{
+
+          append('.btn-edit-'+obj_.id, renderTooltipEditor(
+            'tooltip-edit-'+obj_.id,
+            '<i class="fas fa-edit abs center"></i>',
+            renderLang({es: 'Editar', en: 'Edit'})
+          ));
+
+          append('.btn-delete-'+obj_.id, renderTooltipEditor(
+            'tooltip-delete-'+obj_.id,
+            '<i class="fas fa-trash abs center"></i>',
+            renderLang({es: 'Eliminar', en: 'Delete'})
+          ));
+
+
           s('.btn-edit-'+obj_.id).onclick = () =>
           {
             htmls('.'+idContentEditable, deBase64(obj_.B64HTMLeditble).replaceAll(
@@ -191,11 +229,11 @@ class Editor {
                     <div class='in fll' style='width: 15%; text-align: center;'>
 
                             <div class='inl btn-cards btn-cards-edit btn-edit-`+obj_.id+`'>
-                                  <i class="fas fa-edit abs center"></i>
+
                             </div>
 
                             <div class='inl btn-cards btn-cards-delete btn-delete-`+obj_.id+`'>
-                                  <i class="fas fa-trash abs center"></i>
+
                             </div>
 
                     </div>

@@ -10,11 +10,43 @@ class Menu {
     const factor_ = 0.95;
     const intervalTimeMenuRender = 10;
 
+    const iconStyle = `
+      font-size: 35px;
+      top: 40%;
+    `;
+    const textStyle = `
+      font-size: 8px;
+      top: 90%;
+    `;
+
+    const APPS = [
+      {
+        path: '/editor',
+        render: () => `
+            <i class="fas fa-edit abs center" style='`+iconStyle+`'>
+            </i>
+            <div class='abs center' style='`+textStyle+`'>
+                `+renderLang({es: 'Editor', en: 'Editor'})+`
+            </div>
+        `
+      },
+      {
+        path: '/user',
+        render: () => `
+            <i class="fas fa-user abs center" style='`+iconStyle+`'>
+            </i>
+            <div class='abs center' style='`+textStyle+`'>
+                `+renderLang({es: 'Usuario', en: 'User'})+`
+            </div>
+        `
+      }
+    ];
+
     append('render', `
 
         <`+renderMenuDiv+`-render class='in'>
 
-                <`+renderMenuDiv+` class='abs center' style='border: 2px solid gray;'>
+                <`+renderMenuDiv+` class='abs center' style='border: 2px solid #0e0e0e; border-radius: 10px;'>
 
                 </`+renderMenuDiv+`>
 
@@ -140,18 +172,19 @@ class Menu {
     };
 
 
-    append('render', '<menu-modal></menu-modal>');
+    append('render', '<menu-modal style="display: none"></menu-modal>');
 
     const dimGridMenu = 5;
+    const id_cell = 'menu-cell';
 
     this.processGrid = renderGridsModal({
       row: dimGridMenu,
       col: dimGridMenu,
       delayInit: 0,
       dataType: undefined,
-      id_cell: 'menu-cell',
+      id_cell,
       divRenderModal: 'menu-modal',
-      dataCell: [{test: 'asd'},{test: 'asd'},{test: 'asd'}],
+      dataCell: APPS,
       intervalRender: intervalTimeMenuRender,
       onCLick: (dataCell, idModal, id_cell_grid, idGrid) => {
             const dataInput = {
@@ -161,26 +194,64 @@ class Menu {
               idGrid
             };
             console.log(dataInput);
+            location.href = dataCell.path;
 
       },
-      style: cellGrid()
+      style: cellGrid(),
+      factorCell: 0.9
     });
 
     // this.processGrid != undefined ?
     // clearInterval(this.processGrid.intervalGridModal):null;
     append(renderMenuDiv, this.processGrid.render);
 
-    for(let rowId of range(1, dimGridMenu)){
-      new Sortable(s('.row-content-'+rowId+'-'+this.processGrid.idGrid), {
-        swap: true,
-        animation: 150,
-        group: 'nested',
-    		// fallbackOnBody: true,
-    		// swapThreshold: 0.65
-      });
+
+    const totalCell = (dimGridMenu*dimGridMenu)-1;
+    for(let idCellMenu of range(0, totalCell)){
+      if(APPS[idCellMenu]){
+        const selectorCell = '.'+id_cell+'-'+idCellMenu;
+        s(selectorCell).classList.add('underpost-pointer');
+        htmls(selectorCell, APPS[idCellMenu].render());
+      }
+      const mainSelectorCell =  '.main-cell-'+id_cell+`-`+idCellMenu;
+      s(mainSelectorCell)['data-id'] = 'menu-storage-'+idCellMenu;
+      console.log(s(mainSelectorCell)['data-id']);
     }
 
-    //
+    // for(let rowId of range(1, dimGridMenu)){  }
+    //  new Sortable(s('.row-content-'+rowId+'-'+this.processGrid.idGrid), {
+    new Sortable(s('.'+this.processGrid.idGrid+'-content'), {
+        swap: true,
+        animation: 150,
+        group: 'menu-storage',
+    		// fallbackOnBody: true,
+    		// swapThreshold: 0.65
+        store: {
+      		/**
+      		 * Get the order of elements. Called once during initialization.
+      		 * @param   {Sortable}  sortable
+      		 * @returns {Array}
+      		 */
+      		get: function (sortable) {
+      			let order = localStorage.getItem(sortable.options.group.name);
+            console.log('get menu sortable', order);
+      			return order ? order.split('|') : [];
+      		},
+
+      		/**
+      		 * Save the order of elements. Called onEnd (when the item is dropped).
+      		 * @param {Sortable}  sortable
+      		 */
+      		set: function (sortable) {
+      			let order = sortable.toArray();
+            console.log('set menu sortable', order);
+      			localStorage.setItem(sortable.options.group.name, order.join('|'));
+      		}
+      	}
+      });
+
+
+
 
 
     }

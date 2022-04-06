@@ -3,6 +3,7 @@ import { Style } from '../mods/style.js';
 import { UnderpostSW } from '../mods/underpost-sw.js';
 import { Notifi } from '../mods/notifi.js';
 import { Editor } from '../mods/editor.js';
+import { NavBar } from '../mods/nav-bar.js';
 
 class View {
   constructor(){
@@ -11,6 +12,7 @@ class View {
     new UnderpostSW();
     new Notifi();
     new Editor();
+    new NavBar();
     // Cumulative Layout Shift Controller
     setTimeout( () => {
       s('a.ql-action').href = '#';
