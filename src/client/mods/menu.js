@@ -213,15 +213,15 @@ class Menu {
         s(selectorCell).classList.add('underpost-pointer');
         htmls(selectorCell, APPS[idCellMenu].render());
       }
-      const mainSelectorCell =  '.main-cell-'+id_cell+`-`+idCellMenu;
-      s(mainSelectorCell)['data-id'] = 'menu-storage-'+idCellMenu;
-      console.log(s(mainSelectorCell)['data-id']);
+      // const mainSelectorCell =  '.main-cell-'+id_cell+`-`+idCellMenu;
+      // s(mainSelectorCell)['data-id'] = 'menu-storage-'+idCellMenu;
+      // console.log(s(mainSelectorCell)['data-id']);
     }
 
     // for(let rowId of range(1, dimGridMenu)){  }
     //  new Sortable(s('.row-content-'+rowId+'-'+this.processGrid.idGrid), {
     new Sortable(s('.'+this.processGrid.idGrid+'-content'), {
-        swap: true,
+        // swap: true,
         animation: 150,
         group: 'menu-storage',
     		// fallbackOnBody: true,
