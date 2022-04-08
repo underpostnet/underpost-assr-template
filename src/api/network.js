@@ -9,32 +9,33 @@ from '../../underpost_modules/underpost.js';
 class Network {
 
   constructor(MainProcess){
-      this.getPaths(MainProcess, '/network/get-paths');
+      this.nameModule = 'Network';
+      this.consoleFolderName = '/underpost-console';
+      this.consoleAbsolutePath = 'c:/dd';
+      this.consoleRelativePath = '../..';
+      this.getKeys(MainProcess, '/network/keys');
   }
 
-  getPaths(MainProcess, uri){
+  getKeys(MainProcess, uri){
     MainProcess.app.get(uri, (req, res) => {
-      info.api(req, { uri, apiModule: 'Network' } );
+      info.api(req, { uri, apiModule: this.nameModule } );
       try {
-        const path = '../../underpost-console/data/network';
+        const uriPathKeys = '/data/network/keys';
+        const pathReadKeys = this.consoleRelativePath+this.consoleFolderName+uriPathKeys;
         res.writeHead( 200, {
           'Content-Type': ('application/json; charset='+MainProcess.data.charset),
           'Content-Language': '*'
         });
-        return res.end(JSON.stringify(fs.existsSync( navi(MainProcess.path) ) ?
-            (()=>{
-              let PathsNetwork = [];
-              files.readRecursive(path,
-              dir => PathsNetwork.push(dir));
-              console.log(colors.yellow(' Network > get paths >'));
-              console.log(PathsNetwork);
-              return PathsNetwork;
-            })():
-            (()=>{
-              console.log(colors.red(' Network > no console data available'));
-              return [];
-            })()
-        ));
+        console.log(MainProcess.path);
+        return res.end((()=>{
+          let PathsKeys = [];
+          files.readRecursive(pathReadKeys,
+          dir => PathsKeys.push(dir));
+          PathsKeys = PathsKeys.map(x=>x.split(uriPathKeys)[1]);
+          console.log(colors.yellow(' Network > get paths >'));
+          console.log(PathsKeys);
+          return JSON.stringify(PathsKeys);
+        })());
       }catch(error){
         console.log(colors.red(error));
         res.writeHead( 500, {

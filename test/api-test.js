@@ -33,7 +33,7 @@ class MochaApiTest {
     });
 
     describe(' Module: '+colors.green('Network'), () => {
-      const endPointTest = this.util.buildUrl('/network/get-paths');
+      const endPointTest = this.util.buildUrl('/network/keys');
       describe('GET '+endPointTest, () => {
         const expected = 'object';
         it('Expected response -> '+expected, async () =>

@@ -38,10 +38,28 @@ const update = dep => {
 [
   'https://github.com/underpostnet/underpost.net',
   'https://github.com/underpostnet/underpost-data-template',
-  'https://github.com/underpostnet/underpost-library'
+  'https://github.com/underpostnet/underpost-library',
+  'https://github.com/underpostnet/underpost-console'
 ].map( dep => fs.existsSync('../'+getProjectName(dep) ) ?
         update(dep) : install(dep) );
 
+! fs.existsSync('../underpost-console' ) ?
+fs.mkdirSync('../underpost-console') : null;
+
+! fs.existsSync('../underpost-console/data' ) ?
+fs.mkdirSync('../underpost-console/data') : null;
+
+! fs.existsSync('../underpost-console/data/network' ) ?
+fs.mkdirSync('../underpost-console/data/network') : null;
+
+! fs.existsSync('../underpost-console/data/network/keys' ) ?
+fs.mkdirSync('../underpost-console/data/network/keys') : null;
+
+! fs.existsSync('../underpost-console/data/network/keys/asymmetric' ) ?
+fs.mkdirSync('../underpost-console/data/network/keys/asymmetric') : null;
+
+! fs.existsSync('../underpost-console/data/network/keys/symmetric' ) ?
+fs.mkdirSync('../underpost-console/data/network/keys/symmetric') : null;
 
 if(!fs.existsSync( './underpost_modules/fontawesome' )){
   console.log(colors.yellow(' install -> fontawesome'));
