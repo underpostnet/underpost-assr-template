@@ -31,7 +31,8 @@ class Posts {
 
   async searchPostByTitle(MainProcess, searchTerm){
     let posts = [];
-    await this.readDataPosts(MainProcess).map( post => {
+    const dataPosts = await this.readDataPosts(MainProcess);
+    dataPosts.map( post => {
       let valid = false;
       for(let titlePart of post.title.split(' ')){
         for(let search of searchTerm.split(' ')){

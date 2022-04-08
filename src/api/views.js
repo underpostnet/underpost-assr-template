@@ -90,9 +90,16 @@ class Views {
       */
 
       const uriInitData = '/init.js';
-      let initData = ` var IMG_UNDERPOST_SOCIAL = 'data:image/png;base64,`+fs.readFileSync(
+      let initData = `
+
+          var IMG_UNDERPOST_SOCIAL = 'data:image/png;base64,`+fs.readFileSync(
           './underpost_modules/underpost-library/assets/underpost-600x600.png'
-        ).toString('base64')+`';`;
+        ).toString('base64')+`';
+
+          var COLOR_THEME_B = 'rgba(212, 0, 0, 0.8)';
+          var COLOR_THEME_B_HOVER = 'rgba(212, 0, 0, 1)';
+
+        `;
       initData += MainProcess.dev ? '' :
       javaScriptObfuscator.obfuscate(util.reduce(`
           /*

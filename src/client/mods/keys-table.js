@@ -17,8 +17,17 @@ class KeysTable {
 
       <form class='in form-keys' style='display: none; margin: 5px'>
 
-          tipo <br>
-          contraseña <br>
+            <in-key-options class='in'>
+
+                  <div class='in' style='padding: 10px;'>
+                      `+renderLang({
+                        en: 'Select Type Key',
+                        es: 'Seleccione tipo de llave'
+                      })+`
+                  </div>
+
+
+            </in-key-options>
 
           <div class='inl btn-underpost cancel-key' style='left: -5px;'>
 
@@ -41,6 +50,58 @@ class KeysTable {
       </table-keys>
 
     `);
+
+  
+    const fontSize = 12;
+    let checksBox = [
+      {
+        id: 'asymmetric-input',
+        state: false,
+        text: '<span style="font-size: '+fontSize+'px">asymmetric</span>'
+      },
+      {
+        id: 'symmetric-input',
+        state: false,
+        text: '<span style="font-size: '+fontSize+'px">symmetric</span>'
+      }
+    ];
+
+    checksBox.map( (v,i,a) => {
+      append('in-key-options', renderChecbox({
+        ...v,
+        extraClassContent: '',
+        click: stateEvent => {
+            console.log(v.id, stateEvent);
+            checksBox[i].state = stateEvent;
+            if(stateEvent===true){
+              checksBox.map( (v_,i_,a_) => {
+                if(i_!=i && v_.state===true){
+                    s('.'+checksBox[i_].id).click();
+                }
+              });
+            }
+        },
+        style: {
+          content: `
+            margin-bottom: 10px;
+          `,
+          widthText: 140,
+          pointer: true,
+          background: COLOR_THEME_B,
+          border: '2px solid yellow',
+          width: 41,
+          height: 41,
+          radio: undefined,
+          hover: `
+            background: `+COLOR_THEME_B_HOVER+`;
+          `,
+          icon: `
+            <i class='fas fa-check' style='color: white; font-size: 20px'>
+            </i>
+          `
+        }
+      }));
+    });
 
     s('.create-form-open').onclick = () => {
       s('.create-form-open').style.display = 'none';
