@@ -26,7 +26,6 @@ class Network {
           'Content-Type': ('application/json; charset='+MainProcess.data.charset),
           'Content-Language': '*'
         });
-        console.log(MainProcess.path);
         return res.end((()=>{
           let PathsKeys = [];
           files.readRecursive(pathReadKeys,

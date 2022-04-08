@@ -2,6 +2,10 @@
 
 ![performance](https://github.com/underpostnet/underpost-assr-template/blob/master/performance/1.png?raw=true)
 
+
+Views with stand-alone components whose position is rendered according to instance order
+
+
 ### Usage:
 
 
