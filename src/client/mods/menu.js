@@ -39,6 +39,16 @@ class Menu {
                 `+renderLang({es: 'Usuario', en: 'User'})+`
             </div>
         `
+      },
+      {
+        path: '/keys',
+        render: () => `
+            <i class="fas fa-key abs center" style='`+iconStyle+`'>
+            </i>
+            <div class='abs center' style='`+textStyle+`'>
+                `+renderLang({es: 'Llaves', en: 'Keys'})+`
+            </div>
+        `
       }
     ];
 

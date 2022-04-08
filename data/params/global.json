@@ -136,6 +136,36 @@
             "changefreq":"weekly",
             "priority":1
          }
+      },
+      {
+         "langs":[
+            "en",
+            "es"
+         ],
+         "dir":"ltr",
+         "uri":"/keys",
+         "pwa":true,
+         "title":{
+            "en":"keys - underpost.net",
+            "es":"keys - underpost.net"
+         },
+         "description":{
+            "en":"keys interface",
+            "es":"keys interface"
+         },
+         "image":"/img/underpost-social.jpg",
+         "favicon":"/img/underpost.png",
+         "view":"keys.js",
+         "short_name": "underpost-keys",
+         "jsonld":[
+            "WebSite"
+         ],
+         "sitemap":{
+            "active":true,
+            "lastmod":"2022-02-24",
+            "changefreq":"weekly",
+            "priority":1
+         }
       }
    ]
 }

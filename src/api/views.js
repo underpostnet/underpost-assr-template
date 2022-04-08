@@ -159,7 +159,7 @@ class Views {
       );
       */
 
-      this.renderCss += ' render {display: none} .loading {width: 50px; height: 50px;}';
+      this.renderCss += ' render {display: none; overflow: auto} .loading {width: 50px; height: 50px;}';
 
       // -------------------------------------------------------------------------
       // views paths
