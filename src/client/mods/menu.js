@@ -230,12 +230,22 @@ class Menu {
 
     // for(let rowId of range(1, dimGridMenu)){  }
     //  new Sortable(s('.row-content-'+rowId+'-'+this.processGrid.idGrid), {
+    let onClick = true;
     new Sortable(s('.'+this.processGrid.idGrid+'-content'), {
         // swap: true,
         animation: 150,
         group: 'menu-storage',
     		// fallbackOnBody: true,
     		// swapThreshold: 0.65
+        onUnchoose: function(/**Event*/evt) {
+  				if(onClick === true){
+            s('.'+evt.item.className.split(' ')[1]).click();
+          }
+          onClick = true;
+  			},
+        onChange: function(/**Event*/evt) {
+      		onClick = false;
+      	},
         store: {
       		/**
       		 * Get the order of elements. Called once during initialization.
