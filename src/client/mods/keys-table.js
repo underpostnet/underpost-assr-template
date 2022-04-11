@@ -19,15 +19,44 @@ class KeysTable {
 
             <in-key-options class='in'>
 
-                  <div class='in' style='padding: 10px;'>
+                  <div class='in' style='`+underpost_section_title+`'>
                       `+renderLang({
                         en: 'Select Type Key',
                         es: 'Seleccione tipo de llave'
                       })+`
                   </div>
+                  <br>
 
 
             </in-key-options>
+
+            <br>
+
+            `+renderInput({
+              underpostClass: 'in',
+              id_content_input: 'a3-1',
+              id_input: 'key-pass',
+              type: 'password',
+              required: true,
+              style_content_input: '',
+              style_input,
+              style_label,
+              style_outline: true,
+              style_placeholder,
+              textarea: false,
+              active_label: true,
+              initLabelPos: 5,
+              endLabelPos: -20,
+              text_label: renderLang({en: 'Password', es: 'Contraseña'}),
+              tag_label: 'a3-2',
+              fnOnClick: async () => {
+                console.log('click input');
+              },
+              value: ``,
+              topContent: '',
+              botContent,
+              placeholder: ''
+            })+`
 
           <div class='inl btn-underpost cancel-key' style='left: -5px;'>
 
@@ -51,18 +80,17 @@ class KeysTable {
 
     `);
 
-  
     const fontSize = 12;
     let checksBox = [
       {
         id: 'asymmetric-input',
         state: false,
-        text: '<span style="font-size: '+fontSize+'px">asymmetric</span>'
+        text: '<span style="font-size: '+fontSize+'px">'+renderLang({es: 'asimetrica', en: 'asymmetric'})+'</span>'
       },
       {
         id: 'symmetric-input',
         state: false,
-        text: '<span style="font-size: '+fontSize+'px">symmetric</span>'
+        text: '<span style="font-size: '+fontSize+'px">'+renderLang({es: 'simetrica', en: 'symmetric'})+'</span>'
       }
     ];
 
@@ -73,6 +101,8 @@ class KeysTable {
         click: stateEvent => {
             console.log(v.id, stateEvent);
             checksBox[i].state = stateEvent;
+            /*
+            or exclusive
             if(stateEvent===true){
               checksBox.map( (v_,i_,a_) => {
                 if(i_!=i && v_.state===true){
@@ -80,6 +110,7 @@ class KeysTable {
                 }
               });
             }
+            */
         },
         style: {
           content: `
@@ -111,6 +142,37 @@ class KeysTable {
       s('.form-keys').style.display = 'none';
       fadeIn(s('.create-form-open'));
       s('.create-form-open').style.display = 'inline-table';
+    };
+    s('.create-key-btn').onclick = () => {
+
+        if(
+          checksBox[0].state == false
+          &&
+          checksBox[1].state == false){
+            return   notifi.display(
+               backgroundNotifi,
+               renderLang({en: 'Select Key Type', es: 'Seleccione tipo de llave'}),
+               2000,
+               'error'
+             );
+        }
+
+        if(s('.key-pass').value==''){
+            return   notifi.display(
+               backgroundNotifi,
+               renderLang({en: 'Empty Password', es: 'Contraseña vacia'}),
+               2000,
+               'error'
+             );
+        }
+
+        let bodyPost = {
+          asymmetric: checksBox[0].state,
+          symmetric: checksBox[1].state,
+          keyPass: s('.key-pass').value
+        };
+        console.warn('create-key-btn', bodyPost);
+
     };
 
       (async ()=>{

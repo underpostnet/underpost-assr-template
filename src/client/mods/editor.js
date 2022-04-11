@@ -10,7 +10,6 @@ class Editor {
     const sizeTitle = 15;
     const sizeContent = 15;
     const idContentEditable = 'ql-editor-main';
-    const backgroundNotifi = 'rgba(0, 0, 0, 0.9)';
     let lastIDedit = null;
     let currentsPost = [];
     const contentDisplayEditor = 'display-editor';

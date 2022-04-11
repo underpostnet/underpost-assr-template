@@ -235,7 +235,8 @@ class Menu {
         // swap: true,
         animation: 150,
         group: 'menu-storage',
-    		// fallbackOnBody: true,
+        forceFallback: true,
+        fallbackOnBody: true,
     		// swapThreshold: 0.65
         onUnchoose: function(/**Event*/evt) {
   				if(onClick === true){

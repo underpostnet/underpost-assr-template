@@ -38,33 +38,6 @@ class LogIn {
 
     `);
 
-    const style_input = `
-
-        padding: 12px 15px;
-        font-family: retro-font;
-        font-size: 14px;
-        background: #1d1d1c;
-        color: white;
-        margin: 10px 10px 30px 10px;
-
-    `;
-
-    const style_label = `
-
-        color: red;
-        font-size: 12px;
-        left: 15px;
-
-    `;
-
-    const style_placeholder = `
-
-        font-style: italic;
-
-    `;
-
-    const botContent = '';
-
     append('.signin-form', renderInput({
       underpostClass: 'in',
       id_content_input: 'a1-1',
