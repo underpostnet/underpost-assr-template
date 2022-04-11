@@ -173,59 +173,79 @@ class KeysTable {
         };
         console.warn('create-key-btn', bodyPost);
 
-        let response = await new Rest().FETCH('/network/keys', 'POST', bodyPost);
+        const response = await new Rest().FETCH('/network/keys', 'POST', bodyPost);
         console.log(response);
+        if(response.success === true){
+          await this.renderTableKeys();
+          return   notifi.display(
+             backgroundNotifi,
+             renderLang({es: 'Llaves creadas', en: 'Success create keys'}),
+             2000,
+             'success'
+           );
+        }else{
+          return  notifi.display(
+             backgroundNotifi,
+             renderLang({es: 'Error en el Servicio', en: 'Error service'}),
+             2000,
+             'error'
+           );
+        }
 
     };
 
-      (async ()=>{
+      (async () => await this.renderTableKeys())();
 
-              const fontSize = 10;
-              const fontFamily = 'retro-font';
-              const dataKeys = await new Rest().FETCH('/network/keys', 'GET');
-              const obj = {
-                divContent: 'table-keys',
-                data: dataKeys.map( (v,i,a) => {
-                  return {
-                    path: v
-                  }
-                })
-              };
+  }
 
-              append(obj.divContent, renderTableV1( obj.data, {
-                style: {
-                  header_row_style: `
-                  padding-bottom: 10px;
-                  padding-top: 10px;
-                  `+'font-family: '+fontFamily+'; border-bottom: 3px solid red; font-size: '+fontSize+'px;',
-                  header_cell_style: '',
-                  row_style: 'font-family: '+fontFamily+'; border-bottom: 3px solid yellow; font-size: '+fontSize+'px;',
-                  cell_style: `
-                  padding-bottom: 5px;
-                  padding-top: 5px;
-                  `,
-                  minWidth: 'none'
-                }/*,
-                plugin: index => {
-                  let render_ = `<div class='inl cell-key-`+index+`'>
-                  test `+index+`
-                  </div>`;
-                  setTimeout(()=>{
-                    s('.cell-key-'+index).onclick = ()=>{
-                      alert("index: "+index);
-                    };
-                  },0);
-                  return render_;
-                },
-                name_plugin: 'plugin'
-                */
-              }
-            ));
 
-            append('render', spr('<br>', 5));
+  async renderTableKeys(){
+    {
+         const fontSize = 10;
+         const fontFamily = 'retro-font';
+         const dataKeys = await new Rest().FETCH('/network/keys', 'GET');
+         const obj = {
+           divContent: 'table-keys',
+           data: dataKeys.map( (v,i,a) => {
+             return {
+               path: v
+             }
+           })
+         };
 
-      })()
+         htmls(obj.divContent, renderTableV1( obj.data, {
+           style: {
+             header_row_style: `
+             padding-bottom: 10px;
+             padding-top: 10px;
+             `+'font-family: '+fontFamily+'; border-bottom: 3px solid red; font-size: '+fontSize+'px;',
+             header_cell_style: '',
+             row_style: 'font-family: '+fontFamily+'; border-bottom: 3px solid yellow; font-size: '+fontSize+'px;',
+             cell_style: `
+             padding-bottom: 5px;
+             padding-top: 5px;
+             `,
+             minWidth: 'none'
+           }/*,
+           plugin: index => {
+             let render_ = `<div class='inl cell-key-`+index+`'>
+             test `+index+`
+             </div>`;
+             setTimeout(()=>{
+               s('.cell-key-'+index).onclick = ()=>{
+                 alert("index: "+index);
+               };
+             },0);
+             return render_;
+           },
+           name_plugin: 'plugin'
+           */
+         }
+       ));
 
+       append('render', spr('<br>', 5));
+
+   };
   }
 
 }

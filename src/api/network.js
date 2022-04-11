@@ -6,6 +6,8 @@ import fs from 'fs';
 import { util, navi, rest, files, info }
 from '../../underpost_modules/underpost.js';
 
+import { Keys } from '../../underpost_modules/underpost-modules-v1/keys/class/Keys.js';
+
 class Network {
 
   constructor(MainProcess){
@@ -13,6 +15,7 @@ class Network {
       this.consoleFolderName = '/underpost-console';
       this.consoleAbsolutePath = 'c:/dd';
       this.consoleRelativePath = '../..';
+      this.uriPathKeys = '/data/network/keys';
       this.getKeys(MainProcess, '/network/keys');
       this.createKey(MainProcess, '/network/keys');
   }
@@ -21,8 +24,7 @@ class Network {
     MainProcess.app.get(uri, (req, res) => {
       info.api(req, { uri, apiModule: this.nameModule } );
       try {
-        const uriPathKeys = '/data/network/keys';
-        const pathReadKeys = this.consoleRelativePath+this.consoleFolderName+uriPathKeys;
+        const pathReadKeys = this.consoleRelativePath+this.consoleFolderName+this.uriPathKeys;
         res.writeHead( 200, {
           'Content-Type': ('application/json; charset='+MainProcess.data.charset),
           'Content-Language': '*'
@@ -31,7 +33,7 @@ class Network {
           let PathsKeys = [];
           files.readRecursive(pathReadKeys,
           dir => PathsKeys.push(dir));
-          PathsKeys = PathsKeys.map(x=>x.split(uriPathKeys)[1]);
+          PathsKeys = PathsKeys.map(x=>x.split(this.uriPathKeys)[1]);
           console.log(colors.yellow(' Network > get paths >'));
           console.log(PathsKeys);
           return JSON.stringify(PathsKeys);
@@ -48,26 +50,50 @@ class Network {
   }
 
   createKey(MainProcess, uri){
-    MainProcess.app.post(uri, (req, res) => {
+    MainProcess.app.post(uri, async (req, res) => {
       info.api(req, { uri, apiModule: this.nameModule } );
       try {
-        const uriPathKeys = '/data/network/keys';
-        const pathReadKeys = this.consoleRelativePath+this.consoleFolderName+uriPathKeys;
         res.writeHead( 200, {
           'Content-Type': ('application/json; charset='+MainProcess.data.charset),
           'Content-Language': '*'
         });
-
-        console.log(req.body);
-
-        return res.end('true');
+        console.log(util.jsonSave(req.body));
+        const path = this.consoleAbsolutePath+this.consoleFolderName+this.uriPathKeys;
+        let success = false;
+        let dataReturn = {};
+        if(req.body.asymmetric === true){
+          dataReturn.asymmetric = await new Keys().generateAsymmetricKeys({
+            passphrase: req.body.keyPass,
+            path
+          });
+        }
+        if(req.body.symmetric === true){
+          dataReturn.symmetric = await new Keys().generateSymmetricKeys({
+            passphrase: req.body.keyPass,
+            path
+          });
+        }
+        if(
+          dataReturn.asymmetric!=null
+          ||
+          dataReturn.symmetric!=null
+        ){
+          success = true;
+        }
+        return res.end(JSON.stringify({
+          success,
+          ...dataReturn
+        }));
       }catch(error){
         console.log(colors.red(error));
         res.writeHead( 500, {
           'Content-Type': ('application/json; charset='+MainProcess.data.charset),
           'Content-Language': '*'
         });
-        return res.end('Error 500');
+        return res.end(JSON.stringify({
+          success: false,
+          error
+        }));
       }
     });
 
