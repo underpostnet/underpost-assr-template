@@ -14,6 +14,7 @@ class Network {
       this.consoleAbsolutePath = 'c:/dd';
       this.consoleRelativePath = '../..';
       this.getKeys(MainProcess, '/network/keys');
+      this.createKey(MainProcess, '/network/keys');
   }
 
   getKeys(MainProcess, uri){
@@ -44,6 +45,33 @@ class Network {
         return res.end('Error 500');
       }
     });
+  }
+
+  createKey(MainProcess, uri){
+    MainProcess.app.post(uri, (req, res) => {
+      info.api(req, { uri, apiModule: this.nameModule } );
+      try {
+        const uriPathKeys = '/data/network/keys';
+        const pathReadKeys = this.consoleRelativePath+this.consoleFolderName+uriPathKeys;
+        res.writeHead( 200, {
+          'Content-Type': ('application/json; charset='+MainProcess.data.charset),
+          'Content-Language': '*'
+        });
+
+        console.log(req.body);
+
+        return res.end('true');
+      }catch(error){
+        console.log(colors.red(error));
+        res.writeHead( 500, {
+          'Content-Type': ('application/json; charset='+MainProcess.data.charset),
+          'Content-Language': '*'
+        });
+        return res.end('Error 500');
+      }
+    });
+
+
   }
 
 }

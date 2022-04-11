@@ -143,7 +143,7 @@ class KeysTable {
       fadeIn(s('.create-form-open'));
       s('.create-form-open').style.display = 'inline-table';
     };
-    s('.create-key-btn').onclick = () => {
+    s('.create-key-btn').onclick = async () => {
 
         if(
           checksBox[0].state == false
@@ -172,6 +172,9 @@ class KeysTable {
           keyPass: s('.key-pass').value
         };
         console.warn('create-key-btn', bodyPost);
+
+        let response = await new Rest().FETCH('/network/keys', 'POST', bodyPost);
+        console.log(response);
 
     };
 
