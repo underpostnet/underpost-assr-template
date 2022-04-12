@@ -47,6 +47,7 @@ class Network {
             x.date = new Date(x.date).toISOString();
             return x;
           });
+          PathsKeys = PathsKeys.filter((v,i,a)=>i%2==0);
           res.writeHead( 200, {
             'Content-Type': ('application/json; charset='+MainProcess.data.charset),
             'Content-Language': '*'
