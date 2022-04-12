@@ -7,6 +7,7 @@ import { util, navi, rest, files, info }
 from '../../underpost_modules/underpost.js';
 
 import { Keys } from '../../underpost_modules/underpost-modules-v1/keys/class/Keys.js';
+import { FileGestor } from '../../underpost_modules/underpost-modules-v1/file-gestor/class/FileGestor.js';
 
 class Network {
 
@@ -19,6 +20,7 @@ class Network {
       this.getKeys(MainProcess, '/network/keys');
       this.createKey(MainProcess, '/network/keys');
       this.deleteKey(MainProcess, '/network/keys');
+      this.getKey(MainProcess, '/network/keys/:type/:id');
   }
 
   getKeys(MainProcess, uri){
@@ -131,6 +133,51 @@ class Network {
         });
         return res.end(JSON.stringify({
           success: true
+        }));
+      }catch(error){
+        console.log(colors.red(error));
+        res.writeHead( 500, {
+          'Content-Type': ('application/json; charset='+MainProcess.data.charset),
+          'Content-Language': '*'
+        });
+        return res.end(JSON.stringify({
+          success: false,
+          error
+        }));
+      }
+    });
+  }
+
+
+  getKey(MainProcess, uri){
+    MainProcess.app.get(uri, async (req, res) => {
+      info.api(req, { uri, apiModule: this.nameModule } );
+      try {
+        const path = this.consoleAbsolutePath+this.consoleFolderName+this.uriPathKeys+'/'+req.params.type+'/'+req.params.id;
+        let success = false;
+        let dataFileKey = {};
+        console.log('get', path);
+        switch (req.params.type) {
+          case 'asymmetric':
+            dataFileKey.public = await new FileGestor().getDataFile(path+'/public.pem');
+            dataFileKey.private = await new FileGestor().getDataFile(path+'/public.pem');
+            success = true;
+            break;
+          case 'symmetric':
+            dataFileKey.iv = await new FileGestor().getDataFile(path+'/iv.json');
+            dataFileKey.key = await new FileGestor().getDataFile(path+'/key.json');
+            success = true;
+            break;
+          default:
+            console.log(colors.error('invalid type key'));
+        }
+        res.writeHead( 200, {
+          'Content-Type': ('application/json; charset='+MainProcess.data.charset),
+          'Content-Language': '*'
+        });
+        return res.end(util.jsonSave({
+          success,
+          dataFileKey
         }));
       }catch(error){
         console.log(colors.red(error));
