@@ -176,13 +176,20 @@ class KeysTable {
         const response = await new Rest().FETCH('/network/keys', 'POST', bodyPost);
         console.log(response);
         if(response.success === true){
-          await this.renderTableKeys();
-          return   notifi.display(
-             backgroundNotifi,
-             renderLang({es: 'Llaves creadas', en: 'Success create keys'}),
-             2000,
-             'success'
-           );
+           await this.renderTableKeys();
+           checksBox.map( (v_,i_,a_) => {
+             if(v_.state===true){
+                 s('.'+checksBox[i_].id).click();
+             }
+           });
+           s('.key-pass').value = '';
+           s('.cancel-key').click();
+           return   notifi.display(
+              backgroundNotifi,
+              renderLang({es: 'Llaves creadas', en: 'Success create keys'}),
+              2000,
+              'success'
+            );
         }else{
           return  notifi.display(
              backgroundNotifi,
@@ -208,24 +215,39 @@ class KeysTable {
            divContent: 'table-keys',
            data: dataKeys.map( (v,i,a) => {
              return {
+               id: v.split('symmetric/')[1] ? v.split('symmetric/')[1].split('/')[0] : ' - ',
                path: v
              }
            })
          };
 
          htmls(obj.divContent, renderTableV1( obj.data, {
+           idMark: 'BA4722490666',
            style: {
              header_row_style: `
              padding-bottom: 10px;
              padding-top: 10px;
              `+'font-family: '+fontFamily+'; border-bottom: 3px solid red; font-size: '+fontSize+'px;',
              header_cell_style: '',
-             row_style: 'font-family: '+fontFamily+'; border-bottom: 3px solid yellow; font-size: '+fontSize+'px;',
+             row_style: `
+
+              font-family: `+fontFamily+`;
+              border-bottom: 3px solid rgb(22, 22, 22);
+              font-size: `+fontSize+`px;
+
+              `,
              cell_style: `
              padding-bottom: 5px;
              padding-top: 5px;
              `,
-             minWidth: 'none'
+             minWidth: 'none',
+             mark_row_style: `
+
+             font-family: `+fontFamily+`;
+             border: 3px solid yellow;
+             font-size: `+fontSize+`px;
+
+             `
            }/*,
            plugin: index => {
              let render_ = `<div class='inl cell-key-`+index+`'>
