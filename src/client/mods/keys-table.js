@@ -176,7 +176,12 @@ class KeysTable {
         const response = await new Rest().FETCH('/network/keys', 'POST', bodyPost);
         console.log(response);
         if(response.success === true){
-           await this.renderTableKeys();
+           await this.renderTableKeys({
+             mark: [
+               response.asymmetric,
+               response.symmetric
+             ]
+           });
            checksBox.map( (v_,i_,a_) => {
              if(v_.state===true){
                  s('.'+checksBox[i_].id).click();
@@ -206,23 +211,19 @@ class KeysTable {
   }
 
 
-  async renderTableKeys(){
-    {
+  async renderTableKeys(inObj){
+
+         inObj == undefined ? inObj = {} : null;
+
          const fontSize = 10;
          const fontFamily = 'retro-font';
-         const dataKeys = await new Rest().FETCH('/network/keys', 'GET');
          const obj = {
            divContent: 'table-keys',
-           data: dataKeys.map( (v,i,a) => {
-             return {
-               id: v.split('symmetric/')[1] ? v.split('symmetric/')[1].split('/')[0] : ' - ',
-               path: v
-             }
-           })
+           data: await new Rest().FETCH('/network/keys', 'GET')
          };
 
          htmls(obj.divContent, renderTableV1( obj.data, {
-           idMark: 'BA4722490666',
+           idMark: inObj.mark,
            style: {
              header_row_style: `
              padding-bottom: 10px;
@@ -239,6 +240,7 @@ class KeysTable {
              cell_style: `
              padding-bottom: 5px;
              padding-top: 5px;
+             overflow: hidden;
              `,
              minWidth: 'none',
              mark_row_style: `
@@ -266,8 +268,6 @@ class KeysTable {
        ));
 
        append('render', spr('<br>', 5));
-
-   };
   }
 
 }

@@ -33,9 +33,23 @@ class Network {
           let PathsKeys = [];
           files.readRecursive(pathReadKeys,
           dir => PathsKeys.push(dir));
-          PathsKeys = PathsKeys.map(x=>x.split(this.uriPathKeys)[1]);
+          // PathsKeys = PathsKeys.map(x=>x.split(this.uriPathKeys)[1]);
           console.log(colors.yellow(' Network > get paths >'));
           console.log(PathsKeys);
+          PathsKeys = PathsKeys.map((v,i,a) => {
+            return   {
+               id: v.split('symmetric/')[1] ? v.split('symmetric/')[1].split('/')[0] : ' - ',
+               // path: v.split(this.uriPathKeys)[1],
+               date: new Date(fs.statSync(v).birthtime).getTime(),
+               type: v.split('/').includes('asymmetric') ? 'asymmetric' : 'symmetric'
+             }
+          });
+          PathsKeys = PathsKeys.sort(({date: a}, {date: b}) =>  b - a); // desc
+          // a - b -> asc
+          PathsKeys = PathsKeys.map( x => {
+            x.date = new Date(x.date).toISOString();
+            return x;
+          });
           return JSON.stringify(PathsKeys);
         })());
       }catch(error){
