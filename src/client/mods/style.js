@@ -70,6 +70,29 @@ class Style {
                     .btn-underpost:hover{
                       background: `+COLOR_THEME_B_HOVER+`;
                     }
+
+
+
+                    .b-yellow, .b-blue, .b-red {
+                      border: 2px solid black;
+                      transition: .3s;
+                    }
+
+                    .b-yellow:hover {
+                      /* border: 2px solid yellow; */
+                      color: yellow;
+                    }
+                    .b-blue:hover {
+                      /* border: 2px solid blue; */
+                      color: blue;
+                    }
+                    .b-red:hover {
+                      /* border: 2px solid red; */
+                      color: red;
+                    }
+
+
+
               </style>
 
 

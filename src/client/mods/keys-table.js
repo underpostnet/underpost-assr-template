@@ -74,6 +74,18 @@ class KeysTable {
 
       </form>
 
+
+
+
+      <style>
+
+          .plugin-icon-content-table {
+            text-align: center;
+            width: 32%;
+          }
+
+      </style>
+
       <table-keys class='in' style='margin: 5px'>
 
       </table-keys>
@@ -250,20 +262,58 @@ class KeysTable {
              font-size: `+fontSize+`px;
 
              `
-           }/*,
+           }/* */,
            plugin: index => {
-             let render_ = `<div class='inl cell-key-`+index+`'>
-             test `+index+`
-             </div>`;
-             setTimeout(()=>{
-               s('.cell-key-'+index).onclick = ()=>{
-                 alert("index: "+index);
-               };
-             },0);
+             let render_ = `
+
+
+             <div class='in fll underpost-pointer b-yellow plugin-icon-content-table'>
+
+                        <i class='fas fa-eye' style='font-size: 16px;'></i>
+
+             </div>
+
+             <div class='in fll underpost-pointer b-yellow plugin-icon-content-table'>
+
+                        <i class='fas fa-download' style='font-size: 16px;'></i>
+
+             </div>
+
+             <div class='in fll underpost-pointer b-red plugin-icon-content-table'>
+
+                        <i class='fas fa-trash' style='font-size: 16px;'></i>
+
+             </div>
+             `;
+             // setTimeout(()=>{
+             //   s('.cell-key-'+index).onclick = ()=>{
+             //     alert("index: "+index);
+             //   };
+             // },0);
              return render_;
            },
-           name_plugin: 'plugin'
-           */
+           name_plugin: `
+
+
+           <div class='in fll plugin-icon-content-table'>
+
+                     `+renderLang({en: 'view', es: 'ver'})+`
+
+           </div>
+
+           <div class='in fll plugin-icon-content-table'>
+
+                     `+renderLang({en: 'download', es: 'descargar'})+`
+
+           </div>
+
+           <div class='in fll plugin-icon-content-table'>
+
+                     `+renderLang({en: 'delete', es: 'eliminar'})+`
+
+           </div>
+           `
+
          }
        ));
 
