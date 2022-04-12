@@ -44,7 +44,7 @@ class Network {
                type: v.split('/').includes('asymmetric') ? 'asymmetric' : 'symmetric'
              }
           });
-          PathsKeys = PathsKeys.sort(({date: a}, {date: b}) =>  b - a); // desc
+          PathsKeys = PathsKeys.sort((a, b) =>  b['date'] - a['date']); // desc
           // a - b -> asc
           PathsKeys = PathsKeys.map( x => {
             x.date = new Date(x.date).toISOString();
