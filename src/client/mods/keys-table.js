@@ -81,7 +81,7 @@ class KeysTable {
 
           .plugin-icon-content-table {
             text-align: center;
-            width: 32%;
+            width: 33%;
           }
 
       </style>
@@ -252,7 +252,7 @@ class KeysTable {
              cell_style: `
              padding-bottom: 5px;
              padding-top: 5px;
-             overflow: hidden;
+             overflow: auto;
              `,
              minWidth: 'none',
              mark_row_style: `

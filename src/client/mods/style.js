@@ -74,7 +74,6 @@ class Style {
 
 
                     .b-yellow, .b-blue, .b-red {
-                      border: 2px solid black;
                       transition: .3s;
                     }
 
