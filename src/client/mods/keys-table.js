@@ -267,7 +267,7 @@ class KeysTable {
              let render_ = `
 
 
-             <div class='in fll underpost-pointer b-yellow plugin-icon-content-table'>
+             <div class='in fll underpost-pointer b-yellow plugin-icon-content-table view-`+index+`'>
 
                         <i class='fas fa-eye' style='font-size: 16px;'></i>
 
@@ -306,6 +306,31 @@ class KeysTable {
                     );
                  }
                };
+
+               s('.view-'+index).onclick = async ()=>{
+                 console.warn('on view key', obj.data[index]);
+                 let response = await new Rest().FETCH('/network/keys/'+obj.data[index].type+'/'+obj.data[index].id, 'GET');
+                 if(response.success === true){
+
+
+
+                   notifi.display(
+                      backgroundNotifi,
+                      renderLang({es: 'Informacion Obtenida', en: 'Success get info keys'}),
+                      2000,
+                      'success'
+                    );
+                   await this.renderTableKeys();
+                 }else{
+                   notifi.display(
+                      backgroundNotifi,
+                      renderLang({es: 'Error en el Servicio', en: 'Error service'}),
+                      2000,
+                      'error'
+                    );
+                 }
+               };
+
              },0);
              return render_;
            },
@@ -334,7 +359,6 @@ class KeysTable {
          }
        ));
 
-       append('render', spr('<br>', 5));
   }
 
 }
