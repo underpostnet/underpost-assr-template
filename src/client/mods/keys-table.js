@@ -279,17 +279,34 @@ class KeysTable {
 
              </div>
 
-             <div class='in fll underpost-pointer b-red plugin-icon-content-table'>
+             <div class='in fll underpost-pointer b-red plugin-icon-content-table delete-`+index+`'>
 
                         <i class='fas fa-trash' style='font-size: 16px;'></i>
 
              </div>
              `;
-             // setTimeout(()=>{
-             //   s('.cell-key-'+index).onclick = ()=>{
-             //     alert("index: "+index);
-             //   };
-             // },0);
+             setTimeout(()=>{
+               s('.delete-'+index).onclick = async ()=>{
+                 console.warn('on delete key', obj.data[index]);
+                 let response = await new Rest().FETCH('/network/keys', 'DELETE', obj.data[index]);
+                 if(response.success === true){
+                   notifi.display(
+                      backgroundNotifi,
+                      renderLang({es: 'Llaves Eliminadas', en: 'Success delete keys'}),
+                      2000,
+                      'success'
+                    );
+                   await this.renderTableKeys();
+                 }else{
+                   notifi.display(
+                      backgroundNotifi,
+                      renderLang({es: 'Error en el Servicio', en: 'Error service'}),
+                      2000,
+                      'error'
+                    );
+                 }
+               };
+             },0);
              return render_;
            },
            name_plugin: `

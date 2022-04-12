@@ -18,6 +18,7 @@ class Network {
       this.uriPathKeys = '/data/network/keys';
       this.getKeys(MainProcess, '/network/keys');
       this.createKey(MainProcess, '/network/keys');
+      this.deleteKey(MainProcess, '/network/keys');
   }
 
   getKeys(MainProcess, uri){
@@ -25,10 +26,6 @@ class Network {
       info.api(req, { uri, apiModule: this.nameModule } );
       try {
         const pathReadKeys = this.consoleRelativePath+this.consoleFolderName+this.uriPathKeys;
-        res.writeHead( 200, {
-          'Content-Type': ('application/json; charset='+MainProcess.data.charset),
-          'Content-Language': '*'
-        });
         return res.end((()=>{
           let PathsKeys = [];
           files.readRecursive(pathReadKeys,
@@ -50,6 +47,10 @@ class Network {
             x.date = new Date(x.date).toISOString();
             return x;
           });
+          res.writeHead( 200, {
+            'Content-Type': ('application/json; charset='+MainProcess.data.charset),
+            'Content-Language': '*'
+          });
           return JSON.stringify(PathsKeys);
         })());
       }catch(error){
@@ -67,10 +68,6 @@ class Network {
     MainProcess.app.post(uri, async (req, res) => {
       info.api(req, { uri, apiModule: this.nameModule } );
       try {
-        res.writeHead( 200, {
-          'Content-Type': ('application/json; charset='+MainProcess.data.charset),
-          'Content-Language': '*'
-        });
         console.log(util.jsonSave(req.body));
         const path = this.consoleAbsolutePath+this.consoleFolderName+this.uriPathKeys;
         let success = false;
@@ -94,6 +91,10 @@ class Network {
         ){
           success = true;
         }
+        res.writeHead( 200, {
+          'Content-Type': ('application/json; charset='+MainProcess.data.charset),
+          'Content-Language': '*'
+        });
         return res.end(JSON.stringify({
           success,
           ...dataReturn
@@ -112,6 +113,36 @@ class Network {
     });
 
 
+  }
+
+
+  deleteKey(MainProcess, uri){
+    MainProcess.app.delete(uri, (req, res) => {
+      info.api(req, { uri, apiModule: this.nameModule } );
+      try {
+        console.log(util.jsonSave(req.body));
+        const path = this.consoleAbsolutePath+this.consoleFolderName+this.uriPathKeys+'/'+req.body.type+'/'+req.body.id;
+        console.log('del', path);
+        files.deleteFolderRecursive(path);
+        res.writeHead( 200, {
+          'Content-Type': ('application/json; charset='+MainProcess.data.charset),
+          'Content-Language': '*'
+        });
+        return res.end(JSON.stringify({
+          success: true
+        }));
+      }catch(error){
+        console.log(colors.red(error));
+        res.writeHead( 500, {
+          'Content-Type': ('application/json; charset='+MainProcess.data.charset),
+          'Content-Language': '*'
+        });
+        return res.end(JSON.stringify({
+          success: false,
+          error
+        }));
+      }
+    });
   }
 
 }
