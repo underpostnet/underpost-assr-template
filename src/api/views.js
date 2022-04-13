@@ -96,8 +96,7 @@ class Views {
           './underpost_modules/underpost-library/assets/underpost-600x600.png'
         ).toString('base64')+`';
 
-          window.COLOR_THEME_B = 'rgba(212, 0, 0, 0.8)';
-          window.COLOR_THEME_B_HOVER = 'rgba(212, 0, 0, 1)';
+          // server var
 
         `;
       initData += MainProcess.dev ? '' :

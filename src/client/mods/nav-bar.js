@@ -79,7 +79,7 @@ class NavBar {
           s('html').scrollTop = s('html').offsetTop;
         };
 
-        mod_scroll.init(s('body'), true, scroll => {
+        mod_scroll.init(s('body'), false, scroll => {
           if(scroll>300 && s('.btn-nav-up').style.display == 'none'){
             fadeIn(s('.btn-nav-up'));
           }else if(scroll <= 300 &&  s('.btn-nav-up').style.display == 'block' ){

@@ -157,13 +157,13 @@ class KeysTable {
           `,
           widthText: 140,
           pointer: true,
-          background: COLOR_THEME_B,
+          background: 'rgba(212, 0, 0, 0.8)',
           border: '2px solid yellow',
           width: 41,
           height: 41,
           radio: undefined,
           hover: `
-            background: `+COLOR_THEME_B_HOVER+`;
+            background: rgba(212, 0, 0, 1);
           `,
           icon: `
             <i class='fas fa-check' style='color: white; font-size: 20px'>

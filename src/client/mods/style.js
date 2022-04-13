@@ -32,7 +32,7 @@ class Style {
 
     window.underpost_section_title = `
 
-      background: `+COLOR_THEME_B+`;
+      background: rgba(212, 0, 0, 0.8);
       color: white;
       padding: 10px;
 
@@ -61,14 +61,14 @@ class Style {
                       transition: .3s;
                       padding: 15px;
                       margin: 5px;
-                      background: `+COLOR_THEME_B+`;
+                      background: rgba(212, 0, 0, 0.8);
                       cursor: pointer;
                       font-size: 13px;
                       font-family: retro-font;
 
                     }
                     .btn-underpost:hover{
-                      background: `+COLOR_THEME_B_HOVER+`;
+                      background: rgba(212, 0, 0, 1);
                     }
 
 
