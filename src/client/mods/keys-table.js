@@ -86,6 +86,33 @@ class KeysTable {
 
       </style>
 
+      <view-key style='display: none'>
+
+            <view-key-menu class='in'>
+
+                    <div class='inl btn-underpost cancel-view-key'>
+
+                          <i class="fas fa-times" style='font-size: 20px;'></i>
+
+                    </div>
+
+                    <div class='inl btn-underpost btn-view-key-raw' style='margin: 5px; left: -18px'>
+                        `+renderLang({
+                          es: 'ver datos json en bruto',
+                          en: 'view json raw data'
+                        })+`
+                        <i class='fas fa-eye' style='font-size: 20px'></i>
+                    </div>
+
+            </view-key-menu>
+
+            <pre class='key-raw-data' style='display: none'>
+
+            </pre>
+
+
+      </view-key>
+
       <table-keys class='in' style='margin: 5px'>
 
       </table-keys>
@@ -148,11 +175,13 @@ class KeysTable {
 
     s('.create-form-open').onclick = () => {
       s('.create-form-open').style.display = 'none';
+      s('table-keys').style.display = 'none';
       fadeIn(s('.form-keys'));
     };
     s('.cancel-key').onclick = () => {
       s('.form-keys').style.display = 'none';
       fadeIn(s('.create-form-open'));
+      fadeIn(s('table-keys'));
       s('.create-form-open').style.display = 'inline-table';
     };
     s('.create-key-btn').onclick = async () => {
@@ -307,12 +336,29 @@ class KeysTable {
                  }
                };
 
+               s('.cancel-view-key').onclick = async () => {
+                 s('view-key').style.display = 'none';
+                 fadeIn(s('.create-form-open'));
+                 s('.create-form-open').style.display = 'inline-table';
+                 s('.key-raw-data').style.display = 'none';
+                 fadeIn(s('table-keys'));
+               };
+
                s('.view-'+index).onclick = async ()=>{
                  console.warn('on view key', obj.data[index]);
                  let response = await new Rest().FETCH('/network/keys/'+obj.data[index].type+'/'+obj.data[index].id, 'GET');
                  if(response.success === true){
 
+                   s('.form-keys').style.display = 'none';
+                   // s('html').scrollTop = s('html').offsetTop;
+                   s('.create-form-open').style.display = 'none';
+                   s('table-keys').style.display = 'none';
 
+                   fadeIn(s('view-key'));
+                   s('.btn-view-key-raw').onclick = () => {
+                      htmls('.key-raw-data', jsonSave(response.dataFileKey));
+                      fadeIn(s('.key-raw-data'));
+                   };
 
                    notifi.display(
                       backgroundNotifi,

@@ -56,17 +56,18 @@ class NavBar {
              }
 
         </style>
-
+        <!--
         <div class='fix underpost-nav-bar'>
-
+        </div>
+        -->
                 <a href='/' alt='home'>
-                  <div class='abs btn-underpost btn-nav btn-nav-home'>
+                  <div class='fix btn-underpost btn-nav btn-nav-home'>
 
                   </div>
                 </a>
 
 
-        </div>
+
 
     `);
 
