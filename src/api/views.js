@@ -29,7 +29,11 @@ class Views {
       const validateUriCss = uri => (
         uri.split('.').pop()=='css' &&
         (
-          uri.split('/')[1]=='style'
+          (
+            uri.split('/')[1]=='style'
+            &&
+            MainProcess.data.css.includes(uri)
+          )
           ||
           uri.split('/')[1]=='quill'
           ||
@@ -422,8 +426,8 @@ class Views {
               <script defer type='module' src='/views/`+path.view+`'></script>
           </head>
           <body>
-              <img class='abs center loading' alt='loading' src='data:image/gif;base64,`+fs.readFileSync(
-                './underpost_modules/underpost-library/assets/loading-opt.gif'
+              <img class='abs center loading' alt='loading' style='width: 30px; height: 30px;' src='data:image/gif;base64,`+fs.readFileSync(
+                './underpost_modules/underpost-library/assets/gif-alpha-opt.gif'
               ).toString('base64')+`'>
               <div style='display: none;'>
                 <h1>{{title}}</h1> <h2>{{description}}</h2>

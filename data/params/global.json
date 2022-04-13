@@ -13,6 +13,10 @@
       "/underpost_modules/fontawesome",
       "/src/client"
    ],
+   "css": [
+     "/style/simple.css",
+     "/style/place-bar-select.css"
+   ],
    "fonts":[
       {
          "name":"retro-font",
@@ -30,7 +34,7 @@
        "url": "/cursors/black-default.png",
        "x": -30,
        "y": -30,
-       "class": "body"
+       "class": ".underpost-default"
      },
      {
        "url": "/cursors/black-pointer.png",

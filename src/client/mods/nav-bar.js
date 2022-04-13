@@ -58,11 +58,9 @@ class NavBar {
 
                 </div>
 
-                <a href='/' alt='home'>
-                  <div class='fix btn-underpost btn-nav btn-nav-home' style='bottom: 3px; right: 3px;'>
+                <div class='fix btn-underpost btn-nav btn-nav-home' style='bottom: 3px; right: 3px;'>
 
-                  </div>
-                </a>
+                </div>
 
 
 
@@ -75,6 +73,10 @@ class NavBar {
           renderLang({es: 'Home', en: 'Home'})
         ));
 
+        s('.btn-nav-home').onclick = () => {
+          location.href = '/';
+        };
+
         s('.btn-nav-up').onclick = () => {
           s('html').scrollTop = s('html').offsetTop;
         };
@@ -86,6 +88,23 @@ class NavBar {
             fadeOut(s('.btn-nav-up'));
           }
         });
+
+
+        append('render', `
+
+
+
+
+                <br><br>
+                `+spr(' ', 5)+`<a href='https://underpost.net' alt='underpost.net' >Powered By UNDERpost.net</a>
+                <br><br>
+
+
+
+
+
+
+        `);
 
 
   }
