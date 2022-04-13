@@ -11,7 +11,7 @@ class LogIn {
 
     <br>
     <br>
-    <img class='in' alt='underpost.net' src='`+IMG_UNDERPOST_SOCIAL+`' style='width: 300px; margin: auto; height: auto;'>
+    <img class='in' alt='underpost.net' src='`+window.underpost.assets.socialImg+`' style='width: 300px; margin: auto; height: auto;'>
 
     <br>
     <br>

@@ -88,32 +88,33 @@ class Views {
 
 
       */
-
-      const uriInitData = '/init.js';
-      let initData = `
-
-          window.IMG_UNDERPOST_SOCIAL = 'data:image/png;base64,`+fs.readFileSync(
+      const initData = {
+        assets: {
+          socialImg: 'data:image/png;base64,'+fs.readFileSync(
           './underpost_modules/underpost-library/assets/underpost-600x600.png'
-        ).toString('base64')+`';
-
-          // server var
-
-        `;
-      initData += MainProcess.dev ? '' :
-      javaScriptObfuscator.obfuscate(util.reduce(`
+          ).toString('base64')
+        }
+      };
+      const uriInitData = '/init.js';
+      let initDataRender =
+      `window.underpost = `+util.jsonWebRender(initData)+`;`;
+      initDataRender += MainProcess.dev ? '' :`
           /*
           console.log = function(){};
           console.warn = function(){};
           console.error = function(){};
           */
-
-          `))._obfuscatedCode;
+      `;
+      initDataRender =
+      javaScriptObfuscator.obfuscate(util.reduce(
+        initDataRender
+      ))._obfuscatedCode;
       logStatic(uriInitData);
       MainProcess.app.get(uriInitData, (req, res) => {
         res.writeHead( 200, {
           'Content-Type': ('application/javascript; charset='+MainProcess.data.charset)
         });
-        return res.end(initData);
+        return res.end(initDataRender);
       });
 
       // -------------------------------------------------------------------------
