@@ -33,15 +33,8 @@ class NavBar {
     append('body', `
 
         <style>
-            .underpost-nav-bar {
-              background: none; /* #131313 */
-              height: 40px;
-              width: 100%;
-              bottom: 0px;
-            }
+
             .btn-nav {
-              bottom: 3px;
-              right: 3px;
               width: 15px;
               height: 15px;
               font-size: 20px;
@@ -56,12 +49,17 @@ class NavBar {
              }
 
         </style>
-        <!--
-        <div class='fix underpost-nav-bar'>
-        </div>
-        -->
+
+                <div class='fix btn-underpost btn-nav btn-nav-up' style='bottom: 3px; left: 3px; display: none'>
+
+                      <div class='abs center'>
+                            <i class="fas fa-arrow-up"></i>
+                      </div>
+
+                </div>
+
                 <a href='/' alt='home'>
-                  <div class='fix btn-underpost btn-nav btn-nav-home'>
+                  <div class='fix btn-underpost btn-nav btn-nav-home' style='bottom: 3px; right: 3px;'>
 
                   </div>
                 </a>
@@ -76,6 +74,19 @@ class NavBar {
           '<i class="fas fa-th abs center"></i>',
           renderLang({es: 'Home', en: 'Home'})
         ));
+
+        s('.btn-nav-up').onclick = () => {
+          s('html').scrollTop = s('html').offsetTop;
+        };
+
+        mod_scroll.init(s('body'), true, scroll => {
+          if(scroll>300 && s('.btn-nav-up').style.display == 'none'){
+            fadeIn(s('.btn-nav-up'));
+          }else if(scroll <= 300 &&  s('.btn-nav-up').style.display == 'block' ){
+            fadeOut(s('.btn-nav-up'));
+          }
+        });
+
 
   }
 }
