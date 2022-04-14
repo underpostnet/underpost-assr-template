@@ -38,6 +38,10 @@ class LogIn {
 
     `);
 
+    let botContent = `
+        <br>
+    `;
+
     append('.signin-form', renderInput({
       underpostClass: 'in',
       id_content_input: 'a1-1',

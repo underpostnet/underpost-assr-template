@@ -50,16 +50,8 @@ class Editor {
       type: 'text',
       required: true,
       style_content_input: '',
-      style_input: `
-
-          padding: 12px 15px;
-          font-family: retro-font;
-          font-size: `+sizeTitle+`px;
-          background: #1d1d1c;
-          color: white;
-
-      `,
-      style_label: 'font-size: 12px;',
+      style_input,
+      style_label,
       style_outline: true,
       style_placeholder: '',
       textarea: false,
@@ -85,24 +77,17 @@ class Editor {
           <style>
 
                 .btn-cards {
-                  background: black;
-                  color: white;
                   transition: .3s;
-                  cursor: pointer;
+                  `+window.underpost.theme.cursorPointer+`
                   font-size: 15px;
                   width: 50px;
                   height: 50px;
                   top: -10px;
                 }
 
-                .btn-cards-delete:hover {
-                  font-size: 17px;
-                  color: red;
-                }
-
-                .btn-cards-edit:hover {
-                  font-size: 17px;
-                  color: yellow;
+                .btn-cards:hover {
+                      font-size: 17px;
+                      color: `+window.underpost.theme.mark+`;
                 }
 
           </style>
@@ -205,9 +190,9 @@ class Editor {
 
         return `
 
-        <div class='card-`+obj_.id+`' style=' margin: 5px; `+(state=='new'?'border: 3px solid yellow;':'')+`'>
+        <div class='card-`+obj_.id+`' style=' margin: 5px; `+(state=='new'?'border: 3px solid '+window.underpost.theme.mark+';':'')+`'>
 
-          <div class='in' style='color: white; background: rgb(198, 0, 0); min-height: 60px;'>
+          <div class='in' style='color: `+window.underpost.theme.section_btn_color+`; background: `+window.underpost.theme.section_btn+`; min-height: 60px;'>
 
                 <div class='fl'>
 
@@ -216,7 +201,7 @@ class Editor {
                         <div class='in' style='font-size: 20px; padding: 5px;'>
                             `+obj_.title+`
                         </div>
-                        <div class='in' style='font-size: 10px; padding: 5px; color: yellow;'>
+                        <div class='in' style='font-size: 10px; padding: 5px; color: `+window.underpost.theme.mark+`;'>
                             `+renderLang({en: 'Last Update', es:'Actualizado hace'})+` <span class='time-since-`+obj_.id+`'>`+timeSince(new Date(obj_.date), s('html').lang, -1)+`</span>
                         </div>
                         <div class='in' style='font-size: 10px; padding: 5px; color: #c1c1c1;'>
@@ -271,8 +256,8 @@ class Editor {
               ql_editor: `
                 min-height: 300px;
                 /* background: #ebeceb; */
-                background: #1d1d1c;
-                color: white;
+                background: white;
+                color: black;
                 overflow: hidden !important;
               `,
               standalone_container: `
@@ -280,16 +265,12 @@ class Editor {
                 color: black;
               `,
               placeholder: `
-                color: red;
+                /* color: #0f0f0f; */
                 content: attr(data-placeholder);
                 font-style: normal;
-                left: 15px;
-                pointer-events: none;
-                position: absolute;
-                right: 15px;
               `
           },
-          fontDefault: 'retro-font',
+          fontDefault: window.underpost.theme.font,
           fonts: ['gothic', 'retro-font', 'arial', 'Verdana', 'Times'],
           placeholder: renderLang({es: 'Componer una epopeya...', en: 'Compose an epic...' }),
           initContent: '',
@@ -327,7 +308,7 @@ class Editor {
                               );
                            }
 
-                           displayValue = displayValue.replace('contenteditable="true"', 'style="background: none"');
+                           // displayValue = displayValue.replace('contenteditable="true"', 'style="background: none"');
                            displayValue = displayValue.replaceAll('transform: translate', 'none: ');
                            displayValue = displayValue.replace('ql-editor-main', '');
 
@@ -395,13 +376,13 @@ class Editor {
 
           </div>
 
-          <div class='inl btn-underpost btn-cancel-send-underpost' style='display: none; padding: 10px; top: 2px;'>
+          <div class='inl btn-underpost btn-cancel-send-underpost' style='display: none;'>
 
-                <i class="fas fa-times" style='font-size: 23px;'></i>
+                <i class="fas fa-times"></i>
 
           </div>
 
-          <div class='inl btn-underpost btn-send-underpost' style='display: none; left: -20px;'>
+          <div class='inl btn-underpost btn-send-underpost' style='display: none;'>
 
                 `+renderLang({en: 'SEND', es: 'ENVIAR'})+`
 

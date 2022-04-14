@@ -98,6 +98,7 @@ class Menu {
           width: 90%;
           height: 90%;
           `+window.underpost.theme.cursorPointer+`
+          color: `+window.underpost.theme.mark+`;
 
         `,
         content_cell_modal: `

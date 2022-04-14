@@ -9,12 +9,12 @@ class Style {
     const THEMES = [
       {
         "name": "normal",
-        "background": "white",
-        "text": "black",
-        "sub_background":"#d4d4d4",
+        "background": "black",
+        "text": "white",
+        "sub_background":"yellow",
         "sub_text": "blue",
         "section_btn": "green",
-        "section_btn_color": "white",
+        "section_btn_color": "black",
         "mark": "orange",
         "font": "gothic",
         "cursorDefault": ".underpost-default",
@@ -100,10 +100,12 @@ class Style {
 
     window.style_input = `
 
-        padding: 12px 15px;
+        /* padding: 12px 15px; */
         font-size: 14px;
         background: `+window.underpost.theme.sub_background+`;
-        margin: 10px 10px 30px 10px;
+        /* margin: 10px 10px 30px 10px; */
+        padding: 10px 10px 10px 18px;
+        color: `+window.underpost.theme.sub_text+`
 
     `;
 
@@ -124,7 +126,7 @@ class Style {
 
     `;
 
-    window.botContent = '';
+    window.botContent = ``;
 
     window.backgroundNotifi = 'rgba(0, 0, 0, 0.9)';
 
@@ -154,13 +156,15 @@ class Style {
                       margin: 5px;
                       background: `+window.underpost.theme.section_btn+`;
                       color: `+window.underpost.theme.section_btn_color+`;
-                      opacity: 0.8;
+                      border: 3px solid `+window.underpost.theme.section_btn+`;
                       font-size: 13px;
                       `+window.underpost.theme.cursorPointer+`
                     }
 
                     .btn-underpost:hover{
-                      opacity: 1;
+                      border: 3px solid `+window.underpost.theme.mark+`;
+                      color: `+window.underpost.theme.mark+`;
+                      font-weight: bold;
                     }
 
 
