@@ -32,6 +32,7 @@ class Style {
     const currentTheme = THEMES.find( x => x["name"] == localStorage.getItem("theme") );
     window.underpost.theme = currentTheme ? currentTheme : THEMES[0];
 
+    window.underpost.theme.classDefault = newInstance(window.underpost.theme.cursorDefault).slice(1);
     window.underpost.theme.cursorDefault != '' ?
     window.underpost.theme.cursorDefault =
     window.underpost.assets.cursors.find(
@@ -39,11 +40,12 @@ class Style {
     ).render : null;
 
 
-    window.underpost.theme.cursorPointer != '' ?
+    window.underpost.theme.classPointer = newInstance(window.underpost.theme.cursorPointer).slice(1);
     window.underpost.theme.cursorPointer =
+    window.underpost.theme.cursorPointer != '' ?
     window.underpost.assets.cursors.find(
       x => x.class == window.underpost.theme.cursorPointer
-    ).render : null;
+    ).render : 'cursor: pointer;';
 
 
     window.underpost.theme.font != '' ?
@@ -131,7 +133,7 @@ class Style {
 
               <style>
 
-                    body {
+                    html, body {
                       `+window.underpost.theme.font+`
                       color: `+window.underpost.theme.text+`;
                       background: `+window.underpost.theme.background+`;
@@ -141,6 +143,7 @@ class Style {
                     a {
                       text-decoration: none;
                       color: `+window.underpost.theme.sub_text+`;
+                        `+window.underpost.theme.cursorPointer+`
                     }
 
                     a:hover { text-decoration: underline; }

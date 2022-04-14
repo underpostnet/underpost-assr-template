@@ -56,7 +56,7 @@ class Menu {
 
         <`+renderMenuDiv+`-render class='in'>
 
-                <`+renderMenuDiv+` class='abs center' style='border: 2px solid #0e0e0e; border-radius: 10px;'>
+                <`+renderMenuDiv+` class='abs center' style='border: 2px solid `+window.underpost.theme.text+`; border-radius: 10px;'>
 
                 </`+renderMenuDiv+`>
 
@@ -86,17 +86,18 @@ class Menu {
 
           width: 85%;
           height: 85%;
-          border: 3px solid rgb(15,15,15);
+          border: 3px solid `+window.underpost.theme.text+`;
           transition: .3s;
           border-radius: 10%;
 
         `,
         cell_hover: `
 
-          border: 3px solid yellow;
+          border: 3px solid `+window.underpost.theme.mark+`;
           border-radius: 50%;
           width: 90%;
           height: 90%;
+          `+window.underpost.theme.cursorPointer+`
 
         `,
         content_cell_modal: `
@@ -220,7 +221,7 @@ class Menu {
     for(let idCellMenu of range(0, totalCell)){
       if(APPS[idCellMenu]){
         const selectorCell = '.'+id_cell+'-'+idCellMenu;
-        s(selectorCell).classList.add('underpost-pointer');
+        // s(selectorCell).classList.add(window.underpost.theme.classPointer);
         htmls(selectorCell, APPS[idCellMenu].render());
       }
       // const mainSelectorCell =  '.main-cell-'+id_cell+`-`+idCellMenu;
