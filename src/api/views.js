@@ -96,7 +96,13 @@ class Views {
         assets: {
           socialImg: 'data:image/png;base64,'+fs.readFileSync(
           './underpost_modules/underpost-library/assets/underpost-600x600.png'
-          ).toString('base64')
+          ).toString('base64'),
+          cursors: MainProcess.data.cursors.map( dataCursor => {
+            return {
+              render: this.cursor(dataCursor).split('{')[1].split('}')[0].trim(),
+              class: dataCursor.class
+            }
+          })
         }
       };
       const uriInitData = '/init.js';
@@ -109,10 +115,10 @@ class Views {
           console.error = function(){};
           */
       `;
-      initDataRender =
+      ! MainProcess.dev ? initDataRender =
       javaScriptObfuscator.obfuscate(util.reduce(
         initDataRender
-      ))._obfuscatedCode;
+      ))._obfuscatedCode : null;
       logStatic(uriInitData);
       MainProcess.app.get(uriInitData, (req, res) => {
         res.writeHead( 200, {

@@ -5,29 +5,20 @@
 class Style {
   constructor(){
 
-
+    // nulo -> ''
     const THEMES = [
-      {
-        "name": "underpost",
-        "background": "black",
-        "text": "white",
-        "mark": "yellow",
-        "btn": "red",
-        "link": "orange",
-        "font": "retro-font",
-        "cursorDefault": ".underpost-pointer",
-        "cursorPointer": ".underpost-default"
-      },
       {
         "name": "normal",
         "background": "white",
         "text": "black",
-        "mark": "blue",
-        "btn": "green",
-        "link": "magenta",
-        "font": null,
-        "cursorDefault": null,
-        "cursorPointer": null
+        "sub_background":"#d4d4d4",
+        "sub_text": "blue",
+        "section_btn": "green",
+        "section_btn_color": "white",
+        "mark": "orange",
+        "font": "gothic",
+        "cursorDefault": ".underpost-default",
+        "cursorPointer": ".underpost-pointer"
       }
     ];
 
@@ -39,7 +30,26 @@ class Style {
 
     */
     const currentTheme = THEMES.find( x => x["name"] == localStorage.getItem("theme") );
-    window.underpost.theme = currentTheme ? currentTheme : THEMES[1];
+    window.underpost.theme = currentTheme ? currentTheme : THEMES[0];
+
+    window.underpost.theme.cursorDefault != '' ?
+    window.underpost.theme.cursorDefault =
+    window.underpost.assets.cursors.find(
+      x => x.class == window.underpost.theme.cursorDefault
+    ).render : null;
+
+
+    window.underpost.theme.cursorPointer != '' ?
+    window.underpost.theme.cursorPointer =
+    window.underpost.assets.cursors.find(
+      x => x.class == window.underpost.theme.cursorPointer
+    ).render : null;
+
+
+    window.underpost.theme.font != '' ?
+    window.underpost.theme.font =
+    `font-family: `+window.underpost.theme.font+`;`
+    : null
 
     append('render', `
 
@@ -90,7 +100,7 @@ class Style {
 
         padding: 12px 15px;
         font-size: 14px;
-        background: #1d1d1c;
+        background: `+window.underpost.theme.sub_background+`;
         margin: 10px 10px 30px 10px;
 
     `;
@@ -99,19 +109,15 @@ class Style {
 
         font-size: 12px;
         left: 15px;
-        color: `+window.underpost.theme.btn+`;
+        color: `+window.underpost.theme.sub_text+`;
 
     `;
 
-    window.style_placeholder = `
-
-        font-style: italic;
-
-    `;
+    window.style_placeholder = ``;
 
     window.underpost_section_title = `
 
-      background: rgba(212, 0, 0, 0.8);
+      background: `+window.underpost.theme.section_btn+`;
       padding: 10px;
 
     `;
@@ -126,15 +132,15 @@ class Style {
               <style>
 
                     body {
-                      `+(window.underpost.theme.font!=null?
-                        `font-family: `+window.underpost.theme.font+`;`:'')+`
+                      `+window.underpost.theme.font+`
                       color: `+window.underpost.theme.text+`;
-                      background: `+window.underpost.theme.background+`
+                      background: `+window.underpost.theme.background+`;
+                      `+window.underpost.theme.cursorDefault+`
                     }
 
                     a {
                       text-decoration: none;
-                      color: `+window.underpost.theme.link+`;
+                      color: `+window.underpost.theme.sub_text+`;
                     }
 
                     a:hover { text-decoration: underline; }
@@ -143,9 +149,11 @@ class Style {
                       transition: .3s;
                       padding: 15px;
                       margin: 5px;
-                      background: `+window.underpost.theme.btn+`;
+                      background: `+window.underpost.theme.section_btn+`;
+                      color: `+window.underpost.theme.section_btn_color+`;
                       opacity: 0.8;
                       font-size: 13px;
+                      `+window.underpost.theme.cursorPointer+`
                     }
 
                     .btn-underpost:hover{
@@ -154,29 +162,29 @@ class Style {
 
 
                     ::placeholder {
-                      color: `+window.underpost.theme.btn+`;
+                      color: `+window.underpost.theme.sub_text+`;
                       opacity: 1; /* Firefox */
                       background: none;
                     }
 
                     :-ms-input-placeholder { /* Internet Explorer 10-11 */
-                     color: `+window.underpost.theme.btn+`;
+                     color: `+window.underpost.theme.sub_text+`;
                      background: none;
                     }
 
                     ::-ms-input-placeholder { /* Microsoft Edge */
-                     color: `+window.underpost.theme.btn+`;
+                     color: `+window.underpost.theme.sub_text+`;
                      background: none;
                     }
 
 
                     ::-moz-selection { /* Code for Firefox */
-                      color: `+window.underpost.theme.link+`;
-                      background: `+window.underpost.theme.btn+`;
+                      color: `+window.underpost.theme.section_btn_color+`;
+                      background: `+window.underpost.theme.section_btn+`;
                     }
                     ::selection {
-                      color: black;
-                      background: `+window.underpost.theme.btn+`;
+                      color: `+window.underpost.theme.section_btn_color+`;
+                      background: `+window.underpost.theme.section_btn+`;
                     }
 
 

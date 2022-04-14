@@ -59,7 +59,7 @@ class Editor {
           color: white;
 
       `,
-      style_label: 'color: red; font-size: 12px;',
+      style_label: 'font-size: 12px;',
       style_outline: true,
       style_placeholder: '',
       textarea: false,
