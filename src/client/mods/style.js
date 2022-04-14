@@ -5,32 +5,35 @@
 class Style {
   constructor(){
 
-    // nulo -> ''
-    const THEMES = [
-      {
-        "name": "underpost",
-        "background": "black",
-        "text": "white",
-        "sub_background":"#c0c3c2",
-        "sub_text": "red",
-        "section_btn": "red",
-        "section_btn_color": "white",
-        "mark": "yellow",
-        "font": "retro-font",
-        "cursorDefault": ".underpost-default",
-        "cursorPointer": ".underpost-pointer"
-      }
-    ];
-
     /*
 
     localStorage.getItem(sortable.options.group.name);
     localStorage.setItem(sortable.options.group.name, order.join('|'));
 
-
     */
-    const currentTheme = THEMES.find( x => x["name"] == localStorage.getItem("theme") );
-    window.underpost.theme = currentTheme ? currentTheme : THEMES[0];
+    window.underpost.defaultTheme = {
+      name: "underpost",
+      background: "rgb(0, 0, 0, 1)",
+      text: "rgb(255, 255, 255, 1)",
+      sub_background:"rgba(192, 195, 194, 1)",
+      sub_text: "rgba(255, 0, 0, 1)",
+      section_btn: "rgba(255, 0, 0, 1)",
+      section_btn_color: "rgba(255, 255, 255, 1)",
+      mark: "rgba(235, 255, 0, 1)",
+      font: "retro-font",
+      cursorDefault: ".underpost-default",
+      cursorPointer: ".underpost-pointer"
+    };
+
+    const currentTheme = localStorage.getItem("theme");
+    if(! currentTheme){
+        window.underpost.theme = window.underpost.defaultTheme;
+        localStorage.setItem("theme", JSON.stringify(window.underpost.defaultTheme));
+        console.warn('theme -> set default ', window.underpost.theme);
+    }else{
+        window.underpost.theme = JSON.parse(currentTheme);
+        console.warn('theme -> get current ', window.underpost.theme);
+    }
 
     window.underpost.theme.classDefault = newInstance(window.underpost.theme.cursorDefault).slice(1);
     window.underpost.theme.cursorDefault != '' ?

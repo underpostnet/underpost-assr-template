@@ -49,6 +49,16 @@ class Menu {
                 `+renderLang({es: 'Llaves', en: 'Keys'})+`
             </div>
         `
+      },
+      {
+        path: '/config',
+        render: () => `
+            <i class="fas fa-cog abs center" style='`+iconStyle+`'>
+            </i>
+            <div class='abs center' style='`+textStyle+`'>
+                `+renderLang({es: 'Configuración', en: 'Setting'})+`
+            </div>
+        `
       }
     ];
 

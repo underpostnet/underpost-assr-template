@@ -170,6 +170,36 @@
             "changefreq":"weekly",
             "priority":1
          }
+      },
+      {
+         "langs":[
+            "en",
+            "es"
+         ],
+         "dir":"ltr",
+         "uri":"/config",
+         "pwa":true,
+         "title":{
+            "en":"config - underpost.net",
+            "es":"config - underpost.net"
+         },
+         "description":{
+            "en":"config interface",
+            "es":"config interface"
+         },
+         "image":"/img/underpost-social.jpg",
+         "favicon":"/img/underpost.png",
+         "view":"config.js",
+         "short_name": "underpost-config",
+         "jsonld":[
+            "WebSite"
+         ],
+         "sitemap":{
+            "active":true,
+            "lastmod":"2022-02-24",
+            "changefreq":"weekly",
+            "priority":1
+         }
       }
    ]
 }
