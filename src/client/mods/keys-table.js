@@ -58,13 +58,13 @@ class KeysTable {
               placeholder: ''
             })+`
 
-          <div class='inl btn-underpost cancel-key' style='left: -5px;'>
+          <div class='inl btn-underpost cancel-key'>
 
                 <i class="fas fa-times" style='font-size: 20px;'></i>
 
           </div>
 
-          <div class='inl btn-underpost create-key-btn' style='left: -23px;'>
+          <div class='inl btn-underpost create-key-btn'>
               `+renderLang({
                 es: 'Crear',
                 en: 'Create'
@@ -84,6 +84,15 @@ class KeysTable {
             width: 33%;
           }
 
+          .btn-plug-table {
+            `+window.underpost.theme.cursorPointer+`
+            transition: .3s;
+          }
+
+          .btn-plug-table:hover {
+            color: `+window.underpost.theme.mark+`;
+          }
+
       </style>
 
       <view-key style='display: none'>
@@ -92,16 +101,16 @@ class KeysTable {
 
                     <div class='inl btn-underpost cancel-view-key'>
 
-                          <i class="fas fa-times" style='font-size: 20px;'></i>
+                          <i class="fas fa-times"></i>
 
                     </div>
 
-                    <div class='inl btn-underpost btn-view-key-raw' style='margin: 5px; left: -18px'>
+                    <div class='inl btn-underpost btn-view-key-raw'>
                         `+renderLang({
                           es: 'ver datos json en bruto',
                           en: 'view json raw data'
                         })+`
-                        <i class='fas fa-eye' style='font-size: 20px'></i>
+                        <i class='fas fa-eye'></i>
                     </div>
 
             </view-key-menu>
@@ -157,16 +166,16 @@ class KeysTable {
           `,
           widthText: 140,
           pointer: true,
-          background: 'rgba(212, 0, 0, 0.8)',
-          border: '2px solid yellow',
+          background: window.underpost.theme.section_btn,
+          border: '3px solid '+window.underpost.theme.section_btn,
           width: 41,
           height: 41,
           radio: undefined,
           hover: `
-            background: rgba(212, 0, 0, 1);
+            border: 3px solid `+window.underpost.theme.mark+`;
           `,
           icon: `
-            <i class='fas fa-check' style='color: white; font-size: 20px'>
+            <i class='fas fa-check'>
             </i>
           `
         }
@@ -257,7 +266,7 @@ class KeysTable {
          inObj == undefined ? inObj = {} : null;
 
          const fontSize = 10;
-         const fontFamily = 'retro-font';
+         const fontFamily = window.underpost.theme.font;
          const obj = {
            divContent: 'table-keys',
            data: await new Rest().FETCH('/network/keys', 'GET')
@@ -269,12 +278,12 @@ class KeysTable {
              header_row_style: `
              padding-bottom: 10px;
              padding-top: 10px;
-             `+'font-family: '+fontFamily+'; border-bottom: 3px solid red; font-size: '+fontSize+'px;',
+             `+'font-family: '+fontFamily+'; border-bottom: 3px solid '+window.underpost.theme.section_btn+'; font-size: '+fontSize+'px;',
              header_cell_style: '',
              row_style: `
 
               font-family: `+fontFamily+`;
-              border-bottom: 3px solid rgb(22, 22, 22);
+              border-bottom: 3px solid `+window.underpost.theme.sub_background+`;
               font-size: `+fontSize+`px;
 
               `,
@@ -287,7 +296,7 @@ class KeysTable {
              mark_row_style: `
 
              font-family: `+fontFamily+`;
-             border: 3px solid yellow;
+             border: 3px solid `+window.underpost.theme.mark+`;
              font-size: `+fontSize+`px;
 
              `
@@ -296,19 +305,19 @@ class KeysTable {
              let render_ = `
 
 
-             <div class='in fll underpost-pointer b-yellow plugin-icon-content-table view-`+index+`'>
+             <div class='in fll plugin-icon-content-table btn-plug-table view-`+index+`'>
 
                         <i class='fas fa-eye' style='font-size: 16px;'></i>
 
              </div>
 
-             <div class='in fll underpost-pointer b-yellow plugin-icon-content-table'>
+             <div class='in fll plugin-icon-content-table btn-plug-table'>
 
                         <i class='fas fa-download' style='font-size: 16px;'></i>
 
              </div>
 
-             <div class='in fll underpost-pointer b-red plugin-icon-content-table delete-`+index+`'>
+             <div class='in fll plugin-icon-content-table btn-plug-table delete-`+index+`'>
 
                         <i class='fas fa-trash' style='font-size: 16px;'></i>
 

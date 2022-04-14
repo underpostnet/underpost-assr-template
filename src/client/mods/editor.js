@@ -270,7 +270,7 @@ class Editor {
                 font-style: normal;
               `
           },
-          fontDefault: window.underpost.theme.font,
+          fontDefault: window.underpost.theme.font.split(':')[1].split(';')[0],
           fonts: ['gothic', 'retro-font', 'arial', 'Verdana', 'Times'],
           placeholder: renderLang({es: 'Componer una epopeya...', en: 'Compose an epic...' }),
           initContent: '',

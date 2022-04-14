@@ -8,15 +8,15 @@ class Style {
     // nulo -> ''
     const THEMES = [
       {
-        "name": "normal",
+        "name": "underpost",
         "background": "black",
         "text": "white",
-        "sub_background":"yellow",
-        "sub_text": "blue",
-        "section_btn": "green",
-        "section_btn_color": "black",
-        "mark": "orange",
-        "font": "gothic",
+        "sub_background":"#c0c3c2",
+        "sub_text": "red",
+        "section_btn": "red",
+        "section_btn_color": "white",
+        "mark": "yellow",
+        "font": "retro-font",
         "cursorDefault": ".underpost-default",
         "cursorPointer": ".underpost-pointer"
       }
@@ -52,7 +52,7 @@ class Style {
     window.underpost.theme.font =
     `font-family: `+window.underpost.theme.font+`;`
     : null
-
+    /*
     append('render', `
 
 
@@ -94,6 +94,8 @@ class Style {
 
     }
 
+    */
+
     // -------------------------------------------------------------------------
     // -------------------------------------------------------------------------
 
@@ -105,7 +107,8 @@ class Style {
         background: `+window.underpost.theme.sub_background+`;
         /* margin: 10px 10px 30px 10px; */
         padding: 10px 10px 10px 18px;
-        color: `+window.underpost.theme.sub_text+`
+        color: `+window.underpost.theme.sub_text+`;
+        `+window.underpost.theme.font+`
 
     `;
 
@@ -193,27 +196,6 @@ class Style {
                       color: `+window.underpost.theme.section_btn_color+`;
                       background: `+window.underpost.theme.section_btn+`;
                     }
-
-
-
-
-                    .b-yellow, .b-blue, .b-red {
-                      transition: .3s;
-                    }
-
-                    .b-yellow:hover {
-                      /* border: 2px solid yellow; */
-                      color: yellow;
-                    }
-                    .b-blue:hover {
-                      /* border: 2px solid blue; */
-                      color: blue;
-                    }
-                    .b-red:hover {
-                      /* border: 2px solid red; */
-                      color: red;
-                    }
-
 
 
               </style>
