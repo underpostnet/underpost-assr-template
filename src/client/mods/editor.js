@@ -309,6 +309,7 @@ class Editor {
                            }
 
                            // displayValue = displayValue.replace('contenteditable="true"', 'style="background: none"');
+                           displayValue = displayValue.replace('contenteditable="true"', '');
                            displayValue = displayValue.replaceAll('transform: translate', 'none: ');
                            displayValue = displayValue.replace('ql-editor-main', '');
 
