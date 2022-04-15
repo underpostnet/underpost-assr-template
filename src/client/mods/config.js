@@ -16,25 +16,27 @@ class UnderpostConfig {
     ];
 
     const renderTheme = obj_ => {
-      window.underpost.theme = newInstance(window.underpost.defaultTheme);
+      window.underpost.theme = newInstance(window.underpost.themes[0]);
       if(obj_){
         if(obj_.type === 'random'){
           COLOR_ATTR.map( optionColor => {
             console.log(s('.'+optionColor).value);
             window.underpost.theme[optionColor] = getRandomColor();
-          })
+          });
+          console.warn('theme -> set random theme ', window.underpost.theme);
         }
-        if(obj_.type === 'default'){
-          // idem
+        if(obj_.type === 'theme'){
+          window.underpost.theme = obj_.theme;
+          console.warn('theme -> set theme ', window.underpost.theme);
         }
       }else{
         COLOR_ATTR.map( optionColor => {
           console.log(s('.'+optionColor).value);
           window.underpost.theme[optionColor] = s('.'+optionColor).value;
         });
+        console.warn('theme -> set custom theme ', window.underpost.theme);
       }
       localStorage.setItem("theme", JSON.stringify(window.underpost.theme));
-      console.warn('theme -> set theme ', window.underpost.theme);
       htmls('render', '');
       window.underpost.view();
     }
@@ -118,25 +120,14 @@ class UnderpostConfig {
 
           `);
       });
-      s('.'+idTheme).onclick = () => {
-        window.underpost.defaultTheme = theme_;
-        renderTheme({type: 'default'});
-      }
+      s('.'+idTheme).onclick = () =>
+      renderTheme({type: 'theme', theme: theme_})
     }
 
 
     append('render', `
 
         <br>
-
-        <div class='inl btn-underpost res-theme'>
-
-            `+renderLang({
-              en: 'Restore',
-              es: 'Restaurar'
-            })+`
-
-        </div>
 
         <div class='inl btn-underpost rand-theme'>
 
@@ -150,7 +141,6 @@ class UnderpostConfig {
     `);
 
     s('.rand-theme').onclick = () => renderTheme({type: 'random'});
-    s('.res-theme').onclick = () => renderTheme({type: 'default'});
 
     // window.underpost.intervalTheme != undefined ?
     // clearInterval(window.underpost.intervalTheme):null;

@@ -70,5 +70,17 @@
       "font":"retro-font",
       "cursorDefault":".underpost-default",
       "cursorPointer":".underpost-pointer"
+   },
+   {
+      "background":"#000000",
+      "text":"#ec2462",
+      "sub_background":"#122e00",
+      "sub_text":"#76ed22",
+      "section_btn":"#bc029b",
+      "section_btn_color":"#242854",
+      "mark":"#55ecab",
+      "font":"retro-font",
+      "cursorDefault":".underpost-default",
+      "cursorPointer":".underpost-pointer"
    }
 ]

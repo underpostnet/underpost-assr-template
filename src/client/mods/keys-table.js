@@ -163,6 +163,7 @@ class KeysTable {
         style: {
           content: `
             margin-bottom: 10px;
+            color: `+window.underpost.theme.section_btn_color+`;
           `,
           widthText: 140,
           background: window.underpost.theme.section_btn,

@@ -14,19 +14,13 @@ class Style {
 
     const currentTheme = localStorage.getItem("theme");
     if(! currentTheme){
-        window.underpost.defaultTheme =
-        newInstance(window.underpost.themes[0]);
-        window.underpost.theme = window.underpost.defaultTheme;
-        localStorage.setItem("theme", JSON.stringify(window.underpost.defaultTheme));
+        window.underpost.theme = newInstance(window.underpost.themes[0]);
+        localStorage.setItem("theme", JSON.stringify(window.underpost.theme));
         console.warn('theme -> set default ', window.underpost.theme);
     }else{
         window.underpost.theme = JSON.parse(currentTheme);
         console.warn('theme -> get current ', window.underpost.theme);
     }
-
-    ! window.underpost.defaultTheme ?
-    window.underpost.defaultTheme =
-    newInstance(window.underpost.themes[0]):null;
 
     window.underpost.theme.classDefault = newInstance(window.underpost.theme.cursorDefault).slice(1);
     window.underpost.theme.cursorDefault != '' ?
@@ -76,6 +70,7 @@ class Style {
     window.underpost_section_title = `
 
       background: `+window.underpost.theme.section_btn+`;
+      color: `+window.underpost.theme.section_btn_color+`;
       padding: 10px;
 
     `;
