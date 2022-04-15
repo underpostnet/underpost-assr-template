@@ -6,6 +6,7 @@ import { Menu } from '../mods/menu.js';
 
 window.underpost.view = function(){
   // Execute rendering in instruction order
+  htmls('render', '');
   new Style();
   new UnderpostSW();
   new Notifi();

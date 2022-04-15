@@ -37,7 +37,6 @@ class UnderpostConfig {
         console.warn('theme -> set custom theme ', window.underpost.theme);
       }
       localStorage.setItem("theme", JSON.stringify(window.underpost.theme));
-      htmls('render', '');
       window.underpost.view();
     }
 
@@ -109,16 +108,29 @@ class UnderpostConfig {
       </div>`);
       const totalThemes = l(COLOR_ATTR);
       COLOR_ATTR.map( (optionColor, i, a) => {
+        if(i==0){
           append('.'+idTheme, `
 
               <div class='in fll' style='
               height: 100%;
-              width: `+(100/totalThemes)+`%;
+              width: 50%;
               background: `+theme_[optionColor]+`;
               '>
               </div>
 
           `);
+        }else{
+          append('.'+idTheme, `
+
+              <div class='in fll' style='
+              height: 100%;
+              width: `+(50/totalThemes)+`%;
+              background: `+theme_[optionColor]+`;
+              '>
+              </div>
+
+          `);
+        }
       });
       s('.'+idTheme).onclick = () =>
       renderTheme({type: 'theme', theme: theme_})
