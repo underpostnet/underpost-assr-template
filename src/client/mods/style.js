@@ -11,22 +11,11 @@ class Style {
     localStorage.setItem(sortable.options.group.name, order.join('|'));
 
     */
-    window.underpost.defaultTheme = {
-      name: "underpost",
-      background: "#000000",
-      text: "#ffffff",
-      sub_background:"#e7e7e7",
-      sub_text: "#ff0000",
-      section_btn: "#ff0000",
-      section_btn_color: "#ffffff",
-      mark: "#ebff00",
-      font: "retro-font",
-      cursorDefault: ".underpost-default",
-      cursorPointer: ".underpost-pointer"
-    };
 
     const currentTheme = localStorage.getItem("theme");
     if(! currentTheme){
+        window.underpost.defaultTheme =
+        newInstance(window.underpost.themes[0]);
         window.underpost.theme = window.underpost.defaultTheme;
         localStorage.setItem("theme", JSON.stringify(window.underpost.defaultTheme));
         console.warn('theme -> set default ', window.underpost.theme);
@@ -35,13 +24,16 @@ class Style {
         console.warn('theme -> get current ', window.underpost.theme);
     }
 
+    ! window.underpost.defaultTheme ?
+    window.underpost.defaultTheme =
+    newInstance(window.underpost.themes[0]):null;
+
     window.underpost.theme.classDefault = newInstance(window.underpost.theme.cursorDefault).slice(1);
     window.underpost.theme.cursorDefault != '' ?
     window.underpost.theme.cursorDefault =
     window.underpost.assets.cursors.find(
       x => x.class == window.underpost.theme.cursorDefault
     ).render : null;
-
 
     window.underpost.theme.classPointer = newInstance(window.underpost.theme.cursorPointer).slice(1);
     window.underpost.theme.cursorPointer =
@@ -50,54 +42,10 @@ class Style {
       x => x.class == window.underpost.theme.cursorPointer
     ).render : 'cursor: pointer;';
 
-
     window.underpost.theme.font != '' ?
     window.underpost.theme.font =
     `font-family: `+window.underpost.theme.font+`;`
-    : null
-    /*
-    append('render', `
-
-
-                    <div class='fix' style='
-                    transform: translate(-50%, 0);
-                    left: 50%;
-                    bottom: 10px;
-                    height: 60px;
-                    width: 100px;
-                    background: gray;
-                    z-index: 100;
-                    '>
-
-                        <div class='abs center content-themes'>
-
-                        </div>
-
-                    </div>
-
-
-    `)
-
-    for(let theme_ of THEMES){
-
-        append('.content-themes', `
-
-
-
-                        <div class='inl theme-btn-`+theme_.name+`' style='padding: 5px; border: 2px solid black;'>
-                                  `+theme_.name+`
-                        </div>
-
-
-        `);
-
-        s('.theme-btn-'+theme_.name).onclick = () => {
-          console.log(theme_);
-        }
-
-    }
-
-    */
+    : null;
 
     // -------------------------------------------------------------------------
     // -------------------------------------------------------------------------

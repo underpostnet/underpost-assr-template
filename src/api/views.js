@@ -105,7 +105,8 @@ class Views {
               class: dataCursor.class
             }
           })
-        }
+        },
+        themes: JSON.parse(fs.readFileSync('./data/params/themes.json', MainProcess.data.charset))
       };
       const uriInitData = '/init.js';
       let initDataRender =

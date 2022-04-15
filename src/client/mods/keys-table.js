@@ -165,7 +165,6 @@ class KeysTable {
             margin-bottom: 10px;
           `,
           widthText: 140,
-          pointer: true,
           background: window.underpost.theme.section_btn,
           border: '3px solid '+window.underpost.theme.section_btn,
           width: 41,
@@ -173,6 +172,7 @@ class KeysTable {
           radio: undefined,
           hover: `
             border: 3px solid `+window.underpost.theme.mark+`;
+            `+window.underpost.theme.cursorPointer+`
           `,
           icon: `
             <i class='fas fa-check'>

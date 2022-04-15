@@ -1,11 +1,9 @@
 
 
-import '/lib/jscolor.min.js';
-
-
 class UnderpostConfig {
   constructor(){
 
+    append('render', spr('<br>', 3));
 
     const COLOR_ATTR = [
       "background",
@@ -17,6 +15,31 @@ class UnderpostConfig {
       "mark"
     ];
 
+    const renderTheme = obj_ => {
+      window.underpost.theme = newInstance(window.underpost.defaultTheme);
+      if(obj_){
+        if(obj_.type === 'random'){
+          COLOR_ATTR.map( optionColor => {
+            console.log(s('.'+optionColor).value);
+            window.underpost.theme[optionColor] = getRandomColor();
+          })
+        }
+        if(obj_.type === 'default'){
+          // idem
+        }
+      }else{
+        COLOR_ATTR.map( optionColor => {
+          console.log(s('.'+optionColor).value);
+          window.underpost.theme[optionColor] = s('.'+optionColor).value;
+        });
+      }
+      localStorage.setItem("theme", JSON.stringify(window.underpost.theme));
+      console.warn('theme -> set theme ', window.underpost.theme);
+      htmls('render', '');
+      window.underpost.view();
+    }
+
+
     COLOR_ATTR.map( optionColor => {
 
       append('render', `
@@ -27,12 +50,12 @@ class UnderpostConfig {
               <br>
               `+renderInput({
                 underpostClass: 'in',
-                id_content_input: 'a1',
+                id_content_input: makeid(5),
                 id_input: optionColor,
                 type: 'color',
                 required: true,
                 style_content_input: '',
-                style_input: 'margin: 5px;',
+                style_input: 'margin: 5px; '+window.underpost.theme.cursorPointer,
                 style_label: '',
                 style_outline: true,
                 style_placeholder: '',
@@ -40,8 +63,8 @@ class UnderpostConfig {
                 active_label: false,
                 initLabelPos: 3,
                 endLabelPos: -25,
-                text_label: 'Title',
-                tag_label: 'a3',
+                text_label: 'Color',
+                tag_label:  makeid(5),
                 fnOnClick: async () => {
                   console.log('click input');
                 },
@@ -55,20 +78,56 @@ class UnderpostConfig {
 
 
       `);
+
+      s('.'+optionColor).onblur = () => {
+        console.warn('onchangue color', optionColor);
+        renderTheme();
+      }
     });
+
+
+    append('render', `
+    <div class='inl' style='margin: 5px;'>
+        `+renderLang({
+          es: 'Temas',
+          en: 'Themes'
+        })+`
+    </div>
+    `)
+    append('render', '<themes class="in"></themes>');
+    for(let theme_ of window.underpost.themes){
+      const idTheme = makeid(4);
+      append('themes', `<div class='inl `+idTheme+` btn-underpost' style='
+      width: 100px;
+      height: 50px;
+      margin: 5px;
+      '>
+
+
+      </div>`);
+      const totalThemes = l(COLOR_ATTR);
+      COLOR_ATTR.map( (optionColor, i, a) => {
+          append('.'+idTheme, `
+
+              <div class='in fll' style='
+              height: 100%;
+              width: `+(100/totalThemes)+`%;
+              background: `+theme_[optionColor]+`;
+              '>
+              </div>
+
+          `);
+      });
+      s('.'+idTheme).onclick = () => {
+        window.underpost.defaultTheme = theme_;
+        renderTheme({type: 'default'});
+      }
+    }
 
 
     append('render', `
 
         <br>
-        <div class='inl btn-underpost gen-theme'>
-
-            `+renderLang({
-              en: 'Generate',
-              es: 'Generar'
-            })+`
-
-        </div>
 
         <div class='inl btn-underpost res-theme'>
 
@@ -90,38 +149,15 @@ class UnderpostConfig {
 
     `);
 
+    s('.rand-theme').onclick = () => renderTheme({type: 'random'});
+    s('.res-theme').onclick = () => renderTheme({type: 'default'});
 
-    s('.gen-theme').onclick = () => {
-        window.underpost.theme = newInstance(window.underpost.defaultTheme);
-        COLOR_ATTR.map( optionColor => {
-          console.log(s('.'+optionColor).value);
-          window.underpost.theme[optionColor] = s('.'+optionColor).value;
-        });
-        localStorage.setItem("theme", JSON.stringify(window.underpost.theme));
-        console.warn('theme -> set theme ', window.underpost.theme);
-        htmls('render', '');
-        window.underpost.view();
-    };
+    // window.underpost.intervalTheme != undefined ?
+    // clearInterval(window.underpost.intervalTheme):null;
+    // window.underpost.intervalTheme =
+    // setInterval(()=>renderTheme(), 500);
 
-    s('.rand-theme').onclick = () => {
-        window.underpost.theme = newInstance(window.underpost.defaultTheme);
-        COLOR_ATTR.map( optionColor => {
-          console.log(s('.'+optionColor).value);
-          window.underpost.theme[optionColor] = getRandomColor();
-        });
-        localStorage.setItem("theme", JSON.stringify(window.underpost.theme));
-        console.warn('theme -> set theme ', window.underpost.theme);
-        htmls('render', '');
-        window.underpost.view();
-    };
-
-    s('.res-theme').onclick = () => {
-        window.underpost.theme = newInstance(window.underpost.defaultTheme);
-        localStorage.setItem("theme", JSON.stringify(window.underpost.theme));
-        console.warn('theme -> set theme ', window.underpost.theme);
-        htmls('render', '');
-        window.underpost.view();
-    };
+    append('render', spr('<br>', 3));
 
   }
 }
