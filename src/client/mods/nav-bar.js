@@ -30,7 +30,7 @@ class NavBar {
         });
 
 
-    append('body', `
+    append('render', `
 
         <style>
 

@@ -38,6 +38,8 @@ class Views {
           uri.split('/')[1]=='quill'
           ||
           uri.split('/')[1]=='css'
+          ||
+          uri.split('/')[1]=='spinner'
         )
       );
 
@@ -403,6 +405,11 @@ class Views {
       <link rel='stylesheet' href='/style/place-bar-select.css'>
       <link rel='stylesheet' href='/fonts.css'>
       <link rel='stylesheet' href='/cursors.css'>
+
+      <img class='abs center loading' alt='loading' style='width: 30px; height: 30px;' src='data:image/gif;base64,`+fs.readFileSync(
+        './underpost_modules/underpost-library/assets/gif-alpha-opt.gif'
+      ).toString('base64')+`'>
+
       */
       return `
         <!DOCTYPE html>
@@ -432,9 +439,12 @@ class Views {
               <script defer type='module' src='/views/`+path.view+`'></script>
           </head>
           <body>
-              <img class='abs center loading' alt='loading' style='width: 30px; height: 30px;' src='data:image/gif;base64,`+fs.readFileSync(
-                './underpost_modules/underpost-library/assets/gif-alpha-opt.gif'
-              ).toString('base64')+`'>
+              <div class='abs center loading'>
+                  `+fs.readFileSync(
+                    './underpost_modules/underpost-library/spinner/'+MainProcess.data.spinner+'/index',
+                    MainProcess.data.charset
+                  )+`
+              </div>
               <div style='display: none;'>
                 <h1>{{title}}</h1> <h2>{{description}}</h2>
               </div>

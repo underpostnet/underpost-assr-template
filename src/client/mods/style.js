@@ -13,13 +13,13 @@ class Style {
     */
     window.underpost.defaultTheme = {
       name: "underpost",
-      background: "rgb(0, 0, 0, 1)",
-      text: "rgb(255, 255, 255, 1)",
-      sub_background:"rgba(192, 195, 194, 1)",
-      sub_text: "rgba(255, 0, 0, 1)",
-      section_btn: "rgba(255, 0, 0, 1)",
-      section_btn_color: "rgba(255, 255, 255, 1)",
-      mark: "rgba(235, 255, 0, 1)",
+      background: "#000000",
+      text: "#ffffff",
+      sub_background:"#e7e7e7",
+      sub_text: "#ff0000",
+      section_btn: "#ff0000",
+      section_btn_color: "#ffffff",
+      mark: "#ebff00",
       font: "retro-font",
       cursorDefault: ".underpost-default",
       cursorPointer: ".underpost-pointer"

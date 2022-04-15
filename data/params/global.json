@@ -50,6 +50,7 @@
       "background_color":"#0a0a0a",
       "assets":"/assets/pwa"
    },
+   "spinner": "roller",
    "views":[
       {
          "langs":[

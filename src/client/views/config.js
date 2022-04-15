@@ -5,20 +5,18 @@ import { Notifi } from '../mods/notifi.js';
 import { UnderpostConfig } from '../mods/config.js';
 import { NavBar } from '../mods/nav-bar.js';
 
-class View {
-  constructor(){
-    // Execute rendering in instruction order
-    new Style();
-    new UnderpostSW();
-    new Notifi();
-    new UnderpostConfig();
-    new NavBar();
-    // Cumulative Layout Shift Controller
-    setTimeout( () => {
-      s('.loading').style.display = 'none';
-      s('render').style.display = 'block';
-    }, 200);
-  }
+window.underpost.view = function(){
+  // Execute rendering in instruction order
+  new Style();
+  new UnderpostSW();
+  new Notifi();
+  new UnderpostConfig();
+  new NavBar();
+  // Cumulative Layout Shift Controller
+  setTimeout( () => {
+    s('.loading').style.display = 'none';
+    s('render').style.display = 'block';
+  }, 200);
 }
 
-new View();
+window.underpost.view();

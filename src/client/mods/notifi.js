@@ -7,6 +7,7 @@ class Notifi {
         const fontSizeNotifiIcon = 30;
         const fontSizeNotifi = 18;
         notifi.load({
+               divContent: 'render',
         			 AttrRender: {
         				 error: `
 
