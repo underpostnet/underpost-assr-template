@@ -106,7 +106,14 @@ class Views {
             }
           })
         },
-        themes: JSON.parse(fs.readFileSync('./data/params/themes.json', MainProcess.data.charset))
+        styles: {
+          input: {},
+          section: {},
+          notifi: {}
+        },
+        theme: undefined,
+        themes: JSON.parse(fs.readFileSync('./data/params/themes.json', MainProcess.data.charset)),
+        viewDelay: 200
       };
       const uriInitData = '/init.js';
       let initDataRender =
@@ -179,7 +186,19 @@ class Views {
       );
       */
 
-      this.renderCss += ' render {display: none; overflow: auto} .loading {width: 50px; height: 50px;}';
+      this.renderCss += `
+          render {
+            overflow: auto;
+          }
+          .loading {
+            width: 100%;
+            height: 100%;
+            z-index: 99999;
+            background: white;
+            top: 0%;
+            left: 0%;
+          }
+      `;
 
       // -------------------------------------------------------------------------
       // views paths
@@ -440,11 +459,13 @@ class Views {
               <script defer type='module' src='/views/`+path.view+`'></script>
           </head>
           <body>
-              <div class='abs center loading'>
-                  `+fs.readFileSync(
-                    './underpost_modules/underpost-library/spinner/'+MainProcess.data.spinner+'/index',
-                    MainProcess.data.charset
-                  )+`
+              <div class='fix loading'>
+                  <div class='abs center'>
+                      `+fs.readFileSync(
+                        './underpost_modules/underpost-library/spinner/'+MainProcess.data.spinner+'/index',
+                        MainProcess.data.charset
+                      )+`
+                  </div>
               </div>
               <div style='display: none;'>
                 <h1>{{title}}</h1> <h2>{{description}}</h2>

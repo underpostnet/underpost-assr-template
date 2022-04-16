@@ -50,8 +50,8 @@ class Editor {
       type: 'text',
       required: true,
       style_content_input: '',
-      style_input,
-      style_label,
+      style_input: window.underpost.styles.input.style_input,
+      style_label: window.underpost.styles.input.style_label,
       style_outline: true,
       style_placeholder: '',
       textarea: false,
@@ -162,14 +162,14 @@ class Editor {
                   indPost++;
               }
               return   notifi.display(
-                 backgroundNotifi,
+                 window.underpost.styles.notifi.backgroundNotifi,
                  renderLang({es: 'Eliminado', en: 'Success delete'}),
                  2000,
                  'success'
                );
             }else{
               return   notifi.display(
-                 backgroundNotifi,
+                 window.underpost.styles.notifi.backgroundNotifi,
                  renderLang({es: 'Error en el Servicio', en: 'Error service'}),
                  2000,
                  'error'
@@ -292,7 +292,7 @@ class Editor {
 
                            if(quillLength<=1){
                              return   notifi.display(
-                                backgroundNotifi,
+                                window.underpost.styles.notifi.backgroundNotifi,
                                 renderLang({en: 'Empty content', es: 'Sin Contenido'}),
                                 2000,
                                 'error'
@@ -301,7 +301,7 @@ class Editor {
 
                            if(title==''){
                              return   notifi.display(
-                                backgroundNotifi,
+                                window.underpost.styles.notifi.backgroundNotifi,
                                 renderLang({en: 'Empty title', es: 'Sin Titulo'}),
                                 2000,
                                 'error'
@@ -351,7 +351,7 @@ class Editor {
                             prepend('.'+idContentDashBoard, renderCard(dataPost, 'new'));
                              this.editor.reset();
                              return notifi.display(
-                                backgroundNotifi,
+                                window.underpost.styles.notifi.backgroundNotifi,
                                 renderLang({en: 'Success', es: 'Enviado'}),
                                 2000,
                                 'success'
@@ -359,7 +359,7 @@ class Editor {
                            }
 
                            return notifi.display(
-                              backgroundNotifi,
+                              window.underpost.styles.notifi.backgroundNotifi,
                               renderLang({es: 'Error en el Servicio', en: 'Error service'}),
                               2000,
                               'error'
@@ -419,6 +419,9 @@ class Editor {
 
           renderTimeSinces();
           setInterval(() => renderTimeSinces(), intervalUpdateTimeSince);
+
+          s('a.ql-action').href = '#';
+          s('a.ql-remove').href = '#';
 
 
 

@@ -37,6 +37,7 @@ class UnderpostConfig {
         console.warn('theme -> set custom theme ', window.underpost.theme);
       }
       localStorage.setItem("theme", JSON.stringify(window.underpost.theme));
+      window.underpost.outSpinner = true;
       window.underpost.view();
     }
 

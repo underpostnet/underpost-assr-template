@@ -38,87 +38,83 @@ class LogIn {
 
     `);
 
-    let botContent = `
-        <br>
-    `;
-
     append('.signin-form', renderInput({
       underpostClass: 'in',
-      id_content_input: 'a1-1',
+      id_content_input: makeid(5),
       id_input: 'form-input-email',
       type: 'text',
       required: true,
       style_content_input: '',
-      style_input,
-      style_label,
+      style_input: window.underpost.styles.input.style_input,
+      style_label: window.underpost.styles.input.style_label,
       style_outline: true,
-      style_placeholder,
+      style_placeholder: window.underpost.styles.input.style_placeholder,
       textarea: false,
       username: true,
       active_label: true,
       initLabelPos: 5,
       endLabelPos: -20,
       text_label: 'Email',
-      tag_label: 'a1-2',
+      tag_label: makeid(5),
       fnOnClick: async () => {
         console.log('click input');
       },
       value: ``,
       topContent: '',
-      botContent,
+      botContent: window.underpost.styles.input.botContent,
       placeholder: ''
     }));
 
 
     append('.signin-form', renderInput({
       underpostClass: 'in',
-      id_content_input: 'a3-1',
+      id_content_input: makeid(5),
       id_input: 'form-input-password',
       type: 'password',
       required: true,
       style_content_input: '',
-      style_input,
-      style_label,
+      style_input: window.underpost.styles.input.style_input,
+      style_label: window.underpost.styles.input.style_label,
       style_outline: true,
-      style_placeholder,
+      style_placeholder: window.underpost.styles.input.style_placeholder,
       textarea: false,
       active_label: true,
       initLabelPos: 5,
       endLabelPos: -20,
       text_label: renderLang({en: 'Password', es: 'Contraseña'}),
-      tag_label: 'a3-2',
+      tag_label: makeid(5),
       fnOnClick: async () => {
         console.log('click input');
       },
       value: ``,
       topContent: '',
-      botContent,
+      botContent: window.underpost.styles.input.botContent,
       placeholder: ''
     }));
 
     append('.signin-form', renderInput({
       underpostClass: 'in',
-      id_content_input: 'a4-1',
+      id_content_input: makeid(5),
       id_input: 'form-input-password-repeat',
       type: 'password',
       required: true,
       style_content_input: '',
-      style_input,
-      style_label,
+      style_input: window.underpost.styles.input.style_input,
+      style_label: window.underpost.styles.input.style_label,
       style_outline: true,
-      style_placeholder,
+      style_placeholder: window.underpost.styles.input.style_placeholder,
       textarea: false,
       active_label: true,
       initLabelPos: 5,
       endLabelPos: -20,
       text_label: renderLang({en: 'Repeat Password', es: 'Repetir Contraseña'}),
-      tag_label: 'a4-2',
+      tag_label: makeid(5),
       fnOnClick: async () => {
         console.log('click input');
       },
       value: ``,
       topContent: '',
-      botContent,
+      botContent: window.underpost.styles.input.botContent,
       placeholder: ''
     }));
 

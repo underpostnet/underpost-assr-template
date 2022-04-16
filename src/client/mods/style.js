@@ -22,6 +22,11 @@ class Style {
         console.warn('theme -> get current ', window.underpost.theme);
     }
 
+    s('.loading') ?
+    s('.loading').style.background =
+    window.underpost.theme.background
+    :null;
+
     window.underpost.theme.classDefault = newInstance(window.underpost.theme.cursorDefault).slice(1);
     window.underpost.theme.cursorDefault != '' ?
     window.underpost.theme.cursorDefault =
@@ -42,10 +47,10 @@ class Style {
     : null;
 
     // -------------------------------------------------------------------------
+    // style input
     // -------------------------------------------------------------------------
 
-
-    window.style_input = `
+    window.underpost.styles.input.style_input = `
 
         /* padding: 12px 15px; */
         font-size: 14px;
@@ -57,7 +62,7 @@ class Style {
 
     `;
 
-    window.style_label = `
+    window.underpost.styles.input.style_label = `
 
         font-size: 12px;
         left: 15px;
@@ -65,9 +70,16 @@ class Style {
 
     `;
 
-    window.style_placeholder = ``;
+    window.underpost.styles.input.style_placeholder = ``;
 
-    window.underpost_section_title = `
+
+    window.underpost.styles.input.botContent = `<br>`;
+
+    // -------------------------------------------------------------------------
+    // style section
+    // -------------------------------------------------------------------------
+
+    window.underpost.styles.section.underpost_section_title = `
 
       background: `+window.underpost.theme.section_btn+`;
       color: `+window.underpost.theme.section_btn_color+`;
@@ -75,9 +87,16 @@ class Style {
 
     `;
 
-    window.botContent = ``;
 
-    window.backgroundNotifi = 'rgba(0, 0, 0, 0.9)';
+    // -------------------------------------------------------------------------
+    // style notifi
+    // -------------------------------------------------------------------------
+
+    window.underpost.styles.notifi.backgroundNotifi = 'rgba(0, 0, 0, 0.9)';
+
+    // -------------------------------------------------------------------------
+    // style global
+    // -------------------------------------------------------------------------
 
     append('render', `
 

@@ -19,7 +19,7 @@ class KeysTable {
 
             <in-key-options class='in'>
 
-                  <div class='in' style='`+underpost_section_title+`'>
+                  <div class='in' style='`+window.underpost.styles.section.underpost_section_title+`'>
                       `+renderLang({
                         en: 'Select Type Key',
                         es: 'Seleccione tipo de llave'
@@ -34,27 +34,27 @@ class KeysTable {
 
             `+renderInput({
               underpostClass: 'in',
-              id_content_input: 'a3-1',
+              id_content_input: makeid(3),
               id_input: 'key-pass',
               type: 'password',
               required: true,
               style_content_input: '',
-              style_input,
-              style_label,
+              style_input: window.underpost.styles.input.style_input,
+              style_label: window.underpost.styles.input.style_label,
               style_outline: true,
-              style_placeholder,
+              style_placeholder: window.underpost.styles.input.style_placeholder,
               textarea: false,
               active_label: true,
               initLabelPos: 5,
               endLabelPos: -20,
               text_label: renderLang({en: 'Password', es: 'Contraseña'}),
-              tag_label: 'a3-2',
+              tag_label: makeid(3),
               fnOnClick: async () => {
                 console.log('click input');
               },
               value: ``,
               topContent: '',
-              botContent,
+              botContent: '',
               placeholder: ''
             })+`
 
@@ -201,7 +201,7 @@ class KeysTable {
           &&
           checksBox[1].state == false){
             return   notifi.display(
-               backgroundNotifi,
+               window.underpost.styles.notifi.backgroundNotifi,
                renderLang({en: 'Select Key Type', es: 'Seleccione tipo de llave'}),
                2000,
                'error'
@@ -210,7 +210,7 @@ class KeysTable {
 
         if(s('.key-pass').value==''){
             return   notifi.display(
-               backgroundNotifi,
+               window.underpost.styles.notifi.backgroundNotifi,
                renderLang({en: 'Empty Password', es: 'Contraseña vacia'}),
                2000,
                'error'
@@ -241,14 +241,14 @@ class KeysTable {
            s('.key-pass').value = '';
            s('.cancel-key').click();
            return   notifi.display(
-              backgroundNotifi,
+              window.underpost.styles.notifi.backgroundNotifi,
               renderLang({es: 'Llaves creadas', en: 'Success create keys'}),
               2000,
               'success'
             );
         }else{
           return  notifi.display(
-             backgroundNotifi,
+             window.underpost.styles.notifi.backgroundNotifi,
              renderLang({es: 'Error en el Servicio', en: 'Error service'}),
              2000,
              'error'
@@ -330,7 +330,7 @@ class KeysTable {
                  let response = await new Rest().FETCH('/network/keys', 'DELETE', obj.data[index]);
                  if(response.success === true){
                    notifi.display(
-                      backgroundNotifi,
+                      window.underpost.styles.notifi.backgroundNotifi,
                       renderLang({es: 'Llaves Eliminadas', en: 'Success delete keys'}),
                       2000,
                       'success'
@@ -338,7 +338,7 @@ class KeysTable {
                    await this.renderTableKeys();
                  }else{
                    notifi.display(
-                      backgroundNotifi,
+                      window.underpost.styles.notifi.backgroundNotifi,
                       renderLang({es: 'Error en el Servicio', en: 'Error service'}),
                       2000,
                       'error'
@@ -371,7 +371,7 @@ class KeysTable {
                    };
 
                    notifi.display(
-                      backgroundNotifi,
+                      window.underpost.styles.notifi.backgroundNotifi,
                       renderLang({es: 'Informacion Obtenida', en: 'Success get info keys'}),
                       2000,
                       'success'
@@ -379,7 +379,7 @@ class KeysTable {
                    await this.renderTableKeys();
                  }else{
                    notifi.display(
-                      backgroundNotifi,
+                      window.underpost.styles.notifi.backgroundNotifi,
                       renderLang({es: 'Error en el Servicio', en: 'Error service'}),
                       2000,
                       'error'
