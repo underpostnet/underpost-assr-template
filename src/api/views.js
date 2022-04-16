@@ -111,9 +111,11 @@ class Views {
           section: {},
           notifi: {}
         },
+        intervals: {},
         theme: undefined,
         themes: JSON.parse(fs.readFileSync('./data/params/themes.json', MainProcess.data.charset)),
-        viewDelay: 200
+        viewDelay: 200,
+        view: function(){}
       };
       const uriInitData = '/init.js';
       let initDataRender =

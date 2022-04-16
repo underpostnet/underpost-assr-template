@@ -417,7 +417,11 @@ class Editor {
           );
           const intervalUpdateTimeSince = 5000;
 
+          window.underpost.intervals.editor_time_since != undefined ?
+          clearInterval(window.underpost.intervals.editor_time_since):null;
+          
           renderTimeSinces();
+          window.underpost.intervals.editor_time_since =
           setInterval(() => renderTimeSinces(), intervalUpdateTimeSince);
 
           s('a.ql-action').href = '#';
