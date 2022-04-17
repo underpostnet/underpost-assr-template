@@ -6,9 +6,6 @@ class Menu {
   constructor(){
 
 
-
-    const zIndexContentMenu = 8000;
-    const zIndexBtnMenu = 8001;
     const renderMenuDiv = 'menu-content';
     const factor_ = 0.95;
     const intervalTimeMenuRender = 10;
@@ -22,7 +19,7 @@ class Menu {
         height: 100%;
         top: 0%;
         left: 0%;
-        z-index: `+zIndexContentMenu+`;
+        z-index: `+window.underpost.styles.zIndex.contentMenu+`;
         background: `+window.underpost.theme.background+`;
       '></menu-nav>
     `);
@@ -61,7 +58,7 @@ class Menu {
               height: 15px;
               font-size: 20px;
               transition: .3s;
-              z-index: `+zIndexBtnMenu+`;
+              z-index: `+window.underpost.styles.zIndex.btnMenu+`;
             }
             .btn-nav:hover {
                 bottom: 5px;
@@ -69,7 +66,7 @@ class Menu {
                 width: 25px;
                 height: 25px;
                 font-size: 30px;
-                z-index: `+zIndexBtnMenu+`;
+                z-index: `+window.underpost.styles.zIndex.btnMenu+`;
              }
 
         </style>
@@ -100,13 +97,13 @@ class Menu {
     append('.btn-nav-home', renderTooltipNavBar(
       'btn-nav-home',
       '<i class="fas fa-th abs center"></i>',
-      renderLang({es: 'Home', en: 'Home'})
+      renderLang({es: 'Menu', en: 'Menu'})
     ));
 
     append('.btn-nav-close', renderTooltipNavBar(
       'btn-nav-close',
       '<i class="fas fa-times abs center"></i>',
-      renderLang({es: 'Cerrar Menu', en: 'Close Menu'})
+      renderLang({es: 'Cerrar<br>Menu', en: 'Close Menu'})
     ));
 
     s('.btn-nav-home').onclick = () => {
@@ -246,7 +243,7 @@ class Menu {
           border-radius: 10px;
           border: 4px solid #670667;
           display: none;
-          z-index: 1003;
+           /* z-index: none; */
           background: #161616;
           width: 274px;
           /* height: 255px; */
@@ -276,7 +273,7 @@ class Menu {
             border-radius: 50%;
             background: #161616;
             transition: .3s;
-            z-index: 999;
+          /* z-index: none; */
         `,
         close_btn_content_hover: `
 
@@ -344,6 +341,7 @@ class Menu {
       dataCell: APPS,
       intervalRender: intervalTimeMenuRender,
       onCLick: (dataCell, idModal, id_cell_grid, idGrid) => {
+            s('.loading').style.display = 'block';
             const dataInput = {
               dataCell,
               idModal,

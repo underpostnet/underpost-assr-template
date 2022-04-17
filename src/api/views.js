@@ -109,7 +109,13 @@ class Views {
         styles: {
           input: {},
           section: {},
-          notifi: {}
+          notifi: {},
+          zIndex: {
+            loading: 99999,
+            notifiValidator: 99998,
+            btnMenu: 99997,
+            contentMenu: 99996
+          }
         },
         intervals: {},
         theme: undefined,
@@ -198,10 +204,10 @@ class Views {
           .loading {
             width: 100%;
             height: 100%;
-            z-index: 99999;
             background: white;
             top: 0%;
             left: 0%;
+            z-index: `+initData.styles.zIndex.loading+`
           }
       `;
 

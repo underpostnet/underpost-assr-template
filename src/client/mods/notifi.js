@@ -26,7 +26,7 @@ class Notifi {
         				 /* border: 2px solid yellow; */
         				 color: white;
         				 font-size: `+fontSizeNotifi+`px;
-        				 z-index: 9999;
+        				 z-index: `+window.underpost.styles.zIndex.notifiValidator+`;
         				 height: 50px;
         				 transform: translate(-50%, 0);
                  bottom: 10px;
