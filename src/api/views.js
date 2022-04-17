@@ -189,6 +189,9 @@ class Views {
       */
 
       this.renderCss += `
+          html {
+            overflow: hidden;
+          }
           render {
             overflow: auto;
           }

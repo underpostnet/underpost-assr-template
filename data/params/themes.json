@@ -94,5 +94,17 @@
       "font":"retro-font",
       "cursorDefault":".underpost-default",
       "cursorPointer":".underpost-pointer"
+   },
+   {
+      "background":"#ffffff",
+      "text":"#000000",
+      "sub_background":"#e8e8e8",
+      "sub_text":"#120f55",
+      "section_btn":"#786fd9",
+      "section_btn_color":"#d4d4d4",
+      "mark":"#cd213a",
+      "font":"retro-font",
+      "cursorDefault":".underpost-default",
+      "cursorPointer":".underpost-pointer"
    }
 ]

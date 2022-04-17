@@ -1,14 +1,143 @@
 
 import Sortable from '/lib/sortable.complete.esm.js';
 
-
 class Menu {
 
   constructor(){
 
+
+
+    const zIndexContentMenu = 8000;
+    const zIndexBtnMenu = 8001;
     const renderMenuDiv = 'menu-content';
     const factor_ = 0.95;
     const intervalTimeMenuRender = 10;
+    const renderDiv = 'menu-nav';
+
+    // Menu Controller
+    append('render', `
+      <menu-nav class='fix' style='
+        display: none;
+        width: 100%;
+        height: 100%;
+        top: 0%;
+        left: 0%;
+        z-index: `+zIndexContentMenu+`;
+        background: `+window.underpost.theme.background+`;
+      '></menu-nav>
+    `);
+
+    const renderTooltipNavBar = (_id, content_, value_) => renderTooltipV1({
+          idTooltip: _id,
+          tooltipStyle: '',
+          contentUnderpostClass: 'abs center',
+          originContent:  content_,
+          tooltipContent: `
+            <div class='abs center' style='top: -50px; width: 100px;'>
+                  <div class='inl' style='
+                  font-size: 8px;
+                  padding: 5px;
+                  background: rgba(0, 0, 0, 0.82);
+                  color: rgb(215, 215, 215);
+                  border-radius: 3px;
+                  '>
+                      `+value_+`
+                  </div>
+            </div>
+          `,
+          transition: {
+            active: false,
+            time: '.3s'
+          }
+        });
+
+
+    append('render', `
+
+        <style>
+
+            .btn-nav {
+              width: 15px;
+              height: 15px;
+              font-size: 20px;
+              transition: .3s;
+              z-index: `+zIndexBtnMenu+`;
+            }
+            .btn-nav:hover {
+                bottom: 5px;
+                right: 5px;
+                width: 25px;
+                height: 25px;
+                font-size: 30px;
+                z-index: `+zIndexBtnMenu+`;
+             }
+
+        </style>
+
+                <btns-views-content>
+                  <div class='fix btn-underpost btn-nav btn-nav-up' style='bottom: 3px; left: 3px; display: none'>
+
+                        <div class='abs center'>
+                              <i class="fas fa-arrow-up"></i>
+                        </div>
+
+                  </div>
+                </btns-views-content>
+
+                <div class='fix btn-underpost btn-nav btn-nav-home' style='bottom: 3px; right: 3px;'>
+
+                </div>
+
+                <div class='fix btn-underpost btn-nav btn-nav-close' style='bottom: 3px; right: 3px; display: none;'>
+
+                </div>
+
+
+
+
+    `);
+
+    append('.btn-nav-home', renderTooltipNavBar(
+      'btn-nav-home',
+      '<i class="fas fa-th abs center"></i>',
+      renderLang({es: 'Home', en: 'Home'})
+    ));
+
+    append('.btn-nav-close', renderTooltipNavBar(
+      'btn-nav-close',
+      '<i class="fas fa-times abs center"></i>',
+      renderLang({es: 'Cerrar Menu', en: 'Close Menu'})
+    ));
+
+    s('.btn-nav-home').onclick = () => {
+      // location.href = '/';
+      s('.btn-nav-home').style.display = 'none';
+      fadeIn(s('.btn-nav-close'));
+      s('btns-views-content').style.display = 'none';
+      s('html').style.overflow = 'hidden';
+      fadeIn(s(renderDiv));
+    };
+
+    s('.btn-nav-close').onclick = () => {
+      // location.href = '/';
+      s('.btn-nav-close').style.display = 'none';
+      fadeIn(s('.btn-nav-home'));
+      s('btns-views-content').style.display = 'block';
+      s('html').style.overflow = 'auto';
+      fadeOut(s(renderDiv));
+    };
+
+    s('.btn-nav-up').onclick = () => {
+      s('html').scrollTop = s('html').offsetTop;
+    };
+
+
+
+    toUpBtn('body', '.btn-nav-up', 300);
+
+
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     const iconStyle = `
       font-size: 35px;
@@ -62,7 +191,7 @@ class Menu {
       }
     ];
 
-    append('render', `
+    append(renderDiv, `
 
         <`+renderMenuDiv+`-render class='in'>
 
@@ -75,7 +204,9 @@ class Menu {
 
     `);
 
-    this.MenuContentRenderController =
+    window.underpost.intervals.MenuContentRenderController != undefined ?
+    clearInterval(window.underpost.intervals.MenuContentRenderController):null;
+    window.underpost.intervals.MenuContentRenderController =
     responsiveRender(intervalTimeMenuRender, (w_, h_) => {
       s(renderMenuDiv+'-render').style.height = h_ + 'px';
       if(w_>h_){
@@ -194,12 +325,16 @@ class Menu {
     };
 
 
-    append('render', '<menu-modal style="display: none"></menu-modal>');
+    append(renderDiv, '<menu-modal style="display: none"></menu-modal>');
 
     const dimGridMenu = 5;
     const id_cell = 'menu-cell';
 
-    this.processGrid = renderGridsModal({
+    window.underpost.intervals.processGrid != undefined ?
+    getKeys(window.underpost.intervals.processGrid.intervalReturn).map( intervalKey => {
+      clearInterval(window.underpost.intervals.processGrid.intervalReturn[intervalKey]);
+    }):null;
+    window.underpost.intervals.processGrid = renderGridsModal({
       row: dimGridMenu,
       col: dimGridMenu,
       delayInit: 0,
@@ -223,9 +358,7 @@ class Menu {
       factorCell: 0.9
     });
 
-    // this.processGrid != undefined ?
-    // clearInterval(this.processGrid.intervalGridModal):null;
-    append(renderMenuDiv, this.processGrid.render);
+    append(renderMenuDiv, window.underpost.intervals.processGrid.render);
 
 
     const totalCell = (dimGridMenu*dimGridMenu)-1;
@@ -241,9 +374,9 @@ class Menu {
     }
 
     // for(let rowId of range(1, dimGridMenu)){  }
-    //  new Sortable(s('.row-content-'+rowId+'-'+this.processGrid.idGrid), {
+    //  new Sortable(s('.row-content-'+rowId+'-'+window.underpost.intervals.processGrid.idGrid), {
     let onClick = true;
-    new Sortable(s('.'+this.processGrid.idGrid+'-content'), {
+    new Sortable(s('.'+window.underpost.intervals.processGrid.idGrid+'-content'), {
         // swap: true,
         animation: 150,
         group: 'menu-storage',

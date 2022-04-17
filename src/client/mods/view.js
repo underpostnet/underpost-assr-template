@@ -2,24 +2,36 @@
 import { Style } from './style.js';
 import { UnderpostSW } from './underpost-sw.js';
 import { Notifi } from './notifi.js';
-import { NavBar } from './nav-bar.js';
+import { Footer } from './footer.js';
+import { Menu } from './menu.js';
 
 class View {
   constructor(mods){
-    // Execute rendering in instruction order
+
+    // Spinner Controller
     window.underpost.outSpinner ?
     window.underpost.outSpinner = undefined :
     s('.loading').style.display = 'block';
+
+    // Clear Document
     htmls('render', '');
+
+    // Execute rendering in instruction order
     new Style();
     new UnderpostSW();
     new Notifi();
+    new Menu();
     mods();
-    new NavBar();
+    new Footer();
+
     // Cumulative Layout Shift Controller
     setTimeout(() =>
-      s('.loading').style.display = 'none'
+      {
+        s('html').style.overflow = 'auto';
+        s('.loading').style.display = 'none';
+      }
     , window.underpost.viewDelay);
+
   }
 }
 
