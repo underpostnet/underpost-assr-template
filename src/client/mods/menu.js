@@ -3,26 +3,31 @@ import Sortable from '/lib/sortable.complete.esm.js';
 
 class Menu {
 
-  constructor(){
+  constructor(MainInput){
 
 
-    const renderMenuDiv = 'menu-content';
+    const renderMenuDiv = makeid(5);
     const factor_ = 0.95;
     const intervalTimeMenuRender = 10;
-    const renderDiv = 'menu-nav';
+    const renderDiv = makeid(5);
 
     // Menu Controller
     append('render', `
-      <menu-nav class='fix' style='
-        display: none;
-        width: 100%;
-        height: 100%;
-        top: 0%;
-        left: 0%;
-        z-index: `+window.underpost.styles.zIndex.contentMenu+`;
-        background: `+window.underpost.theme.background+`;
-      '></menu-nav>
+      <`+renderDiv+` class='`+(MainInput ? MainInput.underpostClass : 'fix' )+`' style='
+        display: `+(MainInput ? MainInput.initDisplay : 'none' )+`;
+         `+(MainInput ? MainInput.styleContentGrid : `
+           width: 100%;
+           height: 100%;
+           top: 0%;
+           left: 0%;
+           z-index: `+(MainInput ? MainInput.zIndex.contentMenu : window.underpost.styles.zIndex.contentMenu)+`;
+           background: `+window.underpost.theme.background+`;
+           ` )+`
+
+      '></`+renderDiv+`>
     `);
+
+    MainInput ? null: ( () => {
 
     const renderTooltipNavBar = (_id, content_, value_) => renderTooltipV1({
           idTooltip: _id,
@@ -132,6 +137,7 @@ class Menu {
 
     toUpBtn('body', '.btn-nav-up', 300);
 
+    } )();
 
     // -------------------------------------------------------------------------
     // -------------------------------------------------------------------------
@@ -145,7 +151,7 @@ class Menu {
       top: 90%;
     `;
 
-    const APPS = [
+    const APPS = MainInput ? MainInput.APPS : [
       {
         path: '/editor',
         render: () => `
@@ -192,7 +198,7 @@ class Menu {
 
         <`+renderMenuDiv+`-render class='in'>
 
-                <`+renderMenuDiv+` class='abs center' style='border: 2px solid `+window.underpost.theme.text+`; border-radius: 10px;'>
+                <`+renderMenuDiv+` class='`+(MainInput ? MainInput.underpostClassSubGrid : 'abs center' )+`' style='border: 2px solid `+window.underpost.theme.text+`; border-radius: 10px;'>
 
                 </`+renderMenuDiv+`>
 
@@ -201,17 +207,30 @@ class Menu {
 
     `);
 
-    window.underpost.intervals.MenuContentRenderController != undefined ?
-    clearInterval(window.underpost.intervals.MenuContentRenderController):null;
-    window.underpost.intervals.MenuContentRenderController =
+    let idExternResponsive = MainInput ? makeid(5) : "MenuContentRenderController";
+    window.underpost.intervals[idExternResponsive] != undefined ?
+    clearInterval(window.underpost.intervals[idExternResponsive]):null;
+    window.underpost.intervals[idExternResponsive] =
     responsiveRender(intervalTimeMenuRender, (w_, h_) => {
+
+      MainInput ?
+      s(renderMenuDiv+'-render').style.height = 'auto':
       s(renderMenuDiv+'-render').style.height = h_ + 'px';
+
       if(w_>h_){
-        s(renderMenuDiv).style.width = h_*factor_ + 'px';
-        s(renderMenuDiv).style.width = h_*factor_ + 'px';
+        if(MainInput){
+          s(renderMenuDiv).style.width = '95%';
+          s(renderMenuDiv).style.margin = 'auto';
+        }else {
+          s(renderMenuDiv).style.width = h_*factor_ + 'px';
+        }
       }else{
-        s(renderMenuDiv).style.width = w_*factor_ + 'px';
-        s(renderMenuDiv).style.width = w_*factor_ + 'px';
+        if(MainInput){
+          s(renderMenuDiv).style.width = '95%';
+          s(renderMenuDiv).style.margin = 'auto';
+        }else {
+          s(renderMenuDiv).style.width = w_*factor_ + 'px';
+        }
       }
     });
 
@@ -220,7 +239,7 @@ class Menu {
 
     const cellGrid = () => {
       return {
-        cell: `
+        cell: MainInput ? MainInput.cellStyle : `
 
           width: 85%;
           height: 85%;
@@ -229,7 +248,7 @@ class Menu {
           border-radius: 10%;
 
         `,
-        cell_hover: `
+        cell_hover: MainInput ? MainInput.hoverCellStyle : `
 
           border: 3px solid `+window.underpost.theme.mark+`;
           border-radius: 50%;
@@ -321,27 +340,27 @@ class Menu {
       };
     };
 
-
-    append(renderDiv, '<menu-modal style="display: none"></menu-modal>');
+    const menuModalId = makeid(5);
+    append(renderDiv, '<'+menuModalId+' style="display: none"></'+menuModalId+'>');
 
     const dimGridMenu = 5;
-    const id_cell = 'menu-cell';
-
-    window.underpost.intervals.processGrid != undefined ?
-    getKeys(window.underpost.intervals.processGrid.intervalReturn).map( intervalKey => {
-      clearInterval(window.underpost.intervals.processGrid.intervalReturn[intervalKey]);
+    const id_cell = MainInput ? MainInput.id_cell : 'menu-cell';
+    const idExtern = MainInput ? makeid(5) : "processGrid";
+    window.underpost.intervals[idExtern] != undefined ?
+    getKeys(window.underpost.intervals[idExtern].intervalReturn).map( intervalKey => {
+      clearInterval(window.underpost.intervals[idExtern].intervalReturn[intervalKey]);
     }):null;
-    window.underpost.intervals.processGrid = renderGridsModal({
-      row: dimGridMenu,
-      col: dimGridMenu,
+    window.underpost.intervals[idExtern] = renderGridsModal({
+      row: ( MainInput ? MainInput.row : dimGridMenu ),
+      col: ( MainInput ? MainInput.col : dimGridMenu ),
+      setHeight: ( MainInput ? MainInput.setHeight : undefined ),
       delayInit: 0,
       dataType: undefined,
       id_cell,
-      divRenderModal: 'menu-modal',
+      divRenderModal: menuModalId,
       dataCell: APPS,
       intervalRender: intervalTimeMenuRender,
       onCLick: (dataCell, idModal, id_cell_grid, idGrid) => {
-            s('.loading').style.display = 'block';
             const dataInput = {
               dataCell,
               idModal,
@@ -349,17 +368,26 @@ class Menu {
               idGrid
             };
             console.log(dataInput);
+            if(MainInput){
+              return MainInput.click(dataInput);
+            }
+            s('.loading').style.display = 'block';
             location.href = dataCell.path;
 
       },
       style: cellGrid(),
-      factorCell: 0.9
+      factorCell: MainInput ? MainInput.factorCell : 0.9
     });
 
-    append(renderMenuDiv, window.underpost.intervals.processGrid.render);
+    append(renderMenuDiv, window.underpost.intervals[ MainInput ? idExtern : "processGrid" ].render);
 
 
-    const totalCell = (dimGridMenu*dimGridMenu)-1;
+    let totalCell;
+    if(MainInput){
+      totalCell = (MainInput.col*MainInput.row) - 1;
+    }else{
+      totalCell = (dimGridMenu*dimGridMenu) -1 ;
+    }
     for(let idCellMenu of range(0, totalCell)){
       if(APPS[idCellMenu]){
         const selectorCell = '.'+id_cell+'-'+idCellMenu;
@@ -371,13 +399,11 @@ class Menu {
       // console.log(s(mainSelectorCell)['data-id']);
     }
 
-    // for(let rowId of range(1, dimGridMenu)){  }
-    //  new Sortable(s('.row-content-'+rowId+'-'+window.underpost.intervals.processGrid.idGrid), {
     let onClick = true;
-    new Sortable(s('.'+window.underpost.intervals.processGrid.idGrid+'-content'), {
+    new Sortable(s('.'+window.underpost.intervals[ MainInput ? idExtern : "processGrid" ].idGrid+'-content'), {
         // swap: true,
         animation: 150,
-        group: 'menu-storage',
+        group: (MainInput ? MainInput.sortableGroup : 'menu-storage' ),
         forceFallback: true,
         fallbackOnBody: true,
     		// swapThreshold: 0.65

@@ -2,10 +2,61 @@
 import { UnderpostQuillEditor } from '/mods/underpost-quill-editor.js';
 import { UnderpostInteract } from '/mods/underpost-interact.js';
 import { Rest } from '/mods/rest.js';
+import { Menu } from './menu.js';
 
 class Editor {
 
   constructor(){
+
+    /*
+    style='`+iconStyle+`'
+    style='`+textStyle+`'
+    */
+
+    new Menu({
+      zIndex: {
+        contentMenu: 99997
+      },
+      row: 5,
+      col: 1,
+      factorCell: 1,
+      cellStyle:   `
+          width: 98%;
+          height: 98%;
+          border: 3px solid `+window.underpost.theme.sub_text+`;
+          transition: .3s;
+      `,
+      hoverCellStyle: `
+          border: 3px solid `+window.underpost.theme.mark+`;
+          `+window.underpost.theme.cursorPointer+`
+          color: `+window.underpost.theme.mark+`;
+      `,
+      setHeight: '100px',
+      initDisplay: 'block',
+      styleContentGrid: '',
+      underpostClassSubGrid: 'in',
+      underpostClass: 'in',
+      click: dataInput => {
+
+      },
+      id_cell: 'menu-cell-test',
+      sortableGroup: 'group-editor',
+      APPS: [
+        {
+          path: '/editor',
+          render: () => `
+              <i class="fas fa-times abs center">
+              </i>
+              <div class='abs center'>
+                  `+renderLang({es: 'Test', en: 'Test'})+`
+              </div>
+          `
+        }
+      ]
+    });
+
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
     const sizeTitle = 15;
     const sizeContent = 15;
@@ -30,9 +81,12 @@ class Editor {
         dataPost.date = new Date(dataPost.date).toISOString();
         return dataPost;
       });
-      orderPost.map(dataPost =>
-        append('.'+idContentDashBoard, renderCard(dataPost))
-      );
+      orderPost.map( (dataPost, i, a) => {
+
+
+          append('.'+idContentDashBoard, renderCard(dataPost));
+
+      });
 
     };
 
@@ -419,7 +473,7 @@ class Editor {
 
           window.underpost.intervals.editor_time_since != undefined ?
           clearInterval(window.underpost.intervals.editor_time_since):null;
-          
+
           renderTimeSinces();
           window.underpost.intervals.editor_time_since =
           setInterval(() => renderTimeSinces(), intervalUpdateTimeSince);
