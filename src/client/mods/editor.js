@@ -8,52 +8,6 @@ class Editor {
 
   constructor(){
 
-    /*
-    style='`+iconStyle+`'
-    style='`+textStyle+`'
-    */
-
-    new Menu({
-      zIndex: {
-        contentMenu: 99997
-      },
-      row: 5,
-      col: 1,
-      factorCell: 1,
-      cellStyle:   `
-          width: 98%;
-          height: 98%;
-          border: 3px solid `+window.underpost.theme.sub_text+`;
-          transition: .3s;
-      `,
-      hoverCellStyle: `
-          border: 3px solid `+window.underpost.theme.mark+`;
-          `+window.underpost.theme.cursorPointer+`
-          color: `+window.underpost.theme.mark+`;
-      `,
-      setHeight: '100px',
-      initDisplay: 'block',
-      styleContentGrid: '',
-      underpostClassSubGrid: 'in',
-      underpostClass: 'in',
-      click: dataInput => {
-
-      },
-      id_cell: 'menu-cell-test',
-      sortableGroup: 'group-editor',
-      APPS: [
-        {
-          path: '/editor',
-          render: () => `
-              <i class="fas fa-times abs center">
-              </i>
-              <div class='abs center'>
-                  `+renderLang({es: 'Test', en: 'Test'})+`
-              </div>
-          `
-        }
-      ]
-    });
 
     // -------------------------------------------------------------------------
     // -------------------------------------------------------------------------
@@ -66,11 +20,15 @@ class Editor {
     const contentDisplayEditor = 'display-editor';
     const idContentDashBoard = 'dashboard-post';
 
-    const renderAllPost = () => {
+    const idSortableContent = 'render-editor-sortable';
+    const id_cell = 'menu-cell-test';
+    const renderAllPost = objRenderPosts => {
       console.log('currentsPost ->');
       console.log(currentsPost);
       console.log('currentsPost Size ->');
       console.log(getSizeJSON(currentsPost));
+
+      htmls('.'+idContentDashBoard, '');
 
       let orderPost = newInstance(currentsPost).map(dataPost => {
         dataPost.date = new Date(dataPost.date).getTime();
@@ -81,10 +39,66 @@ class Editor {
         dataPost.date = new Date(dataPost.date).toISOString();
         return dataPost;
       });
+
+
+      htmls(idSortableContent, '');
+      new Menu({
+            row: l(orderPost),
+            col: 1,
+            renderDiv: idSortableContent,
+            styleMainContent: '',
+            factorCell: 1,
+            cellStyle:   `
+                width: 98%;
+                height: 98%;
+                /* border: 3px solid `+window.underpost.theme.sub_text+`; */
+                transition: .3s;
+                text-align: left;
+                overflow-y: auto;
+                overflow-x: hidden;
+            `,
+            hoverCellStyle: `
+                width: 100%;
+                height: 100%;
+                /* border: 3px solid `+window.underpost.theme.mark+`; */
+                `+window.underpost.theme.cursorPointer+`
+                color: `+window.underpost.theme.mark+`;
+            `,
+            setHeight: '400px',
+            initDisplay: 'block',
+            styleContentGrid: `
+              z-index: `+window.underpost.styles.zIndex.contentLanding+`;
+            `,
+            underpostClassSubGrid: 'in',
+            underpostClass: 'in',
+            click: dataInput => {
+
+            },
+            id_cell,
+            sortableGroup: 'group-editor',
+            // default content cell is replaced for orderPost.map
+            APPS: [
+              {
+                path: '/editor',
+                render: () => `
+                    <i class="fas fa-times abs center">
+                    </i>
+                    <div class='abs center'>
+                        `+renderLang({es: 'Test', en: 'Test'})+`
+                    </div>
+                `
+              }
+            ]
+          });
+
       orderPost.map( (dataPost, i, a) => {
 
+          const selectorCell = '.'+id_cell+'-'+i;
+          htmls(selectorCell, renderCard(dataPost,
+            (objRenderPosts && (dataPost.id == objRenderPosts.id) ? objRenderPosts.state : undefined)
+          ));
 
-          append('.'+idContentDashBoard, renderCard(dataPost));
+          // append('.'+idContentDashBoard, renderCard(dataPost));
 
       });
 
@@ -206,6 +220,7 @@ class Editor {
             obj_.del = true;
             const response = await new Rest().FETCH('/posts', 'post', obj_);
             if(response.success === true){
+              /*
               s('.card-'+obj_.id).remove();
               let indPost = 0;
               for(let post of currentsPost){
@@ -215,6 +230,10 @@ class Editor {
                   }
                   indPost++;
               }
+              */
+              const responsePosts = await new Rest().FETCH('/posts/'+getRawQuery(), 'get');
+              currentsPost = responsePosts.data;
+              renderAllPost();
               return   notifi.display(
                  window.underpost.styles.notifi.backgroundNotifi,
                  renderLang({es: 'Eliminado', en: 'Success delete'}),
@@ -290,6 +309,7 @@ class Editor {
         s('.btn-cancel-send-underpost').style.display = 'none';
         fadeGlobal(true, '.btn-new-post', 250, 'inline-table', 'inline-table');
         fadeGlobal(true, '.'+idContentDashBoard, 250, 'block', 'block');
+        fadeGlobal(true, idSortableContent, 250, 'block', 'block');
         if(lastIDedit!=null){
           s('.card-'+lastIDedit).style.display = 'block';
           s('.underpost-ql-title').value = '';
@@ -386,6 +406,7 @@ class Editor {
                            console.log(response);
                            // navigator.onLine ?
                            if(response.success===true){
+                             /*
                              dataPost.id = response.data.id;
                              if(lastIDedit!=null){
                                let indPost = 0;
@@ -401,8 +422,17 @@ class Editor {
                              }else {
                                currentsPost.push(response.data);
                              }
+                             */
+                            const responsePosts = await new Rest().FETCH('/posts/'+getRawQuery(), 'get');
+                            currentsPost = responsePosts.data;
+                            renderAllPost({
+                              state: 'new',
+                              id: response.data.id
+                            });
                             toDashBoard();
+                            /*
                             prepend('.'+idContentDashBoard, renderCard(dataPost, 'new'));
+                            */
                              this.editor.reset();
                              return notifi.display(
                                 window.underpost.styles.notifi.backgroundNotifi,
@@ -443,6 +473,8 @@ class Editor {
 
           </div>
 
+          <render-editor-sortable></render-editor-sortable>
+
           <div class='in `+idContentDashBoard+`'>
 
           </div>
@@ -456,7 +488,9 @@ class Editor {
         fadeGlobal(true, '.'+contentDisplayEditor, fadeInTime, 'block', 'block');
         fadeGlobal(true, '.btn-send-underpost', fadeInTime, 'inline-table', 'inline-table');
         fadeGlobal(true, '.btn-cancel-send-underpost', fadeInTime, 'inline-table', 'inline-table');
+        lastIDedit = null;
         s('.'+idContentDashBoard).style.display = 'none';
+        s(idSortableContent).style.display = 'none';
         s('.btn-new-post').style.display = 'none';
       };
 

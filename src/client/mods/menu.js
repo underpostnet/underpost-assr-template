@@ -9,7 +9,7 @@ class Menu {
     const renderMenuDiv = makeid(5);
     const factor_ = 0.95;
     const intervalTimeMenuRender = 10;
-    const renderDiv = makeid(5);
+    const renderDiv = MainInput ? MainInput.renderDiv : makeid(5);
 
     // Menu Controller
     append('render', `
@@ -20,7 +20,7 @@ class Menu {
            height: 100%;
            top: 0%;
            left: 0%;
-           z-index: `+(MainInput ? MainInput.zIndex.contentMenu : window.underpost.styles.zIndex.contentMenu)+`;
+           z-index: `+window.underpost.styles.zIndex.contentMenu+`;
            background: `+window.underpost.theme.background+`;
            ` )+`
 
@@ -198,7 +198,10 @@ class Menu {
 
         <`+renderMenuDiv+`-render class='in'>
 
-                <`+renderMenuDiv+` class='`+(MainInput ? MainInput.underpostClassSubGrid : 'abs center' )+`' style='border: 2px solid `+window.underpost.theme.text+`; border-radius: 10px;'>
+                <`+renderMenuDiv+` class='`+(MainInput ? MainInput.underpostClassSubGrid : 'abs center' )+`'
+                style='
+                `+(MainInput ? MainInput.styleMainContent : `border: 2px solid `+window.underpost.theme.text+`; border-radius: 10px;`)+`
+                '>
 
                 </`+renderMenuDiv+`>
 
@@ -212,6 +215,11 @@ class Menu {
     clearInterval(window.underpost.intervals[idExternResponsive]):null;
     window.underpost.intervals[idExternResponsive] =
     responsiveRender(intervalTimeMenuRender, (w_, h_) => {
+
+      if(!(s(renderMenuDiv+'-render') && s(renderMenuDiv+'-render'))){
+        console.warn('no grid render div');
+        return;
+      }
 
       MainInput ?
       s(renderMenuDiv+'-render').style.height = 'auto':

@@ -114,7 +114,8 @@ class Views {
             loading: 99999,
             notifiValidator: 99998,
             btnMenu: 99997,
-            contentMenu: 99996
+            contentMenu: 99996,
+            contentLanding: 99995
           }
         },
         intervals: {},
