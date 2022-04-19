@@ -45,6 +45,9 @@ class Editor {
       new Menu({
             row: l(orderPost),
             col: 1,
+            idContentGridResponsive: 'interval-grid-editor',
+            intervalCellGrid: 'interval-cell-editor',
+            mainContentWidth: '95%',
             renderDiv: idSortableContent,
             styleMainContent: '',
             factorCell: 1,

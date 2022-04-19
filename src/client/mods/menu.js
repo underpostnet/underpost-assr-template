@@ -210,7 +210,7 @@ class Menu {
 
     `);
 
-    let idExternResponsive = MainInput ? makeid(5) : "MenuContentRenderController";
+    let idExternResponsive = MainInput ? MainInput.idContentGridResponsive : "MenuContentRenderController";
     window.underpost.intervals[idExternResponsive] != undefined ?
     clearInterval(window.underpost.intervals[idExternResponsive]):null;
     window.underpost.intervals[idExternResponsive] =
@@ -227,14 +227,14 @@ class Menu {
 
       if(w_>h_){
         if(MainInput){
-          s(renderMenuDiv).style.width = '95%';
+          s(renderMenuDiv).style.width = MainInput.mainContentWidth;
           s(renderMenuDiv).style.margin = 'auto';
         }else {
           s(renderMenuDiv).style.width = h_*factor_ + 'px';
         }
       }else{
         if(MainInput){
-          s(renderMenuDiv).style.width = '95%';
+          s(renderMenuDiv).style.width = MainInput.mainContentWidth;
           s(renderMenuDiv).style.margin = 'auto';
         }else {
           s(renderMenuDiv).style.width = w_*factor_ + 'px';
@@ -353,7 +353,7 @@ class Menu {
 
     const dimGridMenu = 5;
     const id_cell = MainInput ? MainInput.id_cell : 'menu-cell';
-    const idExtern = MainInput ? makeid(5) : "processGrid";
+    const idExtern = MainInput ? MainInput.intervalCellGrid : "processGrid";
     window.underpost.intervals[idExtern] != undefined ?
     getKeys(window.underpost.intervals[idExtern].intervalReturn).map( intervalKey => {
       clearInterval(window.underpost.intervals[idExtern].intervalReturn[intervalKey]);
