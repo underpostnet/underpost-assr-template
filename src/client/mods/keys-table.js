@@ -7,6 +7,7 @@ class KeysTable {
 
     this.idSortableContentTable = 'sortable-table-keys';
     this.id_cell  = 'table-cell-keys';
+    this.mainWidthTable = '98%';
 
     append('render', `
 
@@ -126,7 +127,7 @@ class KeysTable {
       </view-key>
 
       <table-keys class='in'>
-            <table-keys-header> </table-keys-header>
+            <table-keys-header class='in' style='width: `+this.mainWidthTable+`; margin: auto'> </table-keys-header>
 
             <`+this.idSortableContentTable+`></`+this.idSortableContentTable+`>
       </table-keys>
@@ -232,6 +233,8 @@ class KeysTable {
         const response = await new Rest().FETCH('/network/keys', 'POST', bodyPost);
         console.log(response);
         if(response.success === true){
+           // volver a ordenar por tiempo
+           localStorage.removeItem('group-table-keys');
            await this.renderTableKeys({
              mark: [
                response.asymmetric,
@@ -287,26 +290,28 @@ class KeysTable {
                renderDiv: this.idSortableContentTable,
                idContentGridResponsive: 'interval-keys-table',
                intervalCellGrid: 'interval-keys-cell',
-               mainContentWidth: '100%',
                styleMainContent: '',
                factorCell: 1,
                cellStyle:   `
-                   width: 98%;
-                   height: 98%;
-                   /* border: 3px solid `+window.underpost.theme.sub_text+`; */
+                   width: `+this.mainWidthTable+`;
+                   height: auto;
+                   border: 3px solid `+window.underpost.theme.background+`;
                    transition: .3s;
                    text-align: left;
                    overflow-y: auto;
                    overflow-x: hidden;
+                   margin: auto;
                `,
                hoverCellStyle: `
-                   width: 100%;
-                   height: 100%;
-                   /* border: 3px solid `+window.underpost.theme.mark+`; */
+                   width: 99%;
+                   height: 99%;
+                   border: 3px solid `+window.underpost.theme.mark+`;
                    `+window.underpost.theme.cursorPointer+`
                   /* color: `+window.underpost.theme.mark+`;  */
                `,
-               setHeight: '50px',
+               mainContentWidth: 'auto',
+               classSubContentCell: 'in',
+               setHeight: 'auto',
                initDisplay: 'block',
                styleContentGrid: `
                  z-index: `+window.underpost.styles.zIndex.contentLanding+`;
@@ -323,17 +328,16 @@ class KeysTable {
              });
 
 
-         let indRow = 0;
          renderTableV1( obj.data, {
            onRenderStyle: renderStyle =>
            append(this.idSortableContentTable, renderStyle),
            onHeaderRender: renderHeader =>
            htmls('table-keys-header', renderHeader),
-           onRenderDataRow: renderRow => {
-             // console.log('onRenderDataRow', renderRow);
-             const selectorCell = '.'+this.id_cell+'-'+indRow;
+           onRenderDataRow: (renderRow, dataRow, indexRow) => {
+             console.log('onRenderDataRow', dataRow);
+             const selectorCell = '.'+this.id_cell+'-'+indexRow;
              htmls(selectorCell, renderRow);
-             indRow++;
+             s(selectorCell).onclick = () => s('.view-'+indexRow).click();
            },
            idMark: inObj.mark,
            style: {

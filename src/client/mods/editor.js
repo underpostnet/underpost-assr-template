@@ -196,7 +196,7 @@ class Editor {
           // -------------------------------------------------------------------
 
           append('.btn-view-'+obj_.id, renderTooltipEditor(
-            'tooltip-delete-'+obj_.id,
+            'tooltip-view-'+obj_.id,
             '<i class="fas fas fa-caret-down icon-fa-'+obj_.id+'" style="font-size: 30px; transition: .3s"></i>',
             `<div class='inl arrow-`+obj_.id+`'>`
             +renderLang({es: 'Ver', en: 'View'})+
@@ -476,11 +476,16 @@ class Editor {
                              */
                             const responsePosts = await new Rest().FETCH('/posts/'+getRawQuery(), 'get');
                             currentsPost = responsePosts.data;
+                            // volver a ordenar por tiempo
+                            localStorage.removeItem('group-editor');
                             renderAllPost({
                               state: 'new',
                               id: response.data.id
                             });
                             toDashBoard();
+                            setTimeout( () => {
+                              s('.icon-fa-'+response.data.id).click();
+                            }, 500);
                             /*
                             prepend('.'+idContentDashBoard, renderCard(dataPost, 'new'));
                             */
