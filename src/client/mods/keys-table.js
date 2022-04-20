@@ -101,28 +101,15 @@ class KeysTable {
 
       <view-key style='display: none'>
 
-            <view-key-menu class='in'>
+            <div class='fix btn-underpost cancel-view-key'>
 
-                    <div class='inl btn-underpost cancel-view-key'>
+                  <i class="fas fa-times"></i>
 
-                          <i class="fas fa-times"></i>
-
-                    </div>
-
-                    <div class='inl btn-underpost btn-view-key-raw'>
-                        `+renderLang({
-                          es: 'ver datos json en bruto',
-                          en: 'view json raw data'
-                        })+`
-                        <i class='fas fa-eye'></i>
-                    </div>
-
-            </view-key-menu>
-
-            <pre class='key-raw-data' style='display: none'>
+            </div>
+            `+spr('<br>', 4)+`
+            <pre class='key-raw-data'>
 
             </pre>
-
 
       </view-key>
 
@@ -415,7 +402,6 @@ class KeysTable {
                  s('view-key').style.display = 'none';
                  fadeIn(s('.create-form-open'));
                  s('.create-form-open').style.display = 'inline-table';
-                 s('.key-raw-data').style.display = 'none';
                  fadeIn(s('table-keys'));
                };
 
@@ -430,10 +416,7 @@ class KeysTable {
                    s('table-keys').style.display = 'none';
 
                    fadeIn(s('view-key'));
-                   s('.btn-view-key-raw').onclick = () => {
-                      htmls('.key-raw-data', jsonSave(response.dataFileKey));
-                      fadeIn(s('.key-raw-data'));
-                   };
+                   htmls('.key-raw-data', jsonSave(response.dataFileKey));
 
                    notifi.display(
                       window.underpost.styles.notifi.backgroundNotifi,
