@@ -5,6 +5,62 @@ class UnderpostConfig {
 
     append('render', spr('<br>', 3));
 
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+
+    const renderHeaderAcc = obj => {
+      append('render', renderAccordion({
+        id: obj.idAcc,
+        open: window.underpost[obj.idAcc] ? true : false,
+        classHeader: 'btn-underpost',
+        styleIcon: `
+          font-size: 30px;
+          transition: .3s;
+        `,
+        width: 80,
+        height: '0.1px',
+        contentHeader: `
+          <div class='abs center'>
+            `+obj.text+`
+          </div>
+        `,
+        onOpen: () => {
+          obj.open();
+          window.underpost[obj.idAcc] = true;
+        },
+        onClose: () => {
+          obj.close();
+          window.underpost[obj.idAcc] = undefined;
+        }
+      }));
+    };
+
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+
+    const configColorID = 'config-colors';
+    const configThemeID = 'config-themes';
+
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+
+    renderHeaderAcc({
+      idAcc: configColorID,
+      text: renderLang({
+        es: 'Colores de la Interfas',
+        en: 'Interface Colors'
+      }),
+      close: () => {
+        fadeOut(s('config-colors-theme'));
+      },
+      open: () => {
+        fadeIn(s('config-colors-theme'));
+        window.underpost[configThemeID] ?
+        s('.header-'+configThemeID).click(): null;
+      }
+    });
+
+
     const COLOR_ATTR = [
       "background",
       "text",
@@ -41,10 +97,13 @@ class UnderpostConfig {
       window.underpost.view();
     }
 
+    append('render', `
+        <config-colors-theme style='display: none'></config-colors-theme>
+    `);
 
     COLOR_ATTR.map( optionColor => {
 
-      append('render', `
+      append('config-colors-theme', `
 
                 <div class='inl' style='margin: 5px;'>
                     `+cap(optionColor.replaceAll('_', ' '))+`
@@ -87,16 +146,26 @@ class UnderpostConfig {
       }
     });
 
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
-    append('render', `
-    <div class='inl' style='margin: 5px;'>
-        `+renderLang({
-          es: 'Temas',
-          en: 'Themes'
-        })+`
-    </div>
-    `)
-    append('render', '<themes class="in"></themes>');
+    renderHeaderAcc({
+      idAcc: configThemeID,
+      text: renderLang({
+        es: 'Temas',
+        en: 'Themes'
+      }),
+      close: () => {
+        fadeOut(s('themes'));
+      },
+      open: () => {
+        fadeIn(s('themes'));
+        window.underpost[configColorID] ?
+        s('.header-'+configColorID).click(): null;
+      }
+    });
+
+    append('render', '<themes class="in" style="display: none"></themes>');
     for(let theme_ of window.underpost.themes){
       const idTheme = makeid(4);
       append('themes', `<div class='inl `+idTheme+` btn-underpost' style='
@@ -138,7 +207,7 @@ class UnderpostConfig {
     }
 
 
-    append('render', `
+    append('themes', `
 
         <br>
 
@@ -160,7 +229,18 @@ class UnderpostConfig {
     // window.underpost.intervalTheme =
     // setInterval(()=>renderTheme(), 500);
 
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+
     append('render', spr('<br>', 3));
+
+
+
+
+
+
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
 
   }
 }
