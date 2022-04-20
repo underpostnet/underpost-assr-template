@@ -47,27 +47,20 @@ class Editor {
             col: 1,
             idContentGridResponsive: 'interval-grid-editor',
             intervalCellGrid: 'interval-cell-editor',
-            mainContentWidth: '95%',
+            mainContentWidth: 'auto',
             renderDiv: idSortableContent,
             styleMainContent: '',
             factorCell: 1,
             cellStyle:   `
-                width: 98%;
-                height: 98%;
-                /* border: 3px solid `+window.underpost.theme.sub_text+`; */
-                transition: .3s;
-                text-align: left;
-                overflow-y: auto;
-                overflow-x: hidden;
+
+
             `,
             hoverCellStyle: `
-                width: 100%;
-                height: 100%;
-                /* border: 3px solid `+window.underpost.theme.mark+`; */
-                `+window.underpost.theme.cursorPointer+`
-                color: `+window.underpost.theme.mark+`;
+
+
             `,
-            setHeight: '400px',
+            setHeight: 'auto',
+            classSubContentCell: 'in',
             initDisplay: 'block',
             styleContentGrid: `
               z-index: `+window.underpost.styles.zIndex.contentLanding+`;
@@ -80,18 +73,7 @@ class Editor {
             id_cell,
             sortableGroup: 'group-editor',
             // default content cell is replaced for orderPost.map
-            APPS: [
-              {
-                path: '/editor',
-                render: () => `
-                    <i class="fas fa-times abs center">
-                    </i>
-                    <div class='abs center'>
-                        `+renderLang({es: 'Test', en: 'Test'})+`
-                    </div>
-                `
-              }
-            ]
+            APPS: []
           });
 
       orderPost.map( (dataPost, i, a) => {
@@ -161,6 +143,10 @@ class Editor {
                       color: `+window.underpost.theme.mark+`;
                 }
 
+                .card-title {
+                    `+window.underpost.theme.cursorPointer+`
+                }
+
           </style>
 
       `);
@@ -196,15 +182,65 @@ class Editor {
 
           append('.btn-edit-'+obj_.id, renderTooltipEditor(
             'tooltip-edit-'+obj_.id,
-            '<i class="fas fa-edit abs center"></i>',
+            '<i class="fas fa-edit"></i>',
             renderLang({es: 'Editar', en: 'Edit'})
           ));
 
           append('.btn-delete-'+obj_.id, renderTooltipEditor(
             'tooltip-delete-'+obj_.id,
-            '<i class="fas fa-trash abs center"></i>',
+            '<i class="fas fa-trash"></i>',
             renderLang({es: 'Eliminar', en: 'Delete'})
           ));
+
+          // -------------------------------------------------------------------
+          // -------------------------------------------------------------------
+
+          append('.btn-view-'+obj_.id, renderTooltipEditor(
+            'tooltip-delete-'+obj_.id,
+            '<i class="fas fas fa-caret-down icon-fa-'+obj_.id+'" style="font-size: 30px; transition: .3s"></i>',
+            `<div class='inl arrow-`+obj_.id+`'>`
+            +renderLang({es: 'Ver', en: 'View'})+
+            `</div>`
+          ));
+
+          let open_ = false;
+          s('.icon-fa-'+obj_.id).onclick = () => {
+              if(open_){
+                htmls('.arrow-'+obj_.id, renderLang({es: 'Ver', en: 'View'}));
+                s('.icon-fa-'+obj_.id).style.transform = 'rotate(0deg)';
+
+                s('.html-content-car-'+obj_.id).style.height = '300px';
+                setTimeout(()=>{
+                    s('.html-content-car-'+obj_.id).style.height = '0px';
+                    setTimeout(()=>{
+                      s('.html-content-car-'+obj_.id).style.display = 'none';
+                    }, 100);
+                }, 0);
+
+              }else{
+                htmls('.arrow-'+obj_.id, renderLang({es: 'Cerrar', en: 'Close'}));
+                s('.icon-fa-'+obj_.id).style.transform = 'rotate(180deg)';
+
+                s('.html-content-car-'+obj_.id).style.display = 'block';
+                setTimeout(()=>{
+                    s('.html-content-car-'+obj_.id).style.height = '300px';
+                    setTimeout(()=>{
+                      s('.html-content-car-'+obj_.id).style.height = 'auto';
+                    }, 100);
+                }, 0);
+
+              }
+              open_ = !open_;
+          };
+
+          setTimeout( () =>
+          s('.card-title-'+obj_.id).style.height =
+          s('.card-title-main-'+obj_.id).clientHeight + 'px', 0);
+
+          s('.card-title-'+obj_.id).onclick = () => s('.icon-fa-'+obj_.id).click();
+
+          // -------------------------------------------------------------------
+          // -------------------------------------------------------------------
 
 
           s('.btn-edit-'+obj_.id).onclick = () =>
@@ -266,13 +302,19 @@ class Editor {
 
         return `
 
-        <div class='card-`+obj_.id+`' style=' margin: 5px; `+(state=='new'?'border: 3px solid '+window.underpost.theme.mark+';':'')+`'>
+        <div class='card-`+obj_.id+` btn-underpost'
+        style='
+        padding: 0px;
+        font-weight: normal;
+        margin: 5px;
+        `+(state=='new'?'border: 3px solid '+window.underpost.theme.mark+';':'')+`
+        '>
 
-          <div class='in' style='color: `+window.underpost.theme.section_btn_color+`; background: `+window.underpost.theme.section_btn+`; min-height: 60px;'>
+          <div class='in' style='color: `+window.underpost.theme.section_btn_color+`; background: `+window.underpost.theme.section_btn+`'>
 
-                <div class='fl'>
+                <div class='fl card-title-main-`+obj_.id+`'>
 
-                    <div class='in fll' style='width: 85%;'>
+                    <div class='in fll card-title card-title-`+obj_.id+`' style='width: 85%'>
 
                         <div class='in' style='font-size: 20px; padding: 5px;'>
                             `+obj_.title+`
@@ -288,11 +330,15 @@ class Editor {
 
                     <div class='in fll' style='width: 15%; text-align: center;'>
 
-                            <div class='inl btn-cards btn-cards-edit btn-edit-`+obj_.id+`'>
+                            <div class='inl btn-cards btn-edit-`+obj_.id+`'>
 
                             </div>
 
-                            <div class='inl btn-cards btn-cards-delete btn-delete-`+obj_.id+`'>
+                            <div class='inl btn-cards btn-delete-`+obj_.id+`'>
+
+                            </div>
+
+                            <div class='inl btn-cards btn-view-`+obj_.id+`'>
 
                             </div>
 
@@ -301,7 +347,9 @@ class Editor {
                 </div>
 
            </div>
-        `+ deBase64(obj_.B64HTMLdisplay) + `
+            <div class='in html-content-car-`+obj_.id+`' style='display: none; height: 0px; transition: .3s'>
+                `+ deBase64(obj_.B64HTMLdisplay) + `
+            </div>
         </div>
         `;
       })();

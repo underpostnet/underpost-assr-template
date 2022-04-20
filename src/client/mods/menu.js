@@ -362,6 +362,7 @@ class Menu {
       row: ( MainInput ? MainInput.row : dimGridMenu ),
       col: ( MainInput ? MainInput.col : dimGridMenu ),
       setHeight: ( MainInput ? MainInput.setHeight : undefined ),
+      classSubContentCell: ( MainInput ? MainInput.classSubContentCell : undefined ),
       delayInit: 0,
       dataType: undefined,
       id_cell,

@@ -319,18 +319,7 @@ class KeysTable {
                id_cell: this.id_cell,
                sortableGroup: 'group-table-keys',
                // default content cell is replaced for orderPost.map
-               APPS: [
-                 {
-                   path: '/editor',
-                   render: () => `
-                       <i class="fas fa-times abs center">
-                       </i>
-                       <div class='abs center'>
-                           `+renderLang({es: 'Test', en: 'Test'})+`
-                       </div>
-                   `
-                 }
-               ]
+               APPS: []
              });
 
 
