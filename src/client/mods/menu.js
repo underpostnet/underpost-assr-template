@@ -137,7 +137,8 @@ class Menu {
       s('html').scrollTop = s('html').offsetTop;
     };
 
-    toUpBtn('body', '.btn-nav-up', 300);
+      window.underpost.scroll.fnUpBtn =
+      toUpBtn('.btn-nav-up', 300);
 
     } )();
 

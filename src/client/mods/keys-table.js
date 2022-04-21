@@ -12,7 +12,7 @@ class KeysTable {
 
     append('render', `
 
-      <div class='fix btn-underpost create-form-open' style='margin: 5px; z-index: `+window.underpost.styles.zIndex.contentTopMenu+`'>
+      <div class='fix btn-underpost underpost-content-top-menu create-form-open'>
           `+renderLang({
             es: 'Crear Llave',
             en: 'Create Key'
@@ -115,7 +115,7 @@ class KeysTable {
 
       <view-key style='display: none'>
 
-            <div class='fix'>
+            <div class='fix underpost-content-top-menu content-btns-raw-data'>
                     <div class='in fll btn-underpost icon-table-keys cancel-view-key'>
 
                           <i class="fas fa-times"></i>
@@ -210,7 +210,7 @@ class KeysTable {
       s('.form-keys').style.display = 'none';
       fadeIn(s('.create-form-open'));
       fadeIn(s('table-keys'));
-      s('.create-form-open').style.display = 'inline-table';
+      s('.create-form-open').style.display = 'block';
     };
     s('.create-key-btn').onclick = async () => {
 
@@ -277,7 +277,11 @@ class KeysTable {
 
     };
 
-      (async () => await this.renderTableKeys())();
+      (async () => {
+          await this.renderTableKeys();
+          window.underpost.scroll.fnKeysTableCreateBtn =
+          setDynamicDisplay('.create-form-open', 'table-keys', false);
+      })();
 
   }
 
@@ -335,8 +339,6 @@ class KeysTable {
                    border: 3px solid `+window.underpost.theme.background+`;
                    transition: .3s;
                    text-align: left;
-                   overflow-y: auto;
-                   overflow-x: hidden;
                    margin: auto;
                `,
                hoverCellStyle: `
@@ -410,7 +412,7 @@ class KeysTable {
              cell_style: `
              padding-bottom: 10px;
              padding-top: 10px;
-          /*   overflow: auto; */
+             overflow: auto;
              `,
              minWidth: 'none',
              mark_row_style: `
@@ -419,6 +421,9 @@ class KeysTable {
              border: 3px solid `+window.underpost.theme.mark+`;
              font-size: `+fontSize+`px;
 
+             `,
+             contentPlugStyle: `
+              overflow-x: hidden;
              `
            }/* */,
            plugin: index => {
@@ -430,8 +435,7 @@ class KeysTable {
                `, renderLang({
                  en: 'View',
                  es: 'Ver'
-               }))+`
-                 <br>
+               }))+`<br>
             </div>
 
              <div class='in fll plugin-icon-content-table'>
@@ -440,8 +444,7 @@ class KeysTable {
                `, renderLang({
                  en: 'Download',
                  es: 'Descargar'
-               }))+`
-                 <br>
+               }))+`<br>
              </div>
 
              <div class='in fll plugin-icon-content-table delete-`+index+`'>
@@ -450,8 +453,7 @@ class KeysTable {
                `, renderLang({
                  en: 'Delete',
                  es: 'Eliminar'
-               }))+`
-                 <br>
+               }))+`<br>
              </div>
 
              <div class='in fll plugin-icon-content-table'>
@@ -460,8 +462,7 @@ class KeysTable {
                `, renderLang({
                  en: 'Sign',
                  es: 'Firmar'
-               }))+`
-                 <br>
+               }))+`<br>
              </div>
 
              `;
@@ -490,7 +491,7 @@ class KeysTable {
                s('.cancel-view-key').onclick = async () => {
                  s('view-key').style.display = 'none';
                  fadeIn(s('.create-form-open'));
-                 s('.create-form-open').style.display = 'inline-table';
+                 s('.create-form-open').style.display = 'block';
                  fadeIn(s('table-keys'));
                };
 
@@ -506,6 +507,11 @@ class KeysTable {
 
                    fadeIn(s('view-key'));
                    htmls('.key-raw-data', jsonSave(response.dataFileKey));
+
+                   setTimeout( () =>
+                   window.underpost.scroll.fnKeysRawDataConfig =
+                   setDynamicDisplay('.content-btns-raw-data', '.key-raw-data', true)
+                    , 0);
 
                    notifi.display(
                       window.underpost.styles.notifi.backgroundNotifi,

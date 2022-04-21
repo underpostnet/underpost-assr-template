@@ -54,15 +54,20 @@ class UnderpostSW {
 
   async reqNotify(){
     return new Promise( (resolve, reject) =>
-      Notification.requestPermission().then(
+      Notification.requestPermission()
+      .then(
         result => {
           if( result === 'granted' ) {
               resolve(true)
           } else {
               reject(false);
           }
-        }
-      )
+      })
+      .catch( error => {
+        console.error('[Service Worker] Error Notification.requestPermission()');
+        console.error(error);
+        reject(false);
+      })
     )
   }
 

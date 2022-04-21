@@ -135,6 +135,13 @@ class Style {
                       font-weight: bold;
                     }
 
+                    .underpost-content-top-menu {
+                      top: 5px;
+                      left: 5px;
+                      margin: 5px;
+                      z-index: `+window.underpost.styles.zIndex.contentTopMenu+`;
+                      display: none;
+                    }
 
                     ::placeholder {
                       color: `+window.underpost.theme.sub_text+`;

@@ -120,6 +120,7 @@ class Views {
           }
         },
         intervals: {},
+        scroll: {},
         theme: undefined,
         themes: JSON.parse(fs.readFileSync('./data/params/themes.json', MainProcess.data.charset)),
         viewDelay: 200,
