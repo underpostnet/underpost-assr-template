@@ -160,7 +160,7 @@ class Network {
         switch (req.params.type) {
           case 'asymmetric':
             dataFileKey.public = await new FileGestor().getDataFile(path+'/public.pem');
-            dataFileKey.private = await new FileGestor().getDataFile(path+'/public.pem');
+            dataFileKey.private = await new FileGestor().getDataFile(path+'/private.pem');
             success = true;
             break;
           case 'symmetric':

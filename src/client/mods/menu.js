@@ -35,7 +35,7 @@ class Menu {
           contentUnderpostClass: 'abs center',
           originContent:  content_,
           tooltipContent: `
-            <div class='abs center' style='top: -50px; width: 100px;'>
+            <div class='abs center' style='top: -30px; width: 100px;'>
                   <div class='inl' style='
                   font-size: 8px;
                   padding: 5px;
@@ -77,13 +77,11 @@ class Menu {
         </style>
 
                 <btns-views-content>
+
                   <div class='fix btn-underpost btn-nav btn-nav-up' style='bottom: 3px; left: 3px; display: none'>
 
-                        <div class='abs center'>
-                              <i class="fas fa-arrow-up"></i>
-                        </div>
-
                   </div>
+
                 </btns-views-content>
 
                 <div class='fix btn-underpost btn-nav btn-nav-home' style='bottom: 3px; right: 3px;'>
@@ -101,13 +99,13 @@ class Menu {
 
     append('.btn-nav-home', renderTooltipNavBar(
       'btn-nav-home',
-      '<i class="fas fa-th abs center"></i>',
+      '<i class="fas fa-th"></i>',
       renderLang({es: 'Menu', en: 'Menu'})
     ));
 
     append('.btn-nav-close', renderTooltipNavBar(
       'btn-nav-close',
-      '<i class="fas fa-times abs center"></i>',
+      '<i class="fas fa-times"></i>',
       renderLang({es: 'Cerrar<br>Menu', en: 'Close Menu'})
     ));
 
@@ -129,11 +127,15 @@ class Menu {
       fadeOut(s(renderDiv));
     };
 
+    append('.btn-nav-up', renderTooltipNavBar(
+      'btn-nav-up',
+      '<i class="fas fa-arrow-up"></i>',
+      renderLang({es: 'Subir', en: 'Top'})
+    ));
+
     s('.btn-nav-up').onclick = () => {
       s('html').scrollTop = s('html').offsetTop;
     };
-
-
 
     toUpBtn('body', '.btn-nav-up', 300);
 

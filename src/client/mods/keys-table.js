@@ -8,10 +8,11 @@ class KeysTable {
     this.idSortableContentTable = 'sortable-table-keys';
     this.id_cell  = 'table-cell-keys';
     this.mainWidthTable = '98%';
+    const topSpace = spr('<br>', 4);
 
     append('render', `
 
-      <div class='inl btn-underpost create-form-open' style='margin: 5px'>
+      <div class='fix btn-underpost create-form-open' style='margin: 5px; z-index: `+window.underpost.styles.zIndex.contentTopMenu+`'>
           `+renderLang({
             es: 'Crear Llave',
             en: 'Create Key'
@@ -85,28 +86,51 @@ class KeysTable {
 
           .plugin-icon-content-table {
             text-align: center;
-            width: 33%;
-          }
-
-          .btn-plug-table {
+            width: 25%;
             `+window.underpost.theme.cursorPointer+`
             transition: .3s;
           }
 
-          .btn-plug-table:hover {
+          .plugin-icon-content-table:hover {
             color: `+window.underpost.theme.mark+`;
+          }
+
+          .col-header-table {
+              padding-left: 2.5%;
+              padding-right: 2.5%;
+              padding-bottom: 10px;
+              padding-top: 10px;
+              width: 20%;
+              text-align: center;
+              border-bottom: 3px solid `+window.underpost.theme.section_btn+`;
+              font-size: 12px;
+          }
+
+          .icon-table-keys {
+            font-size: 16px;
+            position: relative;
           }
 
       </style>
 
       <view-key style='display: none'>
 
-            <div class='fix btn-underpost cancel-view-key'>
+            <div class='fix'>
+                    <div class='in fll btn-underpost icon-table-keys cancel-view-key'>
 
-                  <i class="fas fa-times"></i>
+                          <i class="fas fa-times"></i>
 
+                    </div>
+
+                    <div class='in fll btn-underpost icon-table-keys copy-view-key'>
+
+                          <i class="fas fa-copy"></i>
+
+                    </div>
             </div>
-            `+spr('<br>', 4)+`
+
+            `+topSpace+`
+
             <pre class='key-raw-data'>
 
             </pre>
@@ -114,6 +138,7 @@ class KeysTable {
       </view-key>
 
       <table-keys class='in'>
+            `+topSpace+`
             <table-keys-header class='in' style='width: `+this.mainWidthTable+`; margin: auto'> </table-keys-header>
 
             <`+this.idSortableContentTable+`></`+this.idSortableContentTable+`>
@@ -256,6 +281,31 @@ class KeysTable {
 
   }
 
+  renderTooltipTableKey(_id, content_, value_){
+    return renderTooltipV1({
+      idTooltip: _id,
+      tooltipStyle: '',
+      contentUnderpostClass: 'abs center',
+      originContent:  content_,
+      tooltipContent: `
+        <div class='abs center' style='top: 0px; width: 100px;'>
+              <div class='inl' style='
+              font-size: 8px;
+              padding: 2px;
+              background: rgba(0, 0, 0, 0.82);
+              color: rgb(215, 215, 215);
+              border-radius: 3px;
+              '>
+                  `+value_+`
+              </div>
+        </div>
+      `,
+      transition: {
+        active: false,
+        time: '.3s'
+      }
+    });
+  }
 
   async renderTableKeys(inObj){
 
@@ -318,8 +368,25 @@ class KeysTable {
          renderTableV1( obj.data, {
            onRenderStyle: renderStyle =>
            append(this.idSortableContentTable, renderStyle),
-           onHeaderRender: renderHeader =>
-           htmls('table-keys-header', renderHeader),
+           onHeaderRender: renderHeader => {
+             htmls('table-keys-header', `
+                <div class='fl'>
+                        <div class='in fll col-header-table'>
+                          `+renderLang({en: 'Id', es: 'Id'})+`
+                        </div>
+                        <div class='in fll col-header-table'>
+                          `+renderLang({en: 'Date', es: 'Fecha'})+`
+                        </div>
+                        <div class='in fll col-header-table'>
+                          `+renderLang({en: 'Type', es: 'Tipo'})+`
+                        </div>
+                        <div class='in fll col-header-table'>
+                          `+spr('<br>', 1)+`
+                        </div>
+                </div>
+             `);
+           },
+           // htmls('table-keys-header', renderHeader),
            onRenderDataRow: (renderRow, dataRow, indexRow) => {
              console.log('onRenderDataRow', dataRow);
              const selectorCell = '.'+this.id_cell+'-'+indexRow;
@@ -341,9 +408,9 @@ class KeysTable {
 
               `,
              cell_style: `
-             padding-bottom: 5px;
-             padding-top: 5px;
-             overflow: auto;
+             padding-bottom: 10px;
+             padding-top: 10px;
+          /*   overflow: auto; */
              `,
              minWidth: 'none',
              mark_row_style: `
@@ -357,24 +424,46 @@ class KeysTable {
            plugin: index => {
              let render_ = `
 
+            <div class='in fll plugin-icon-content-table view-`+index+`'>
+             `+this.renderTooltipTableKey('view-tl-'+index, `
+                          <i class='fas fa-eye icon-table-keys'></i>
+               `, renderLang({
+                 en: 'View',
+                 es: 'Ver'
+               }))+`
+                 <br>
+            </div>
 
-             <div class='in fll plugin-icon-content-table btn-plug-table view-`+index+`'>
-
-                        <i class='fas fa-eye' style='font-size: 16px;'></i>
-
+             <div class='in fll plugin-icon-content-table'>
+             `+this.renderTooltipTableKey('view-tl-'+index, `
+                          <i class='fas fa-download icon-table-keys'></i>
+               `, renderLang({
+                 en: 'Download',
+                 es: 'Descargar'
+               }))+`
+                 <br>
              </div>
 
-             <div class='in fll plugin-icon-content-table btn-plug-table'>
-
-                        <i class='fas fa-download' style='font-size: 16px;'></i>
-
+             <div class='in fll plugin-icon-content-table delete-`+index+`'>
+             `+this.renderTooltipTableKey('view-tl-'+index, `
+                          <i class='fas fa-trash icon-table-keys'></i>
+               `, renderLang({
+                 en: 'Delete',
+                 es: 'Eliminar'
+               }))+`
+                 <br>
              </div>
 
-             <div class='in fll plugin-icon-content-table btn-plug-table delete-`+index+`'>
-
-                        <i class='fas fa-trash' style='font-size: 16px;'></i>
-
+             <div class='in fll plugin-icon-content-table'>
+             `+this.renderTooltipTableKey('view-tl-'+index, `
+                          <i class="fas fa-pen-nib icon-table-keys"></i>
+               `, renderLang({
+                 en: 'Sign',
+                 es: 'Firmar'
+               }))+`
+                 <br>
              </div>
+
              `;
              setTimeout(()=>{
                s('.delete-'+index).onclick = async ()=>{
@@ -424,7 +513,7 @@ class KeysTable {
                       2000,
                       'success'
                     );
-                   await this.renderTableKeys();
+                   // await this.renderTableKeys();
                  }else{
                    notifi.display(
                       window.underpost.styles.notifi.backgroundNotifi,
@@ -438,27 +527,7 @@ class KeysTable {
              },0);
              return render_;
            },
-           name_plugin: `
-
-
-           <div class='in fll plugin-icon-content-table'>
-
-                     `+renderLang({en: 'view', es: 'ver'})+`
-
-           </div>
-
-           <div class='in fll plugin-icon-content-table'>
-
-                     `+renderLang({en: 'download', es: 'descargar'})+`
-
-           </div>
-
-           <div class='in fll plugin-icon-content-table'>
-
-                     `+renderLang({en: 'delete', es: 'eliminar'})+`
-
-           </div>
-           `
+           name_plugin: ``
 
          }
        );
