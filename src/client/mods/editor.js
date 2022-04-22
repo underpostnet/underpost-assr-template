@@ -41,7 +41,7 @@ class Editor {
       });
 
 
-      htmls(idSortableContent, '');
+      htmls(idSortableContent, spr('<br>', 4));
       new Menu({
             row: l(orderPost),
             col: 1,
@@ -510,12 +510,13 @@ class Editor {
       append('render', `
 
 
-
+        <div class='fix btn-new-post-menu underpost-content-top-menu'>
           <div class='inl btn-underpost btn-new-post'>
 
                 `+renderLang({en: 'NEW POST', es: 'NUEVO POST'})+` <i class="fas fa-comment-alt"></i>
 
           </div>
+        </div>
 
           <div class='inl btn-underpost btn-cancel-send-underpost' style='display: none;'>
 
@@ -529,13 +530,16 @@ class Editor {
 
           </div>
 
-          <render-editor-sortable></render-editor-sortable>
+          <render-editor-sortable class='in'></render-editor-sortable>
 
           <div class='in `+idContentDashBoard+`'>
 
           </div>
 
       `);
+
+       window.underpost.scroll.fnEditorNewPost =
+       setDynamicDisplay('.btn-new-post-menu', 'render-editor-sortable', true);
 
       s('.btn-cancel-send-underpost').onclick = () => toDashBoard();
 

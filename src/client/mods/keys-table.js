@@ -137,7 +137,7 @@ class KeysTable {
 
       </view-key>
 
-      <table-keys class='in'>
+      <table-keys class='in' style='min-height: 300px'>
             `+topSpace+`
             <table-keys-header class='in' style='width: `+this.mainWidthTable+`; margin: auto'> </table-keys-header>
 
