@@ -270,17 +270,18 @@ class Menu {
 
         `,
         content_cell_modal: `
-          border-radius: 10px;
-          border: 4px solid #670667;
+        /*  border-radius: 10px;
+          border: 4px solid #670667; */
           display: none;
-           /* z-index: none; */
-          background: #161616;
+          z-index: `+window.underpost.styles.zIndex.contentModalGrid+`;
+          background: `+window.underpost.theme.sub_background+`;
+          color: `+window.underpost.theme.sub_text+`;
           width: 274px;
           /* height: 255px; */
         `,
         cell_modal: `
 
-              border: 10px solid #161616;
+              border: 10px solid `+window.underpost.theme.sub_text+`;
               /* overflow: auto; */
               transition: .3s;
               width: 254px;
@@ -299,11 +300,12 @@ class Menu {
             left: -10px;
             width: 30px;
             height: 30px;
-            border: 4px solid #670667;
+            border: 4px solid `+window.underpost.theme.sub_text+`;
             border-radius: 50%;
-            background: #161616;
+            background: `+window.underpost.theme.sub_background+`;
             transition: .3s;
-          /* z-index: none; */
+            z-index: `+window.underpost.styles.zIndex.contentModalGrid+`;
+            `+window.underpost.theme.cursorPointer+`
         `,
         close_btn_content_hover: `
 
@@ -351,8 +353,9 @@ class Menu {
       };
     };
 
-    const menuModalId = makeid(5);
-    append(renderDiv, '<'+menuModalId+' style="display: none"></'+menuModalId+'>');
+    const menuModalId = MainInput && MainInput.mainIdGrid ? 'modal-' + MainInput.mainIdGrid : makeid(5);
+    // style="display: none"
+    append(renderDiv, '<'+menuModalId+' class="in" ></'+menuModalId+'>');
 
     const dimGridMenu = 5;
     const id_cell = MainInput ? MainInput.id_cell : 'menu-cell';
@@ -366,7 +369,10 @@ class Menu {
       col: ( MainInput ? MainInput.col : dimGridMenu ),
       setHeight: ( MainInput ? MainInput.setHeight : undefined ),
       classSubContentCell: ( MainInput ? MainInput.classSubContentCell : undefined ),
+      disableRowNavModal: true,
       delayInit: 0,
+      mainIdGrid: MainInput ? MainInput.mainIdGrid : undefined,
+      clickRowOpenModal: MainInput ? MainInput.clickRowOpenModal : undefined,
       dataType: undefined,
       id_cell,
       divRenderModal: menuModalId,
@@ -401,7 +407,7 @@ class Menu {
       totalCell = (dimGridMenu*dimGridMenu) -1 ;
     }
     for(let idCellMenu of range(0, totalCell)){
-      if(APPS[idCellMenu]){
+      if(APPS[idCellMenu] && APPS[idCellMenu].render){
         const selectorCell = '.'+id_cell+'-'+idCellMenu;
         // s(selectorCell).classList.add(window.underpost.theme.classPointer);
         htmls(selectorCell, APPS[idCellMenu].render());

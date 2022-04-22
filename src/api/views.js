@@ -116,7 +116,8 @@ class Views {
             btnMenu: 99997,
             contentMenu: 99996,
             contentTopMenu: 99995,
-            contentLanding: 99994
+            contentModalGrid: 99994,
+            contentLanding: 99993
           }
         },
         intervals: {},

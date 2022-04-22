@@ -321,6 +321,7 @@ class KeysTable {
            divContent: 'table-keys',
            data: await new Rest().FETCH('/network/keys', 'GET')
          };
+         const mainIdGrid = 'grids-table-keys';
 
          // htmls(obj.divContent, );
 
@@ -332,6 +333,8 @@ class KeysTable {
                idContentGridResponsive: 'interval-keys-table',
                intervalCellGrid: 'interval-keys-cell',
                styleMainContent: '',
+               mainIdGrid,
+               clickRowOpenModal: false,
                factorCell: 1,
                cellStyle:   `
                    width: `+this.mainWidthTable+`;
@@ -358,12 +361,12 @@ class KeysTable {
                underpostClassSubGrid: 'in',
                underpostClass: 'in',
                click: dataInput => {
-
+                 console.log(dataInput);
                },
                id_cell: this.id_cell,
                sortableGroup: 'group-table-keys',
                // default content cell is replaced for orderPost.map
-               APPS: []
+               APPS: obj.data
              });
 
 
@@ -389,13 +392,14 @@ class KeysTable {
              `);
            },
            // htmls('table-keys-header', renderHeader),
-           onRenderDataRow: (renderRow, dataRow, indexRow) => {
-             console.log('onRenderDataRow', dataRow);
+           onRenderDataRow: (renderRow, dataRow, indexRow, rowClickId) => {
+             console.log('onRenderDataRow', dataRow, rowClickId);
              const selectorCell = '.'+this.id_cell+'-'+indexRow;
              htmls(selectorCell, renderRow);
-             s(selectorCell).onclick = () => s('.view-'+indexRow).click();
+             s(rowClickId).onclick = () => s('.view-'+indexRow).click();
            },
            idMark: inObj.mark,
+           id_table: 'underpost-table-keys',
            style: {
              header_row_style: `
              padding-bottom: 10px;
@@ -467,8 +471,8 @@ class KeysTable {
 
              `;
              setTimeout(()=>{
-               s('.delete-'+index).onclick = async ()=>{
-                 console.warn('on delete key', obj.data[index]);
+
+               const deleteKey = async () => {
                  let response = await new Rest().FETCH('/network/keys', 'DELETE', obj.data[index]);
                  if(response.success === true){
                    notifi.display(
@@ -488,6 +492,42 @@ class KeysTable {
                  }
                };
 
+               s('.delete-'+index).onclick = async ()=>{
+                 console.warn('on delete key', obj.data[index]);
+
+                 htmls('.content-cell-modal-'+mainIdGrid, `
+                    `+spr('<br>', 2)+`
+                      `+renderLang({
+                        es: '¿Desea Eliminar la Llave de ID <span style="color: '+window.underpost.theme.mark+'">'+obj.data[index].id+'</span>?',
+                        en: 'You want to Delete the ID Key <span style="color: '+window.underpost.theme.mark+'">'+obj.data[index].id+'</span>?'
+                      })+`
+                        <br><br>
+                        <div class='inl btn-underpost confirm-del-key' style='background: black; color: red; width: 75%'>
+                              `+renderLang({
+                                  es: 'Eliminar Llave',
+                                  en: 'Delete Key'
+                              })+`
+                        </div>
+                        <br>
+                        <div class='inl btn-underpost cancel-del-key' style='background: black; color: gray; width: 75%'>
+                              `+renderLang({
+                                  es: 'Cancelar',
+                                  en: 'Cancel'
+                              })+`
+                        </div>
+                    `+spr('<br>', 2)+`
+                 `);
+
+                 s('.confirm-del-key').onclick = async () => {
+                   await deleteKey();
+                   fadeOut(s('.main-content-cell-modal-'+mainIdGrid));
+                 };
+                 s('.cancel-del-key').onclick = () =>
+                 fadeOut(s('.main-content-cell-modal-'+mainIdGrid));
+
+                 fadeIn(s('.main-content-cell-modal-'+mainIdGrid));
+               };
+
                s('.cancel-view-key').onclick = async () => {
                  s('view-key').style.display = 'none';
                  fadeIn(s('.create-form-open'));
@@ -497,6 +537,7 @@ class KeysTable {
 
                s('.view-'+index).onclick = async ()=>{
                  console.warn('on view key', obj.data[index]);
+                 s('.main-content-cell-modal-'+mainIdGrid).style.display = 'none';
                  let response = await new Rest().FETCH('/network/keys/'+obj.data[index].type+'/'+obj.data[index].id, 'GET');
                  if(response.success === true){
 
