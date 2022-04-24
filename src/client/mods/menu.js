@@ -145,57 +145,7 @@ class Menu {
     // -------------------------------------------------------------------------
     // -------------------------------------------------------------------------
 
-    const iconStyle = `
-      font-size: 35px;
-      top: 40%;
-    `;
-    const textStyle = `
-      font-size: 8px;
-      top: 90%;
-    `;
-
-    const APPS = MainInput ? MainInput.APPS : [
-      {
-        path: '/editor',
-        render: () => `
-            <i class="fas fa-edit abs center" style='`+iconStyle+`'>
-            </i>
-            <div class='abs center' style='`+textStyle+`'>
-                `+renderLang({es: 'Editor', en: 'Editor'})+`
-            </div>
-        `
-      },
-      {
-        path: '/user',
-        render: () => `
-            <i class="fas fa-user abs center" style='`+iconStyle+`'>
-            </i>
-            <div class='abs center' style='`+textStyle+`'>
-                `+renderLang({es: 'Usuario', en: 'User'})+`
-            </div>
-        `
-      },
-      {
-        path: '/keys',
-        render: () => `
-            <i class="fas fa-key abs center" style='`+iconStyle+`'>
-            </i>
-            <div class='abs center' style='`+textStyle+`'>
-                `+renderLang({es: 'Llaves', en: 'Keys'})+`
-            </div>
-        `
-      },
-      {
-        path: '/config',
-        render: () => `
-            <i class="fas fa-cog abs center" style='`+iconStyle+`'>
-            </i>
-            <div class='abs center' style='`+textStyle+`'>
-                `+renderLang({es: 'Configuración', en: 'Setting'})+`
-            </div>
-        `
-      }
-    ];
+    const APPS = MainInput ? MainInput.APPS : window.underpost.paths;
 
     append(renderDiv, `
 
@@ -309,7 +259,8 @@ class Menu {
         `,
         close_btn_content_hover: `
 
-            border: 4px solid yellow;
+            border: 4px solid `+window.underpost.theme.mark+`;
+            color: `+window.underpost.theme.mark+`;
         `,
         close_btn_simbol: `<i class="fas fa-times"></i>`,
         cell_btn_render_back: `
@@ -406,11 +357,30 @@ class Menu {
     }else{
       totalCell = (dimGridMenu*dimGridMenu) -1 ;
     }
+
+    const iconStyle = `
+      font-size: 35px;
+      top: 40%;
+    `;
+    const textStyle = `
+      font-size: 8px;
+      top: 90%;
+    `;
+
     for(let idCellMenu of range(0, totalCell)){
-      if(APPS[idCellMenu] && APPS[idCellMenu].render){
+      if(APPS[idCellMenu] && MainInput == undefined){
         const selectorCell = '.'+id_cell+'-'+idCellMenu;
         // s(selectorCell).classList.add(window.underpost.theme.classPointer);
-        htmls(selectorCell, APPS[idCellMenu].render());
+        htmls(selectorCell, `
+
+        <div class='abs center' style='`+iconStyle+`'>
+              `+APPS[idCellMenu].icon+`
+        </div>
+        <div class='abs center' style='`+textStyle+`'>
+              `+APPS[idCellMenu].name+`
+        </div>
+
+          `);
       }
       // const mainSelectorCell =  '.main-cell-'+id_cell+`-`+idCellMenu;
       // s(mainSelectorCell)['data-id'] = 'menu-storage-'+idCellMenu;

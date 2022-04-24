@@ -125,6 +125,7 @@ class Views {
         theme: undefined,
         themes: JSON.parse(fs.readFileSync('./data/params/themes.json', MainProcess.data.charset)),
         viewDelay: 200,
+        paths: [],
         view: function(){}
       };
       const uriInitData = '/init.js';

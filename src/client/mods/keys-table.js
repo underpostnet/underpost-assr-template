@@ -1,5 +1,6 @@
 import { Rest } from '/mods/rest.js';
 import { Menu } from './menu.js';
+import { UnderpostTitle } from './title.js';
 
 class KeysTable {
 
@@ -138,7 +139,11 @@ class KeysTable {
       </view-key>
 
       <table-keys class='in' style='min-height: 300px'>
-            `+topSpace+`
+
+            `+new UnderpostTitle({
+              path: '/keys'
+            }).render+`
+
             <table-keys-header class='in' style='width: `+this.mainWidthTable+`; margin: auto'> </table-keys-header>
 
             <`+this.idSortableContentTable+`></`+this.idSortableContentTable+`>

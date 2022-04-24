@@ -8,6 +8,31 @@ import { Menu } from './menu.js';
 class View {
   constructor(mods){
 
+
+
+    window.underpost.paths = [
+      {
+        path: '/editor',
+        name: renderLang({es: 'Editor', en: 'Editor'}),
+        icon: '<i class="fas fa-edit"></i>'
+      },
+      {
+        path: '/user',
+        name: renderLang({es: 'Usuario', en: 'User'}),
+        icon: '<i class="fas fa-user"></i>'
+      },
+      {
+        path: '/keys',
+        name: renderLang({es: 'Llaves', en: 'Keys'}),
+        icon: '<i class="fas fa-key"></i>'
+      },
+      {
+        path: '/config',
+        name: renderLang({es: 'Configuración', en: 'Setting'}),
+        icon: '<i class="fas fa-cog"></i>'
+      }
+    ];
+
     // Spinner Controller
     window.underpost.outSpinner ?
     window.underpost.outSpinner = undefined :

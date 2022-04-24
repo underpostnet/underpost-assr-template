@@ -3,6 +3,7 @@ import { UnderpostQuillEditor } from '/mods/underpost-quill-editor.js';
 import { UnderpostInteract } from '/mods/underpost-interact.js';
 import { Rest } from '/mods/rest.js';
 import { Menu } from './menu.js';
+import { UnderpostTitle } from './title.js';
 
 class Editor {
 
@@ -41,7 +42,10 @@ class Editor {
       });
 
 
-      htmls(idSortableContent, spr('<br>', 4));
+      htmls(idSortableContent, new UnderpostTitle({
+        path: '/editor'
+      }).render);
+
       new Menu({
             row: l(orderPost),
             col: 1,
