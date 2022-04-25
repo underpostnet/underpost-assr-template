@@ -7,7 +7,6 @@
       "section_btn":"#ff0000",
       "section_btn_color":"#ffffff",
       "mark":"#ebff00",
-      "font":"retro-font",
       "cursorDefault":".underpost-default",
       "cursorPointer":".underpost-pointer"
    },
@@ -19,7 +18,6 @@
       "section_btn":"#000308",
       "section_btn_color":"#5665F6",
       "mark":"#E5E1A6",
-      "font":"retro-font",
       "cursorDefault":".underpost-default",
       "cursorPointer":".underpost-pointer"
    },
@@ -31,7 +29,6 @@
       "section_btn":"#786FD9",
       "section_btn_color":"#C33298",
       "mark":"#CD213A",
-      "font":"retro-font",
       "cursorDefault":".underpost-default",
       "cursorPointer":".underpost-pointer"
    },
@@ -43,7 +40,6 @@
       "section_btn":"#bc029b",
       "section_btn_color":"#242854",
       "mark":"#55ecab",
-      "font":"retro-font",
       "cursorDefault":".underpost-default",
       "cursorPointer":".underpost-pointer"
    },
@@ -55,7 +51,6 @@
       "section_btn":"#A9F6EE",
       "section_btn_color":"#77A9B5",
       "mark":"#4FEF1A",
-      "font":"retro-font",
       "cursorDefault":".underpost-default",
       "cursorPointer":".underpost-pointer"
    },
@@ -67,7 +62,6 @@
       "section_btn":"#08dda8",
       "section_btn_color":"#3e13ee",
       "mark":"#002b80",
-      "font":"retro-font",
       "cursorDefault":".underpost-default",
       "cursorPointer":".underpost-pointer"
    },
@@ -79,7 +73,6 @@
       "section_btn":"#bc029b",
       "section_btn_color":"#242854",
       "mark":"#55ecab",
-      "font":"retro-font",
       "cursorDefault":".underpost-default",
       "cursorPointer":".underpost-pointer"
    },
@@ -91,7 +84,6 @@
       "section_btn":"#E4EDF1",
       "section_btn_color":"#867C7A",
       "mark":"#CF30B3",
-      "font":"retro-font",
       "cursorDefault":".underpost-default",
       "cursorPointer":".underpost-pointer"
    },
@@ -103,7 +95,6 @@
       "section_btn":"#786fd9",
       "section_btn_color":"#d4d4d4",
       "mark":"#cd213a",
-      "font":"retro-font",
       "cursorDefault":".underpost-default",
       "cursorPointer":".underpost-pointer"
    }

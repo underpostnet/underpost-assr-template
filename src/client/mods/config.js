@@ -40,6 +40,20 @@ class UnderpostConfig {
 
     const configColorID = 'config-colors';
     const configThemeID = 'config-themes';
+    const configFontsID =  'config-fonts';
+
+    const exclusiveAcc = exep => {
+
+      exep != configColorID && window.underpost[configColorID] ?
+      s('.header-'+configColorID).click(): null;
+
+      exep != configThemeID && window.underpost[configThemeID] ?
+      s('.header-'+configThemeID).click(): null;
+
+      exep != configFontsID && window.underpost[configFontsID] ?
+      s('.header-'+configFontsID).click(): null;
+
+    };
 
     // -------------------------------------------------------------------------
     // -------------------------------------------------------------------------
@@ -55,8 +69,7 @@ class UnderpostConfig {
       },
       open: () => {
         fadeIn(s('config-colors-theme'));
-        window.underpost[configThemeID] ?
-        s('.header-'+configThemeID).click(): null;
+        exclusiveAcc(configColorID);
       }
     });
 
@@ -160,8 +173,7 @@ class UnderpostConfig {
       },
       open: () => {
         fadeIn(s('themes'));
-        window.underpost[configColorID] ?
-        s('.header-'+configColorID).click(): null;
+        exclusiveAcc(configThemeID);
       }
     });
 
@@ -228,6 +240,48 @@ class UnderpostConfig {
     // clearInterval(window.underpost.intervalTheme):null;
     // window.underpost.intervalTheme =
     // setInterval(()=>renderTheme(), 500);
+
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+
+    renderHeaderAcc({
+      idAcc: configFontsID,
+      text: renderLang({
+        es: 'Fuentes de Letra',
+        en: 'Fonts'
+      }),
+      close: () => {
+        fadeOut(s('config-fonts-content'));
+      },
+      open: () => {
+        fadeIn(s('config-fonts-content'));
+        exclusiveAcc(configFontsID);
+      }
+    });
+
+    append('render', `
+      <config-fonts-content class="in" style="display: none">
+          `+window.underpost.fonts.map( font_ => {
+
+            let idFont = makeid(4);
+            setTimeout( () => {
+              s('.'+idFont).onclick = () => {
+                localStorage.setItem("font", font_);
+                window.underpost.outSpinner = true;
+                window.underpost.view();
+              };
+            }, 0);
+
+            return `
+
+                <div class='inl btn-underpost `+idFont+`' style='font-family: `+font_+`'>
+                      `+font_+`
+                </div>
+
+              `;
+          }).join('')+`
+      </config-fonts-content>
+    `);
 
     // -------------------------------------------------------------------------
     // -------------------------------------------------------------------------

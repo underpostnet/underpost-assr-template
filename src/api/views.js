@@ -120,6 +120,7 @@ class Views {
             contentLanding: 99993
           }
         },
+        fonts: ['arial', 'Verdana', 'Times'].concat(MainProcess.data.fonts.map(font_=>font_.name)),
         intervals: {},
         scroll: {},
         theme: undefined,

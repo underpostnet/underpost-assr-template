@@ -41,10 +41,15 @@ class Style {
       x => x.class == window.underpost.theme.cursorPointer
     ).render : 'cursor: pointer;';
 
-    window.underpost.theme.font != '' ?
-    window.underpost.theme.font =
-    `font-family: `+window.underpost.theme.font+`;`
-    : null;
+
+    const currentFont = localStorage.getItem("font");
+    if(currentFont){
+      window.underpost.theme.font = 'font-family: '+currentFont+';';
+    }else{
+      const fontDefault = 'retro-font';
+      localStorage.setItem("font", fontDefault);
+      window.underpost.theme.font = 'font-family: '+fontDefault+';';
+    }
 
     // -------------------------------------------------------------------------
     // style input
