@@ -21,6 +21,7 @@ class Network {
       this.createKey(MainProcess, '/network/keys');
       this.deleteKey(MainProcess, '/network/keys');
       this.getKey(MainProcess, '/network/keys/:type/:id');
+      this.postSignData(MainProcess, '/network/sign-data');
   }
 
   getKeys(MainProcess, uri){
@@ -191,6 +192,35 @@ class Network {
         }));
       }
     });
+  }
+
+  postSignData(MainProcess, uri){
+    MainProcess.app.post(uri, async (req, res) => {
+      info.api(req, { uri, apiModule: this.nameModule } );
+      try {
+        console.log(util.jsonSave(req.body));
+        let success = true;
+
+        res.writeHead( 200, {
+          'Content-Type': ('application/json; charset='+MainProcess.data.charset),
+          'Content-Language': '*'
+        });
+        return res.end(JSON.stringify({
+          success
+        }));
+      }catch(error){
+        console.log(colors.red(error));
+        res.writeHead( 500, {
+          'Content-Type': ('application/json; charset='+MainProcess.data.charset),
+          'Content-Language': '*'
+        });
+        return res.end(JSON.stringify({
+          success: false,
+          error
+        }));
+      }
+    });
+
   }
 
 }

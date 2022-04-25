@@ -1,6 +1,7 @@
 import { Rest } from '/mods/rest.js';
 import { Menu } from './menu.js';
 import { UnderpostTitle } from './title.js';
+import '/lib/jszip.min.js';
 
 class KeysTable {
 
@@ -81,6 +82,60 @@ class KeysTable {
       </form>
 
 
+      <form class='in form-sign-keys' style='display: none; margin: 5px'>
+
+            `+new UnderpostTitle({path: '/keys', name: renderLang({
+              es: 'Firmar Data',
+              en: 'Sign Data'
+            })}).render+`
+
+            `+renderInput({
+              underpostClass: 'in',
+              id_content_input: makeid(3),
+              id_input: 'input-data-sign',
+              type: 'text',
+              required: true,
+              style_content_input: '',
+              style_input: window.underpost.styles.input.style_input,
+              style_label: window.underpost.styles.input.style_label,
+              style_outline: true,
+              style_placeholder: window.underpost.styles.input.style_placeholder,
+              textarea: true,
+              active_label: true,
+              initLabelPos: 5,
+              endLabelPos: -20,
+              text_label: '',
+              tag_label: makeid(3),
+              fnOnClick: async () => {
+                console.log('click input');
+              },
+              value: ``,
+              topContent: '',
+              botContent: '',
+              placeholder: renderLang({
+                es: 'Ingrese Data',
+                en: 'Enter Data'
+              })
+            })+`
+
+            <br>
+
+            <div class='fll btn-underpost btn-sign-cancel'>
+                <i class='fas fa-times'></i>
+            </div>
+
+            <div class='inl btn-underpost btn-sign-key'>
+                `+renderLang({
+                  es: 'Firmar',
+                  en: 'Sign'
+                })+`
+            </div>
+
+            <div class='fll btn-underpost btn-sign-key'>
+                <i class='fas fa-paste'></i>
+            </div>
+
+      </form>
 
 
       <style>
@@ -447,7 +502,7 @@ class KeysTable {
                }))+`<br>
             </div>
 
-             <div class='in fll plugin-icon-content-table'>
+             <div class='in fll plugin-icon-content-table download-`+index+`'>
              `+this.renderTooltipTableKey('view-tl-'+index, `
                           <i class='fas fa-download icon-table-keys'></i>
                `, renderLang({
@@ -465,7 +520,7 @@ class KeysTable {
                }))+`<br>
              </div>
 
-             <div class='in fll plugin-icon-content-table'>
+             <div class='in fll plugin-icon-content-table sign-`+index+`'>
              `+this.renderTooltipTableKey('view-tl-'+index, `
                           <i class="fas fa-pen-nib icon-table-keys"></i>
                `, renderLang({
@@ -487,6 +542,62 @@ class KeysTable {
                       'success'
                     );
                    await this.renderTableKeys();
+                 }else{
+                   notifi.display(
+                      window.underpost.styles.notifi.backgroundNotifi,
+                      renderLang({es: 'Error en el Servicio', en: 'Error service'}),
+                      2000,
+                      'error'
+                    );
+                 }
+               };
+
+               s('.download-'+index).onclick = async () => {
+                 let response = await new Rest()
+                 .FETCH('/network/keys/'+obj.data[index].type+'/'+obj.data[index].id, 'GET');
+                 if(response.success === true){
+
+
+                   let zip = new JSZip();
+
+                   // Add an top-level, arbitrary text file with contents
+                   if(obj.data[index].type=='asymmetric'){
+                     zip.file(response.dataFileKey.public.name, response.dataFileKey.public.raw);
+                     zip.file(response.dataFileKey.private.name, response.dataFileKey.private.raw);
+                   }else{
+                     zip.file(response.dataFileKey.key.name, response.dataFileKey.key.raw);
+                     zip.file(response.dataFileKey.iv.name, response.dataFileKey.iv.raw);
+                   }
+
+                   // Generate a directory within the Zip file structure
+                   // let img = zip.folder("images");
+
+                   // Add a file to the directory, in this case an image with data URI as contents
+                   // img.file("smile.gif", imgData, {base64: true});
+
+                   // Generate the zip file asynchronously
+                   zip.generateAsync({ type: "blob" })
+                   .then( content => {
+                     // Force down of the Zip file
+                     // application/zip
+                     console.log(content);
+                     downloader.BLOB(obj.data[index].id+'.zip', content);
+                     notifi.display(
+                        window.underpost.styles.notifi.backgroundNotifi,
+                        renderLang({es: 'Llave Descargada', en: 'Key Downloaded'}),
+                        2000,
+                        'success'
+                      );
+                   }).catch(error => {
+                     console.error(error);
+                     notifi.display(
+                        window.underpost.styles.notifi.backgroundNotifi,
+                        renderLang({es: 'Error en el Servicio', en: 'Error service'}),
+                        2000,
+                        'error'
+                      );
+                   });
+
                  }else{
                    notifi.display(
                       window.underpost.styles.notifi.backgroundNotifi,
@@ -538,6 +649,37 @@ class KeysTable {
                  fadeIn(s('.create-form-open'));
                  s('.create-form-open').style.display = 'block';
                  fadeIn(s('table-keys'));
+               };
+
+               s('.btn-sign-cancel').onclick = () => {
+                 fadeIn(s('.create-form-open'));
+                 s('.create-form-open').style.display = 'block';
+                 s('.form-sign-keys').style.display = 'none';
+                 fadeIn(s('table-keys'));
+               };
+
+               s('.sign-'+index).onclick = () => {
+                 s('.main-content-cell-modal-'+mainIdGrid).style.display = 'none';
+                 // s('.form-keys').style.display = 'none';
+                 s('.create-form-open').style.display = 'none';
+                 s('table-keys').style.display = 'none';
+                 s('.btn-sign-key').onclick = async () => {
+                  if(s('.input-data-sign').value==''){
+                    return  notifi.display(
+                         window.underpost.styles.notifi.backgroundNotifi,
+                         renderLang({en: 'Empy data', es: 'No hay datos'}),
+                         2000,
+                         'error'
+                       );
+                  }
+                  const result = await new Rest().FETCH('network/sign-data', 'POST', {
+                    data: s('.input-data-sign').value,
+                    key: obj.data[index]
+                  });
+                  console.log('sign data response', result);
+                }
+
+                 fadeIn(s('.form-sign-keys'));
                };
 
                s('.view-'+index).onclick = async ()=>{
