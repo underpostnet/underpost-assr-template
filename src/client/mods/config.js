@@ -41,6 +41,7 @@ class UnderpostConfig {
     const configColorID = 'config-colors';
     const configThemeID = 'config-themes';
     const configFontsID =  'config-fonts';
+    const configSizeFonts = 'config-size-fonts';
 
     const exclusiveAcc = exep => {
 
@@ -52,6 +53,9 @@ class UnderpostConfig {
 
       exep != configFontsID && window.underpost[configFontsID] ?
       s('.header-'+configFontsID).click(): null;
+
+      exep != configSizeFonts && window.underpost[configSizeFonts] ?
+      s('.header-'+configSizeFonts).click(): null;
 
     };
 
@@ -281,6 +285,58 @@ class UnderpostConfig {
               `;
           }).join('')+`
       </config-fonts-content>
+    `);
+
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+
+    renderHeaderAcc({
+      idAcc: configSizeFonts,
+      text: renderLang({
+        es: 'Tamaño de Letra',
+        en: 'Fonts Size'
+      }),
+      close: () => {
+        fadeOut(s('config-fonts-size-content'));
+      },
+      open: () => {
+        fadeIn(s('config-fonts-size-content'));
+        exclusiveAcc(configSizeFonts);
+      }
+    });
+    const srcSizesFonts = range(5, 60).map( size_ => {
+      if(size_ % 5 == 0){
+        return {
+          display: size_+'px',
+          value: size_
+        }
+      }else{
+        return null;
+      }
+    }).filter(x=>x!=null);
+
+    append('render', `
+      <config-fonts-size-content class="in" style="display: none">
+
+          `+renderLang({
+            es: 'Titulo',
+            en: 'Title'
+          })+`<br>
+          `+renderDropDownV1({
+              title: renderLang({
+                es: 'Select Size',
+                en: 'Seleccionar Tamaño'
+              }),
+              id: "title-config-size",
+              underpostClass: 'in',
+              style: {
+                content: 'font-size: 14px; padding: 10px; margin: 5px; width: 300px; '+window.underpost.theme.font,
+                option: 'font-size: 14px; padding: 10px; '+window.underpost.theme.font
+              },
+              data: srcSizesFonts
+            })+`
+
+      </config-fonts-size-content>
     `);
 
     // -------------------------------------------------------------------------
