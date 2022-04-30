@@ -6,10 +6,9 @@ import { Footer } from './footer.js';
 import { Menu } from './menu.js';
 
 class View {
-  constructor(mods){
+  constructor(UriView, mods){
 
-
-
+    // view group paths
     window.underpost.paths = [
       {
         path: '/editor',
@@ -38,6 +37,11 @@ class View {
     window.underpost.outSpinner = undefined :
     s('.loading').style.display = 'block';
 
+    // uri controller
+    if(UriView){
+      setURI(UriView);
+    }
+
     // Clear Document
     htmls('render', '');
 
@@ -46,7 +50,7 @@ class View {
     new UnderpostSW();
     new Notifi();
     new Menu();
-    mods();
+    mods(UriView == undefined ? getUriPath() : UriView);
     new Footer();
 
     // Cumulative Layout Shift Controller
@@ -59,5 +63,10 @@ class View {
 
   }
 }
+
+// Browser and App
+// navigator button controller
+window.onpopstate = e =>
+window.underpost.view();
 
 export { View };

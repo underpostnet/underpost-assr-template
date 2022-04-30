@@ -6,11 +6,8 @@ import { Editor } from '../mods/editor.js';
 import { LogIn } from '../mods/login.js';
 
 window.underpost.view = UriView =>
-new View(() => {
-  if(UriView){
-    setURI(UriView);
-  }
-  switch (UriView == undefined ? getUriPath() : UriView) {
+new View( UriView, PATH => {
+  switch (PATH) {
     case '/':
       break;
     case '/editor':
@@ -31,10 +28,5 @@ new View(() => {
       location.href = UriView;
   }
 });
-
-// Browser and App
-// navigator button controller
-window.onpopstate = e =>
-window.underpost.view();
 
 window.underpost.view();
