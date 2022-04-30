@@ -1,9 +1,7 @@
 [
    "/init.js",
    "/util.js",
-   "/views/home.js",
-   "/views/editor.js",
-   "/views/user.js",
+   "/views/main.js",
    "/vanilla.js",
    "/cursors/black-default.png",
    "/mods/notifi.js",

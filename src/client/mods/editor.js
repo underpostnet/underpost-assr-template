@@ -565,7 +565,8 @@ class Editor {
           renderAllPost();
 
           const renderTimeSinces = () => currentsPost.map( post =>
-            htmls('.time-since-'+post.id, timeSince(new Date(post.date), s('html').lang, -1))
+            s('.time-since-'+post.id) ?
+            htmls('.time-since-'+post.id, timeSince(new Date(post.date), s('html').lang, -1)) : null
           );
           const intervalUpdateTimeSince = 5000;
 

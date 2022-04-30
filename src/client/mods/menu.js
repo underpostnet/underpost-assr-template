@@ -110,7 +110,6 @@ class Menu {
     ));
 
     s('.btn-nav-home').onclick = () => {
-      // location.href = '/';
       s('.btn-nav-home').style.display = 'none';
       fadeIn(s('.btn-nav-close'));
       s('btns-views-content').style.display = 'none';
@@ -119,7 +118,6 @@ class Menu {
     };
 
     s('.btn-nav-close').onclick = () => {
-      // location.href = '/';
       s('.btn-nav-close').style.display = 'none';
       fadeIn(s('.btn-nav-home'));
       s('btns-views-content').style.display = 'block';
@@ -341,7 +339,7 @@ class Menu {
               return MainInput.click(dataInput);
             }
             s('.loading').style.display = 'block';
-            location.href = dataCell.path;
+            window.underpost.view(dataCell.path);
 
       },
       style: cellGrid(),
