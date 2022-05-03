@@ -14,7 +14,7 @@ class UnderpostConfig {
         open: window.underpost[obj.idAcc] ? true : false,
         classHeader: 'btn-underpost',
         styleIcon: `
-          font-size: 30px;
+          font-size: `+window.underpost.theme.fontSize._h2+`;
           transition: .3s;
         `,
         width: 80,
@@ -318,26 +318,78 @@ class UnderpostConfig {
     append('render', `
       <config-fonts-size-content class="in" style="display: none">
 
-          `+renderLang({
-            es: 'Titulo',
-            en: 'Title'
-          })+`<br>
+          <div style='margin: 5px'>
+              `+renderLang({
+                es: 'Titulo',
+                en: 'Title'
+              })+`
+          </div>
           `+renderDropDownV1({
-              title: renderLang({
-                es: 'Select Size',
-                en: 'Seleccionar Tamaño'
-              }),
+              title: window.underpost.theme.fontSize._h1,
               id: "title-config-size",
               underpostClass: 'in',
               style: {
-                content: 'font-size: 14px; padding: 10px; margin: 5px; width: 300px; '+window.underpost.theme.font,
-                option: 'font-size: 14px; padding: 10px; '+window.underpost.theme.font
+                content: 'padding: 10px; margin: 5px; width: 300px; '+window.underpost.theme.font,
+                option: 'padding: 10px; '+window.underpost.theme.font
               },
               data: srcSizesFonts
             })+`
 
+            <div style='margin: 5px'>
+                `+renderLang({
+                  es: 'SubTitulo',
+                  en: 'SubTitle'
+                })+`
+            </div>
+            `+renderDropDownV1({
+                title: window.underpost.theme.fontSize._h2,
+                id: "subtitle-config-size",
+                underpostClass: 'in',
+                style: {
+                  content: 'padding: 10px; margin: 5px; width: 300px; '+window.underpost.theme.font,
+                  option: 'padding: 10px; '+window.underpost.theme.font
+                },
+                data: srcSizesFonts
+              })+`
+
+              <div style='margin: 5px'>
+                  `+renderLang({
+                    es: 'Texto',
+                    en: 'Text'
+                  })+`
+              </div>
+              `+renderDropDownV1({
+                  title: window.underpost.theme.fontSize._p,
+                  id: "text-config-size",
+                  underpostClass: 'in',
+                  style: {
+                    content: 'padding: 10px; margin: 5px; width: 300px; '+window.underpost.theme.font,
+                    option: 'padding: 10px; '+window.underpost.theme.font
+                  },
+                  data: srcSizesFonts
+                })+`
+
       </config-fonts-size-content>
     `);
+
+
+
+    [
+      { selector:'.title-config-size', key:'_h1' },
+      { selector:'.subtitle-config-size', key:'_h2' },
+      { selector:'.text-config-size', key:'_p' }
+    ].map( inputDropID => s(inputDropID.selector).onchange = () => {
+
+              console.log(inputDropID, s(inputDropID.selector).value);
+
+              window.underpost.theme.fontSize[inputDropID.key] =
+              s(inputDropID.selector).value + 'px';
+
+              localStorage.setItem('font-sizes', JSONstr(window.underpost.theme.fontSize));
+
+              window.underpost.view();
+
+        });
 
     // -------------------------------------------------------------------------
     // -------------------------------------------------------------------------

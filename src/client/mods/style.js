@@ -42,6 +42,9 @@ class Style {
     ).render : 'cursor: pointer;';
 
 
+    // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+
     const currentFont = localStorage.getItem("font");
     if(currentFont){
       window.underpost.theme.font = 'font-family: '+currentFont+';';
@@ -52,13 +55,26 @@ class Style {
     }
 
     // -------------------------------------------------------------------------
+    // -------------------------------------------------------------------------
+
+    const currentSizeData = JSON.parse(localStorage.getItem('font-sizes'));
+    if(currentSizeData){
+      window.underpost.theme.fontSize = currentSizeData;
+    }else{
+      window.underpost.theme.fontSize = {
+        _h1: '30px',
+        _h2: '20px',
+        _p:  '16px'
+      };
+    }
+
+    // -------------------------------------------------------------------------
     // style input
     // -------------------------------------------------------------------------
 
     window.underpost.styles.input.style_input = `
 
         /* padding: 12px 15px; */
-        font-size: 14px;
         background: `+window.underpost.theme.sub_background+`;
         /* margin: 10px 10px 30px 10px; */
         padding: 10px 10px 10px 18px;
@@ -69,7 +85,6 @@ class Style {
 
     window.underpost.styles.input.style_label = `
 
-        font-size: 12px;
         left: 15px;
         color: `+window.underpost.theme.sub_text+`;
 
@@ -112,6 +127,7 @@ class Style {
                       `+window.underpost.theme.font+`
                       color: `+window.underpost.theme.text+`;
                       background: `+window.underpost.theme.background+`;
+                      font-size: `+window.underpost.theme.fontSize._p+`;
                       `+window.underpost.theme.cursorDefault+`
                     }
 
@@ -130,7 +146,7 @@ class Style {
                       background: `+window.underpost.theme.section_btn+`;
                       color: `+window.underpost.theme.section_btn_color+`;
                       border: 3px solid `+window.underpost.theme.section_btn+`;
-                      font-size: 13px;
+                      font-size: `+window.underpost.theme.fontSize._h2+`;
                       `+window.underpost.theme.cursorPointer+`
                     }
 
