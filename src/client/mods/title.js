@@ -21,7 +21,11 @@ class UnderpostTitle {
                 margin: 10px;
                 '>
 
-                      <span style='font-size: 50px'>`+obj.icon+`</span> `+(MainInput.name ? MainInput.name : obj.name)+`
+                      <span style='font-size: `+window.underpost.theme.fontSize._h1+`'>`+obj.icon+`</span>
+                      <span style='font-size: `+window.underpost.theme.fontSize._h2+`'>
+                        `+(MainInput.name ? MainInput.name : obj.name)+
+                      `</span>
+
 
                 </div>
 

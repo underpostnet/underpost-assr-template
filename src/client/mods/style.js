@@ -146,7 +146,6 @@ class Style {
                       background: `+window.underpost.theme.section_btn+`;
                       color: `+window.underpost.theme.section_btn_color+`;
                       border: 3px solid `+window.underpost.theme.section_btn+`;
-                      font-size: `+window.underpost.theme.fontSize._h2+`;
                       `+window.underpost.theme.cursorPointer+`
                     }
 

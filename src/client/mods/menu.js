@@ -37,7 +37,6 @@ class Menu {
           tooltipContent: `
             <div class='abs center' style='top: -30px; width: 100px;'>
                   <div class='inl' style='
-                  font-size: 8px;
                   padding: 5px;
                   background: rgba(0, 0, 0, 0.82);
                   color: rgb(215, 215, 215);
@@ -59,18 +58,14 @@ class Menu {
         <style>
 
             .btn-nav {
-              width: 15px;
-              height: 15px;
-              font-size: 20px;
+              width: `+window.underpost.theme.fontSize._p+`;
+              height: `+window.underpost.theme.fontSize._p+`;
               transition: .3s;
               z-index: `+window.underpost.styles.zIndex.btnMenu+`;
             }
             .btn-nav:hover {
                 bottom: 5px;
                 right: 5px;
-                width: 25px;
-                height: 25px;
-                font-size: 30px;
                 z-index: `+window.underpost.styles.zIndex.btnMenu+`;
              }
 
@@ -267,7 +262,6 @@ class Menu {
         width: 30px;
         height: 30px;
         transition: .3s;
-        font-size: 25px;
         background: rgb(22,22,22);
         border-radius: 50%;
         left: 0%;
@@ -286,7 +280,6 @@ class Menu {
         width: 30px;
         height: 30px;
         transition: .3s;
-        font-size: 25px;
         background: rgb(22,22,22);
         border-radius: 50%;
         left: 100%;
@@ -357,11 +350,10 @@ class Menu {
     }
 
     const iconStyle = `
-      font-size: 35px;
+      font-size: `+window.underpost.theme.fontSize._h1+`;
       top: 40%;
     `;
     const textStyle = `
-      font-size: 8px;
       top: 90%;
     `;
 

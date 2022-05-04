@@ -136,14 +136,12 @@ class Editor {
                 .btn-cards {
                   transition: .3s;
                   `+window.underpost.theme.cursorPointer+`
-                  font-size: 15px;
                   width: 50px;
                   height: 50px;
                   top: -10px;
                 }
 
                 .btn-cards:hover {
-                      font-size: 17px;
                       color: `+window.underpost.theme.mark+`;
                 }
 
@@ -163,7 +161,6 @@ class Editor {
             tooltipContent: `
               <div class='abs center' style='top: -18px; width: 100px;'>
                     <div class='inl' style='
-                    font-size: 8px;
                     padding: 5px;
                     background: rgba(0, 0, 0, 0.82);
                     color: rgb(215, 215, 215);
@@ -201,7 +198,7 @@ class Editor {
 
           append('.btn-view-'+obj_.id, renderTooltipEditor(
             'tooltip-view-'+obj_.id,
-            '<i class="fas fas fa-caret-down icon-fa-'+obj_.id+'" style="font-size: 30px; transition: .3s"></i>',
+            '<i class="fas fas fa-caret-down icon-fa-'+obj_.id+'" style="transition: .3s"></i>',
             `<div class='inl arrow-`+obj_.id+`'>`
             +renderLang({es: 'Ver', en: 'View'})+
             `</div>`
@@ -320,13 +317,13 @@ class Editor {
 
                     <div class='in fll card-title card-title-`+obj_.id+`' style='width: 85%'>
 
-                        <div class='in' style='font-size: 20px; padding: 5px;'>
+                        <div class='in' style='font-size: `+window.underpost.theme.fontSize._h2+`; padding: 5px;'>
                             `+obj_.title+`
                         </div>
-                        <div class='in' style='font-size: 10px; padding: 5px; color: `+window.underpost.theme.mark+`;'>
+                        <div class='in' style='padding: 5px; color: `+window.underpost.theme.mark+`;'>
                             `+renderLang({en: 'Last Update', es:'Actualizado hace'})+` <span class='time-since-`+obj_.id+`'>`+timeSince(new Date(obj_.date), s('html').lang, -1)+`</span>
                         </div>
-                        <div class='in' style='font-size: 10px; padding: 5px; color: #c1c1c1;'>
+                        <div class='in' style='padding: 5px; color: #c1c1c1;'>
                             `+obj_.date.split('.')[0].replace('T', ' ')+`
                         </div>
 
@@ -517,21 +514,23 @@ class Editor {
         <div class='fix btn-new-post-menu underpost-content-top-menu'>
           <div class='inl btn-underpost btn-new-post'>
 
-                `+renderLang({en: 'NEW POST', es: 'NUEVO POST'})+` <i class="fas fa-comment-alt"></i>
+                `+renderLang({en: 'New Post', es: 'Nuevo Post'})+` <i class="fas fa-comment-alt"></i>
 
           </div>
         </div>
 
-          <div class='inl btn-underpost btn-cancel-send-underpost' style='display: none;'>
+          <div class='in' style='margin: 5px'>
+              <div class='inl btn-underpost btn-cancel-send-underpost' style='display: none;'>
 
-                <i class="fas fa-times"></i>
+                    <i class="fas fa-times"></i>
 
-          </div>
+              </div>
 
-          <div class='inl btn-underpost btn-send-underpost' style='display: none;'>
+              <div class='inl btn-underpost btn-send-underpost' style='display: none;'>
 
-                `+renderLang({en: 'SEND', es: 'ENVIAR'})+`
+                    `+renderLang({en: 'SEND', es: 'ENVIAR'})+`
 
+              </div>
           </div>
 
           <render-editor-sortable class='in'></render-editor-sortable>

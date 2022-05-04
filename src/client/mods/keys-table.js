@@ -19,7 +19,7 @@ class KeysTable {
             es: 'Crear Llave',
             en: 'Create Key'
           })+`
-          <i class='fas fa-plus' style='font-size: 20px'></i>
+          <i class='fas fa-plus'></i>
       </div>
 
       <form class='in form-keys' style='display: none; margin: 5px'>
@@ -67,16 +67,16 @@ class KeysTable {
 
           <div class='inl btn-underpost cancel-key'>
 
-                <i class="fas fa-times" style='font-size: 20px;'></i>
+                <i class="fas fa-times"></i>
 
           </div>
 
           <div class='inl btn-underpost create-key-btn'>
               `+renderLang({
-                es: 'Crear',
-                en: 'Create'
+                es: 'CREAR',
+                en: 'CREATE'
               })+`
-              <i class='fas fa-key' style='font-size: 20px'></i>
+              <i class='fas fa-key'></i>
           </div>
 
       </form>
@@ -159,11 +159,9 @@ class KeysTable {
               width: 20%;
               text-align: center;
               border-bottom: 3px solid `+window.underpost.theme.section_btn+`;
-              font-size: 12px;
           }
 
           .icon-table-keys {
-            font-size: 16px;
             position: relative;
           }
 
@@ -206,17 +204,16 @@ class KeysTable {
 
     `);
 
-    const fontSize = 12;
     let checksBox = [
       {
         id: 'asymmetric-input',
         state: false,
-        text: '<span style="font-size: '+fontSize+'px">'+renderLang({es: 'asimetrica', en: 'asymmetric'})+'</span>'
+        text: '<span>'+renderLang({es: 'asimetrica', en: 'asymmetric'})+'</span>'
       },
       {
         id: 'symmetric-input',
         state: false,
-        text: '<span style="font-size: '+fontSize+'px">'+renderLang({es: 'simetrica', en: 'symmetric'})+'</span>'
+        text: '<span>'+renderLang({es: 'simetrica', en: 'symmetric'})+'</span>'
       }
     ];
 
@@ -354,7 +351,6 @@ class KeysTable {
       tooltipContent: `
         <div class='abs center' style='top: 0px; width: 100px;'>
               <div class='inl' style='
-              font-size: 8px;
               padding: 2px;
               background: rgba(0, 0, 0, 0.82);
               color: rgb(215, 215, 215);
@@ -375,7 +371,6 @@ class KeysTable {
 
          inObj == undefined ? inObj = {} : null;
 
-         const fontSize = 10;
          const fontFamily = window.underpost.theme.font;
          const obj = {
            divContent: 'table-keys',
@@ -464,13 +459,12 @@ class KeysTable {
              header_row_style: `
              padding-bottom: 10px;
              padding-top: 10px;
-             `+'font-family: '+fontFamily+'; border-bottom: 3px solid '+window.underpost.theme.section_btn+'; font-size: '+fontSize+'px;',
+             `+'font-family: '+fontFamily+'; border-bottom: 3px solid '+window.underpost.theme.section_btn+';',
              header_cell_style: '',
              row_style: `
 
               font-family: `+fontFamily+`;
               border-bottom: 3px solid `+window.underpost.theme.sub_background+`;
-              font-size: `+fontSize+`px;
 
               `,
              cell_style: `
@@ -483,7 +477,6 @@ class KeysTable {
 
              font-family: `+fontFamily+`;
              border: 3px solid `+window.underpost.theme.mark+`;
-             font-size: `+fontSize+`px;
 
              `,
              contentPlugStyle: `

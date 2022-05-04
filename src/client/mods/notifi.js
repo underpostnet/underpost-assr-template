@@ -4,19 +4,18 @@ class Notifi {
 
   constructor(){
 
-        const fontSizeNotifiIcon = 30;
-        const fontSizeNotifi = 18;
+
         notifi.load({
                divContent: 'render',
         			 AttrRender: {
         				 error: `
 
-        							<i class="fas fa-times" style='font-size: `+fontSizeNotifiIcon+`px; color: red;'></i>
+        							<i class="fas fa-times" style='font-size: `+window.underpost.theme.fontSize._h1+`; color: red;'></i>
 
         				 `,
         				 success: `
 
-        						<i class="fas fa-check" style='font-size: `+fontSizeNotifiIcon+`px; color: green;'></i>
+        						<i class="fas fa-check" style='font-size: `+window.underpost.theme.fontSize._h1+`; color: green;'></i>
 
         				 `
         			 },
@@ -25,7 +24,6 @@ class Notifi {
         				 border-radius: 10px;
         				 /* border: 2px solid yellow; */
         				 color: white;
-        				 font-size: `+fontSizeNotifi+`px;
         				 z-index: `+window.underpost.styles.zIndex.notifiValidator+`;
         				 height: 50px;
         				 transform: translate(-50%, 0);

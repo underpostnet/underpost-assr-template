@@ -20,7 +20,7 @@ class UnderpostConfig {
         width: 80,
         height: '0.1px',
         contentHeader: `
-          <div class='abs center'>
+          <div class='abs center' style='font-size: `+window.underpost.theme.fontSize._h2+`'>
             `+obj.text+`
           </div>
         `,
