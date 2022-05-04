@@ -1,15 +1,17 @@
 
 
 class UnderpostConfig {
-  constructor(){
+  constructor(MainInput){
 
-    append('render', spr('<br>', 3));
+    const _RENDER = MainInput && MainInput.MainRender ? MainInput.MainRender : 'render';
+
+    append(_RENDER, spr('<br>', 3));
 
     // -------------------------------------------------------------------------
     // -------------------------------------------------------------------------
 
     const renderHeaderAcc = obj => {
-      append('render', renderAccordion({
+      append(_RENDER, renderAccordion({
         id: obj.idAcc,
         open: window.underpost[obj.idAcc] ? true : false,
         classHeader: 'btn-underpost',
@@ -114,7 +116,7 @@ class UnderpostConfig {
       window.underpost.view();
     }
 
-    append('render', `
+    append(_RENDER, `
         <config-colors-theme style='display: none'></config-colors-theme>
     `);
 
@@ -181,7 +183,7 @@ class UnderpostConfig {
       }
     });
 
-    append('render', '<themes class="in" style="display: none"></themes>');
+    append(_RENDER, '<themes class="in" style="display: none"></themes>');
     for(let theme_ of window.underpost.themes){
       const idTheme = makeid(4);
       append('themes', `<div class='inl `+idTheme+` btn-underpost' style='
@@ -263,7 +265,7 @@ class UnderpostConfig {
       }
     });
 
-    append('render', `
+    append(_RENDER, `
       <config-fonts-content class="in" style="display: none">
           `+window.underpost.fonts.map( font_ => {
 
@@ -315,7 +317,7 @@ class UnderpostConfig {
       }
     }).filter(x=>x!=null);
 
-    append('render', `
+    append(_RENDER, `
       <config-fonts-size-content class="in" style="display: none">
 
           <div style='margin: 5px'>
@@ -394,7 +396,7 @@ class UnderpostConfig {
     // -------------------------------------------------------------------------
     // -------------------------------------------------------------------------
 
-    append('render', spr('<br>', 3));
+    append(_RENDER, spr('<br>', 3));
 
 
 

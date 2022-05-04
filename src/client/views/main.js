@@ -44,12 +44,13 @@ new MainProcess( UriView, PATH => {
       break;
     case '/user':
       new LogIn();
+      new UnderpostConfig();
       break;
     case '/keys':
       new Editor({ MainRender: '.col-0' });
       new KeysTable({ MainRender: '.col-1' });
-      new UnderpostConfig();
-      new LogIn();
+      new UnderpostConfig({ MainRender: '.col-2' });
+      new LogIn({ MainRender: '.col-3' });
       break;
     case '/config':
       new UnderpostConfig();

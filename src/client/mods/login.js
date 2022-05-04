@@ -3,9 +3,11 @@ import { Rest } from '../plugins/underpost-web-engine/rest.js';
 
 class LogIn {
 
-  constructor(){
+  constructor(MainInput){
 
-    append('render', `
+    const _RENDER = MainInput && MainInput.MainRender ? MainInput.MainRender : 'render';
+
+    append(_RENDER, `
 
 
 
@@ -19,7 +21,7 @@ class LogIn {
 
     `);
 
-    append('render', `
+    append(_RENDER, `
 
 
 
@@ -150,7 +152,7 @@ class LogIn {
 
 
 
-    append('render', spr('<br>', 5));
+    append(_RENDER, spr('<br>', 5));
 
     s('html').onkeydown = () => {
     		switch (window.event.keyCode) {
