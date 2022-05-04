@@ -16,11 +16,11 @@ from '../underpost_modules/underpost.js';
 import { Middlewares } from './mods/middlewares.js';
 import { UtilMod } from './mods/util.js';
 import { Errors } from './mods/errors.js';
+import { Views } from './mods/views.js';
 
 // API services
 import { ApiTest } from './api/api-test.js';
 import { Network } from './api/network.js';
-import { Views } from './api/views.js';
 import { Posts } from './api/posts.js';
 
 
@@ -37,7 +37,7 @@ class MainProcess {
     console.log(' Load MOD Instance: '+colors.green('Middlewares'));
     new Middlewares(this);
 
-    console.log(' Load API Instance: '+colors.green('Views'));
+    console.log(' Load MOD Instance: '+colors.green('Views'));
     new Views(this);
 
     console.log(' Load API Instance: '+colors.green('ApiTest'));
