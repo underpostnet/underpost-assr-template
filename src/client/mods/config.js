@@ -331,8 +331,10 @@ class UnderpostConfig {
               id: "title-config-size",
               underpostClass: 'in',
               style: {
-                content: 'padding: 10px; margin: 5px; width: 300px; '+window.underpost.theme.font,
+                content: 'padding: 10px; margin: 5px; width: 300px; '+window.underpost.theme.font
+                +' font-size: '+window.underpost.theme.fontSize._p+';',
                 option: 'padding: 10px; '+window.underpost.theme.font
+                +' font-size: '+window.underpost.theme.fontSize._p+';'
               },
               data: srcSizesFonts
             })+`
@@ -348,8 +350,10 @@ class UnderpostConfig {
                 id: "subtitle-config-size",
                 underpostClass: 'in',
                 style: {
-                  content: 'padding: 10px; margin: 5px; width: 300px; '+window.underpost.theme.font,
+                  content: 'padding: 10px; margin: 5px; width: 300px; '+window.underpost.theme.font
+                  +' font-size: '+window.underpost.theme.fontSize._p+';',
                   option: 'padding: 10px; '+window.underpost.theme.font
+                  +' font-size: '+window.underpost.theme.fontSize._p+';'
                 },
                 data: srcSizesFonts
               })+`
@@ -365,8 +369,10 @@ class UnderpostConfig {
                   id: "text-config-size",
                   underpostClass: 'in',
                   style: {
-                    content: 'padding: 10px; margin: 5px; width: 300px; '+window.underpost.theme.font,
+                    content: 'padding: 10px; margin: 5px; width: 300px; '+window.underpost.theme.font
+                    +' font-size: '+window.underpost.theme.fontSize._p+';',
                     option: 'padding: 10px; '+window.underpost.theme.font
+                    +' font-size: '+window.underpost.theme.fontSize._p+';'
                   },
                   data: srcSizesFonts
                 })+`

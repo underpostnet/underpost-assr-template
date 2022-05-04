@@ -79,6 +79,7 @@ class Style {
         /* margin: 10px 10px 30px 10px; */
         padding: 10px 10px 10px 18px;
         color: `+window.underpost.theme.sub_text+`;
+        font-size: `+window.underpost.theme.fontSize._p+`;
         `+window.underpost.theme.font+`
 
     `;
