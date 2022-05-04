@@ -1,13 +1,13 @@
 
-import { UnderpostQuillEditor } from '/mods/underpost-quill-editor.js';
-import { UnderpostInteract } from '/mods/underpost-interact.js';
-import { Rest } from '/mods/rest.js';
-import { Menu } from './menu.js';
-import { UnderpostTitle } from './title.js';
+import { UnderpostQuillEditor } from '../plugins/underpost-web-engine/underpost-quill-editor.js';
+import { UnderpostInteract } from '../plugins/underpost-web-engine/underpost-interact.js';
+import { Rest } from '../plugins/underpost-web-engine/rest.js';
+import { Menu } from '../plugins/underpost-web-engine/menu.js';
+import { UnderpostTitle } from '../plugins/underpost-web-engine/title.js';
 
 class Editor {
 
-  constructor(){
+  constructor(MainInput){
 
 
     // -------------------------------------------------------------------------
@@ -20,6 +20,9 @@ class Editor {
     let currentsPost = [];
     const contentDisplayEditor = 'display-editor';
     const idContentDashBoard = 'dashboard-post';
+
+    const _RENDER = MainInput && MainInput.MainRender ?
+    MainInput.MainRender : 'render';
 
     const idSortableContent = 'render-editor-sortable';
     const id_cell = 'menu-cell-test';
@@ -93,7 +96,7 @@ class Editor {
 
     };
 
-    append('render', `
+    append(_RENDER, `
 
             <div class='in `+contentDisplayEditor+`' style='display: none; padding: 5px;'>
 
@@ -508,7 +511,7 @@ class Editor {
           }
       });
 
-      append('render', `
+      append(_RENDER, `
 
 
         <div class='fix btn-new-post-menu underpost-content-top-menu'>

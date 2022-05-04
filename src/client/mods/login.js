@@ -1,5 +1,5 @@
 
-import { Rest } from '/mods/rest.js';
+import { Rest } from '../plugins/underpost-web-engine/rest.js';
 
 class LogIn {
 

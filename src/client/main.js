@@ -1,11 +1,11 @@
 
-import { Style } from './style.js';
-import { UnderpostSW } from './underpost-sw.js';
-import { Notifi } from './notifi.js';
-import { Footer } from './footer.js';
-import { Menu } from './menu.js';
+import { Style } from './plugins/underpost-web-engine/style.js';
+import { UnderpostSW } from './plugins/underpost-web-engine/underpost-sw.js';
+import { Notifi } from './plugins/underpost-web-engine/notifi.js';
+import { Footer } from './plugins/underpost-web-engine/footer.js';
+import { Menu } from './plugins/underpost-web-engine/menu.js';
 
-class View {
+class MainProcess {
   constructor(UriView, mods){
 
     // view group paths
@@ -47,7 +47,7 @@ class View {
 
     // Execute rendering in instruction order
     new Style();
-    new UnderpostSW();
+    // new UnderpostSW();
     new Notifi();
     new Menu();
     mods(UriView == undefined ? getUriPath() : UriView);
@@ -69,4 +69,4 @@ class View {
 window.onpopstate = e =>
 window.underpost.view();
 
-export { View };
+export { MainProcess };

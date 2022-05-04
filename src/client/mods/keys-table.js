@@ -1,6 +1,8 @@
-import { Rest } from '/mods/rest.js';
-import { Menu } from './menu.js';
-import { UnderpostTitle } from './title.js';
+
+import { Rest } from '../plugins/underpost-web-engine/rest.js';
+import { Menu } from '../plugins/underpost-web-engine/menu.js';
+import { UnderpostTitle } from '../plugins/underpost-web-engine/title.js';
+
 import '/lib/jszip.min.js';
 
 class KeysTable {
@@ -11,8 +13,8 @@ class KeysTable {
     this.id_cell  = 'table-cell-keys';
     this.mainWidthTable = '98%';
     const topSpace = spr('<br>', 4);
-
-    append('render', `
+    const _RENDER = obj && obj.MainRender ? obj.MainRender : 'render';
+    append(_RENDER, `
 
       <div class='fix btn-underpost underpost-content-top-menu create-form-open'>
           `+renderLang({
