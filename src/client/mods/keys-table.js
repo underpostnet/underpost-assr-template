@@ -16,15 +16,12 @@ class KeysTable {
     const _RENDER = obj && obj.MainRender ? obj.MainRender : 'render';
     append(_RENDER, `
 
-      <div class='fix btn-underpost underpost-content-top-menu create-form-open'>
-          `+renderLang({
-            es: 'Crear Llave',
-            en: 'Create Key'
-          })+`
-          <i class='fas fa-plus'></i>
-      </div>
-
       <form class='in form-keys' style='display: none; margin: 5px'>
+
+              `+new UnderpostTitle({path: '/keys', name: renderLang({
+                es: 'Crear Llaves',
+                en: 'New Keys'
+              })}).render+`
 
             <in-key-options class='in'>
 
@@ -171,7 +168,12 @@ class KeysTable {
 
       <view-key style='display: none'>
 
-            <div class='fix underpost-content-top-menu content-btns-raw-data'>
+            `+new UnderpostTitle({path: '/keys', name: renderLang({
+              es: 'Ver Llaves',
+              en: 'View Keys'
+            })}).render+`
+
+            <div class='in content-btns-raw-data'>
                     <div class='in fll btn-underpost icon-table-keys cancel-view-key'>
 
                           <i class="fas fa-times"></i>
@@ -198,6 +200,14 @@ class KeysTable {
             `+new UnderpostTitle({
               path: '/keys'
             }).render+`
+
+            <div class='inl btn-underpost create-form-open'>
+                `+renderLang({
+                  es: 'Crear Llave',
+                  en: 'Create Key'
+                })+`
+                <i class='fas fa-plus'></i>
+            </div>
 
             <table-keys-header class='in' style='width: `+this.mainWidthTable+`; margin: auto'> </table-keys-header>
 
@@ -269,7 +279,7 @@ class KeysTable {
       s('.form-keys').style.display = 'none';
       fadeIn(s('.create-form-open'));
       fadeIn(s('table-keys'));
-      s('.create-form-open').style.display = 'block';
+      s('.create-form-open').style.display = 'inline-table';
     };
     s('.create-key-btn').onclick = async () => {
 
@@ -336,11 +346,11 @@ class KeysTable {
 
     };
 
-      (async () => {
-          await this.renderTableKeys();
-          window.underpost.scroll.fnKeysTableCreateBtn =
-          setDynamicDisplay('.create-form-open', 'table-keys', false);
-      })();
+
+          (async () => {
+              await this.renderTableKeys();
+
+          })();
 
   }
 
@@ -642,13 +652,13 @@ class KeysTable {
                s('.cancel-view-key').onclick = async () => {
                  s('view-key').style.display = 'none';
                  fadeIn(s('.create-form-open'));
-                 s('.create-form-open').style.display = 'block';
+                 s('.create-form-open').style.display = 'inline-table';
                  fadeIn(s('table-keys'));
                };
 
                s('.btn-sign-cancel').onclick = () => {
                  fadeIn(s('.create-form-open'));
-                 s('.create-form-open').style.display = 'block';
+                 s('.create-form-open').style.display = 'inline-table';
                  s('.form-sign-keys').style.display = 'none';
                  fadeIn(s('table-keys'));
                };
@@ -690,11 +700,6 @@ class KeysTable {
 
                    fadeIn(s('view-key'));
                    htmls('.key-raw-data', jsonSave(response.dataFileKey));
-
-                   setTimeout( () =>
-                   window.underpost.scroll.fnKeysRawDataConfig =
-                   setDynamicDisplay('.content-btns-raw-data', '.key-raw-data', true)
-                    , 0);
 
                    notifi.display(
                       window.underpost.styles.notifi.backgroundNotifi,

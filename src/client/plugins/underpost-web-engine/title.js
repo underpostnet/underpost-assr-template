@@ -13,12 +13,7 @@ class UnderpostTitle {
           <div class='in' style='padding: 15px'>
 
                 <div class='in' style='
-              /*  border-left: 20px solid `+window.underpost.theme.text+`; */
-                border-bottom: 20px solid `+window.underpost.theme.text+`;
-              /*    border-radius: 45%; */
-                color: `+window.underpost.theme.text+`;
-                padding: 60px 10px 20px 10px;
-                margin: 10px;
+              border-bottom: 4px solid `+window.underpost.theme.text+`;
                 '>
 
                       <span style='font-size: `+window.underpost.theme.fontSize._h1+`'>`+obj.icon+`</span>

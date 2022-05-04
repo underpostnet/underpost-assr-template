@@ -115,9 +115,8 @@ class Views {
             notifiValidator: 99998,
             btnMenu: 99997,
             contentMenu: 99996,
-            contentTopMenu: 99995,
-            contentModalGrid: 99994,
-            contentLanding: 99993
+            contentModalGrid: 99995,
+            contentLanding: 99994
           }
         },
         fonts: ['arial', 'Verdana', 'Times'].concat(MainProcess.data.fonts.map(font_=>font_.name)),

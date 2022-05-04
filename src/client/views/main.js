@@ -41,6 +41,7 @@ new MainProcess( UriView, PATH => {
       break;
     case '/editor':
       new Editor();
+      new KeysTable();
       break;
     case '/user':
       new LogIn();

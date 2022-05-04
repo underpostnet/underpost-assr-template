@@ -47,7 +47,29 @@ class Editor {
 
       htmls(idSortableContent, new UnderpostTitle({
         path: '/editor'
-      }).render);
+      }).render + `
+
+        <div class='in btn-new-post-menu'>
+          <div class='inl btn-underpost btn-new-post'>
+
+                `+renderLang({en: 'New Post', es: 'Nuevo Post'})+` <i class="fas fa-comment-alt"></i>
+
+          </div>
+        </div>
+
+      `);
+
+      s('.btn-new-post').onclick = () => {
+        const fadeInTime = 250;
+        fadeGlobal(true, '.'+contentDisplayEditor, fadeInTime, 'block', 'block');
+        fadeGlobal(true, '.btn-send-underpost', fadeInTime, 'inline-table', 'inline-table');
+        fadeGlobal(true, '.btn-cancel-send-underpost', fadeInTime, 'inline-table', 'inline-table');
+        lastIDedit = null;
+        s('.'+idContentDashBoard).style.display = 'none';
+        s(idSortableContent).style.display = 'none';
+        s('.btn-new-post').style.display = 'none';
+        s('.title-new-post').style.display = 'block';
+      };
 
       new Menu({
             row: l(orderPost),
@@ -97,6 +119,26 @@ class Editor {
     };
 
     append(_RENDER, `
+
+            <div class='title-edit' style='display: none'>
+                  `+new UnderpostTitle({
+                      path: '/editor',
+                      name: renderLang({
+                        es: 'Editar',
+                        en: 'Edit'
+                      })
+                    }).render+`
+            </div>
+
+            <div class='title-new-post' style='display: none'>
+                  `+new UnderpostTitle({
+                      path: '/editor',
+                      name: renderLang({
+                        es: 'Nuevo Post',
+                        en: 'New Post'
+                      })
+                    }).render+`
+            </div>
 
             <div class='in `+contentDisplayEditor+`' style='display: none; padding: 5px;'>
 
@@ -256,8 +298,10 @@ class Editor {
             s('.underpost-ql-title').value = obj_.title;
             s('.card-'+obj_.id).style.display = 'none';
             s('.btn-new-post').click();
+            s('.title-new-post').style.display = 'none';
             lastIDedit = obj_.id;
             setTimeout( ()=> s('.underpost-ql-title').click(), 500);
+            s('.title-edit').style.display = 'block';
           },
           s('.btn-delete-'+obj_.id).onclick = async () => {
             obj_.del = true;
@@ -365,6 +409,8 @@ class Editor {
         fadeGlobal(true, '.btn-new-post', 250, 'inline-table', 'inline-table');
         fadeGlobal(true, '.'+idContentDashBoard, 250, 'block', 'block');
         fadeGlobal(true, idSortableContent, 250, 'block', 'block');
+        s('.title-edit').style.display = 'none';
+        s('.title-new-post').style.display = 'none';
         if(lastIDedit!=null){
           s('.card-'+lastIDedit).style.display = 'block';
           s('.underpost-ql-title').value = '';
@@ -513,15 +559,6 @@ class Editor {
 
       append(_RENDER, `
 
-
-        <div class='fix btn-new-post-menu underpost-content-top-menu'>
-          <div class='inl btn-underpost btn-new-post'>
-
-                `+renderLang({en: 'New Post', es: 'Nuevo Post'})+` <i class="fas fa-comment-alt"></i>
-
-          </div>
-        </div>
-
           <div class='in' style='margin: 5px'>
               <div class='inl btn-underpost btn-cancel-send-underpost' style='display: none;'>
 
@@ -544,21 +581,8 @@ class Editor {
 
       `);
 
-       window.underpost.scroll.fnEditorNewPost =
-       setDynamicDisplay('.btn-new-post-menu', 'render-editor-sortable', true);
-
       s('.btn-cancel-send-underpost').onclick = () => toDashBoard();
 
-      s('.btn-new-post').onclick = () => {
-        const fadeInTime = 250;
-        fadeGlobal(true, '.'+contentDisplayEditor, fadeInTime, 'block', 'block');
-        fadeGlobal(true, '.btn-send-underpost', fadeInTime, 'inline-table', 'inline-table');
-        fadeGlobal(true, '.btn-cancel-send-underpost', fadeInTime, 'inline-table', 'inline-table');
-        lastIDedit = null;
-        s('.'+idContentDashBoard).style.display = 'none';
-        s(idSortableContent).style.display = 'none';
-        s('.btn-new-post').style.display = 'none';
-      };
 
       (async () => {
 
