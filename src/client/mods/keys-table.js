@@ -236,6 +236,18 @@ class KeysTable {
         click: stateEvent => {
             console.log(v.id, stateEvent);
             checksBox[i].state = stateEvent;
+            if(stateEvent === true && v.id=='asymmetric-input'){
+              fadeIn(s('.asymmetric-info'));
+            }
+            if(stateEvent === false && v.id=='asymmetric-input'){
+              fadeOut(s('.asymmetric-info'));
+            }
+            if(stateEvent === true && v.id=='symmetric-input'){
+              fadeIn(s('.symmetric-info'));
+            }
+            if(stateEvent === false && v.id=='symmetric-input'){
+              fadeOut(s('.symmetric-info'));
+            }
             /*
             or exclusive
             if(stateEvent===true){
@@ -269,6 +281,40 @@ class KeysTable {
         }
       }));
     });
+
+    append('in-key-options', `
+        <div class='in asymmetric-info' style='display: none'>
+                Asymmetric Config:
+                <pre>
+                `+jsonSave({
+                        modulusLength: 4096,
+                        namedCurve: 'secp256k1',
+                        publicKeyEncoding: {
+                            type: 'spki',
+                            format: 'pem'
+                        },
+                        privateKeyEncoding: {
+                            type: 'pkcs8',
+                            format: 'pem',
+                            cipher: 'aes-256-cbc'
+                        }
+                })+`
+                </pre>
+        </div>
+
+        <div class='in symmetric-info' style='display: none'>
+            Symmetric Config:
+            <pre>
+            `+jsonSave({
+                    algorithm: "aes-256-ctr",
+                    hasher: "SHA1",
+                    saltRandomArgument: (64/8),
+                    keySize: (256/64) + (128/64),
+                    ivSize: (128/64) * 4
+            })+`
+            </pre>
+        </div>
+    `);
 
     s('.create-form-open').onclick = () => {
       s('.create-form-open').style.display = 'none';
@@ -699,6 +745,15 @@ class KeysTable {
                    s('table-keys').style.display = 'none';
 
                    fadeIn(s('view-key'));
+
+                   if(obj.data[index].type == 'symmetric' ){
+                     delete response.dataFileKey.iv.buffer;
+                     delete response.dataFileKey.key.buffer;
+                   }else{
+                     delete response.dataFileKey.public.buffer;
+                     delete response.dataFileKey.private.buffer;
+                   }
+
                    htmls('.key-raw-data', jsonSave(response.dataFileKey));
 
                    notifi.display(
