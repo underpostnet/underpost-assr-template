@@ -1,5 +1,6 @@
 
 import { Rest } from '../plugins/underpost-web-engine/rest.js';
+import { UnderpostTitle } from '../plugins/underpost-web-engine/title.js';
 
 class LogIn {
 
@@ -9,7 +10,9 @@ class LogIn {
 
     append(_RENDER, `
 
-
+      `+new UnderpostTitle({
+          path: '/user'
+        }).render+`
 
     <br>
     <br>

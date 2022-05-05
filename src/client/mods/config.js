@@ -1,11 +1,14 @@
 
+import { UnderpostTitle } from '../plugins/underpost-web-engine/title.js';
 
 class UnderpostConfig {
   constructor(MainInput){
 
     const _RENDER = MainInput && MainInput.MainRender ? MainInput.MainRender : 'render';
 
-    append(_RENDER, spr('<br>', 3));
+    append(_RENDER, new UnderpostTitle({
+        path: '/config'
+      }).render );
 
     // -------------------------------------------------------------------------
     // -------------------------------------------------------------------------
