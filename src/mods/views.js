@@ -126,7 +126,8 @@ class Views {
         themes: JSON.parse(fs.readFileSync('./data/params/themes.json', MainProcess.data.charset)),
         viewDelay: 200,
         paths: [],
-        view: function(){}
+        view: function(){},
+        limitDesktopMovil: 600
       };
       const uriInitData = '/init.js';
       let initDataRender =

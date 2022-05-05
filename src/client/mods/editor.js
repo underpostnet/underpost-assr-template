@@ -14,7 +14,7 @@ class Editor {
     // -------------------------------------------------------------------------
 
     const sizeTitle = 15;
-    const sizeContent = 15;
+    const sizeContent = parseInt(window.underpost.theme.fontSize._p.split('px')[0]);
     const idContentEditable = 'ql-editor-main';
     let lastIDedit = null;
     let currentsPost = [];
