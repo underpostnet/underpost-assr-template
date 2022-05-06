@@ -1,5 +1,5 @@
 
-import { UnderpostTitle } from '../plugins/underpost-web-engine/title.js';
+import { UnderpostTitle } from '../deps/title.js';
 
 class UnderpostConfig {
   constructor(MainInput){

@@ -1,9 +1,9 @@
 
-import { UnderpostQuillEditor } from '../plugins/underpost-web-engine/underpost-quill-editor.js';
-import { UnderpostInteract } from '../plugins/underpost-web-engine/underpost-interact.js';
-import { Rest } from '../plugins/underpost-web-engine/rest.js';
-import { Menu } from '../plugins/underpost-web-engine/menu.js';
-import { UnderpostTitle } from '../plugins/underpost-web-engine/title.js';
+import { UnderpostQuillEditor } from '../deps/underpost-quill-editor.js';
+import { UnderpostInteract } from '../deps/underpost-interact.js';
+import { Rest } from '../deps/rest.js';
+import { Menu } from '../deps/menu.js';
+import { UnderpostTitle } from '../deps/title.js';
 
 class Editor {
 

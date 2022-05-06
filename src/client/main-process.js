@@ -1,9 +1,9 @@
 
-import { Style } from './plugins/underpost-web-engine/style.js';
-import { UnderpostSW } from './plugins/underpost-web-engine/underpost-sw.js';
-import { Notifi } from './plugins/underpost-web-engine/notifi.js';
-import { Footer } from './plugins/underpost-web-engine/footer.js';
-import { Menu } from './plugins/underpost-web-engine/menu.js';
+import { Style } from './deps/style.js';
+import { UnderpostSW } from './deps/underpost-sw.js';
+import { Notifi } from './deps/notifi.js';
+import { Footer } from './deps/footer.js';
+import { Menu } from './deps/menu.js';
 
 class MainProcess {
   constructor(UriView, mods){

@@ -1,6 +1,6 @@
 
-import { Rest } from '../plugins/underpost-web-engine/rest.js';
-import { UnderpostTitle } from '../plugins/underpost-web-engine/title.js';
+import { Rest } from '../deps/rest.js';
+import { UnderpostTitle } from '../deps/title.js';
 
 class LogIn {
 

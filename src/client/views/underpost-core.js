@@ -5,7 +5,7 @@ import { UnderpostConfig } from '../mods/config.js';
 import { Editor } from '../mods/editor.js';
 import { LogIn } from '../mods/login.js';
 
-import { MainProcess } from '../main.js';
+import { MainProcess } from '../main-process.js';
 
 window.underpost.view = UriView =>
 new MainProcess( UriView, PATH => {

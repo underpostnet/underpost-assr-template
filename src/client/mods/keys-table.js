@@ -1,7 +1,7 @@
 
-import { Rest } from '../plugins/underpost-web-engine/rest.js';
-import { Menu } from '../plugins/underpost-web-engine/menu.js';
-import { UnderpostTitle } from '../plugins/underpost-web-engine/title.js';
+import { Rest } from '../deps/rest.js';
+import { Menu } from '../deps/menu.js';
+import { UnderpostTitle } from '../deps/title.js';
 
 import '/lib/jszip.min.js';
 

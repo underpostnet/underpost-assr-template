@@ -70,7 +70,7 @@
          },
          "image":"/img/underpost-social.jpg",
          "favicon":"/img/underpost.png",
-         "view":"main.js",
+         "view":"underpost-core.js",
          "short_name": "underpost-home",
          "jsonld":[
             "WebSite"
@@ -100,7 +100,7 @@
          },
          "image":"/img/underpost-social.jpg",
          "favicon":"/img/underpost.png",
-         "view":"main.js",
+         "view":"underpost-core.js",
          "short_name": "underpost-editor",
          "jsonld":[
             "WebSite"
@@ -130,7 +130,7 @@
          },
          "image":"/img/underpost-social.jpg",
          "favicon":"/img/underpost.png",
-         "view":"main.js",
+         "view":"underpost-core.js",
          "short_name": "underpost-user",
          "jsonld":[
             "WebSite"
@@ -160,7 +160,7 @@
          },
          "image":"/img/underpost-social.jpg",
          "favicon":"/img/underpost.png",
-         "view":"main.js",
+         "view":"underpost-core.js",
          "short_name": "underpost-keys",
          "jsonld":[
             "WebSite"
@@ -190,7 +190,7 @@
          },
          "image":"/img/underpost-social.jpg",
          "favicon":"/img/underpost.png",
-         "view":"main.js",
+         "view":"underpost-core.js",
          "short_name": "underpost-config",
          "jsonld":[
             "WebSite"
