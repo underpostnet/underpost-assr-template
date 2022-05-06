@@ -149,7 +149,7 @@
          ],
          "dir":"ltr",
          "uri":"/keys",
-         "pwa":true,
+         "pwa":false,
          "title":{
             "en":"keys - underpost.net",
             "es":"keys - underpost.net"

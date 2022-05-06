@@ -407,7 +407,7 @@ class Views {
     }
 
     renderServiceWorker(MainProcess, uri, renderJS){
-      return uri == '/sw.js' ? `
+      return uri == '/service-worker.js' ? `
       const _DEV = `+(MainProcess.dev ? 'true' : 'false' )+`;
       const _URL = '`+MainProcess.util.buildUrl()+`';
       const _ASSETS = JSON.parse('`+JSON.stringify(

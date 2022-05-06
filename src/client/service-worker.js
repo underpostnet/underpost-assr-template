@@ -178,9 +178,13 @@ self.addEventListener('activate', (event) => {
       setInterval( async () => {
         if(_OFFLINE === true){
           try {
+              console.warn(' ATTEMPT TO ONLINE TRANSITION ->')
               await fetch(_URL, {method: 'get'});
               _OFFLINE = false;
-          }catch(err){ }
+              console.log(' ATTEMPT TO ONLINE TRANSITION SUCCESS');
+          }catch(err){
+            console.error(' ATTEMPT TO ONLINE TRANSITION FAIL');
+          }
         }
       }, 2000);
 

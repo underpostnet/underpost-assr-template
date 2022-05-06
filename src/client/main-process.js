@@ -13,22 +13,26 @@ class MainProcess {
       {
         path: '/editor',
         name: renderLang({es: 'Editor', en: 'Editor'}),
-        icon: '<i class="fas fa-edit"></i>'
+        icon: '<i class="fas fa-edit"></i>',
+        offline: true
       },
       {
         path: '/user',
         name: renderLang({es: 'Usuario', en: 'User'}),
-        icon: '<i class="fas fa-user"></i>'
+        icon: '<i class="fas fa-user"></i>',
+        offline: true
       },
       {
         path: '/keys',
         name: renderLang({es: 'Llaves', en: 'Keys'}),
-        icon: '<i class="fas fa-key"></i>'
+        icon: '<i class="fas fa-key"></i>',
+        offline: false
       },
       {
         path: '/config',
         name: renderLang({es: 'Configuración', en: 'Setting'}),
-        icon: '<i class="fas fa-cog"></i>'
+        icon: '<i class="fas fa-cog"></i>',
+        offline: true
       }
     ];
 
@@ -47,7 +51,7 @@ class MainProcess {
 
     // Execute rendering in instruction order
     new Style();
-    // new UnderpostSW();
+    new UnderpostSW();
     new Notifi();
     new Menu();
     mods(UriView == undefined ? getUriPath() : UriView);
