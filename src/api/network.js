@@ -37,13 +37,19 @@ class Network {
           console.log(colors.yellow(' Network > get paths >'));
           console.log(PathsKeys);
           PathsKeys = PathsKeys.map((v,i,a) => {
-            return   {
-               id: v.split('symmetric/')[1] ? v.split('symmetric/')[1].split('/')[0] : ' - ',
-               // path: v.split(this.uriPathKeys)[1],
-               date: new Date(fs.statSync(v).birthtime).getTime(),
-               type: v.split('/').includes('asymmetric') ? 'asymmetric' : 'symmetric'
-             }
+            const idKey = v.split('symmetric/')[1] ? v.split('symmetric/')[1].split('/')[0] : ' - ';
+            if(idKey=="active.json"){
+              return null;
+            } else {
+              return   {
+                 id: idKey,
+                 // path: v.split(this.uriPathKeys)[1],
+                 date: new Date(fs.statSync(v).birthtime).getTime(),
+                 type: v.split('/').includes('asymmetric') ? 'asymmetric' : 'symmetric'
+               }
+            }
           });
+          PathsKeys = PathsKeys.filter(x=>x!=null);
           PathsKeys = PathsKeys.sort((a, b) =>  b['date'] - a['date']); // desc
           // a - b -> asc
           PathsKeys = PathsKeys.map( x => {
