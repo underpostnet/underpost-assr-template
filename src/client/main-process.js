@@ -13,26 +13,22 @@ class MainProcess {
       {
         path: '/editor',
         name: renderLang({es: 'Editor', en: 'Editor'}),
-        icon: '<i class="fas fa-edit"></i>',
-        offline: true
+        icon: '<i class="fas fa-edit"></i>'
       },
       {
         path: '/user',
         name: renderLang({es: 'Usuario', en: 'User'}),
-        icon: '<i class="fas fa-user"></i>',
-        offline: true
+        icon: '<i class="fas fa-user"></i>'
       },
       {
         path: '/keys',
         name: renderLang({es: 'Llaves', en: 'Keys'}),
-        icon: '<i class="fas fa-key"></i>',
-        offline: false
+        icon: '<i class="fas fa-key"></i>'
       },
       {
         path: '/config',
         name: renderLang({es: 'Configuración', en: 'Setting'}),
-        icon: '<i class="fas fa-cog"></i>',
-        offline: true
+        icon: '<i class="fas fa-cog"></i>'
       }
     ];
 
