@@ -27,19 +27,18 @@ class Auth {
     MainProcess.app.post(uri, (req, res) => {
       info.api(req, { uri, apiModule: this.nameModule } );
       try{
+        const response = jwt.sign(
+          {
+            exp: Math.floor(Date.now() / 1000) + (60 * 60 * MainProcess.data.api.EXPIRE),
+            data: req.body
+          },
+          MainProcess.data.api.SECRET
+        );
         res.writeHead( 200, {
           'Content-Type': ('application/json; charset='+MainProcess.data.charset),
           'Content-Language': '*'
         });
-        return res.end(
-          jwt.sign(
-            {
-              exp: Math.floor(Date.now() / 1000) + (60 * 60 * MainProcess.data.api.EXPIRE),
-              data: req.body
-            },
-            MainProcess.data.api.SECRET
-          )
-        );
+        return res.end(response);
       }catch(error){
         console.log(colors.red(error));
         res.writeHead( 500, {
@@ -55,18 +54,22 @@ class Auth {
     MainProcess.app.post(uri, (req, res) => {
       info.api(req, { uri, apiModule: this.nameModule } );
       try{
-        res.writeHead( 200, {
-          'Content-Type': ('application/json; charset='+MainProcess.data.charset),
-          'Content-Language': '*'
-        });
         const authHeader = String(req.headers['authorization'] || '');
         if (authHeader.startsWith('Bearer ')) {
           const token = authHeader.substring(7, authHeader.length);
           console.log(token);
-          return res.end(
-            JSON.stringify(jwt.verify(token, MainProcess.data.api.SECRET))
-          );
+          const response = JSON.stringify(jwt.verify(token, MainProcess.data.api.SECRET));
+          // throw undefined;
+          res.writeHead( 200, {
+            'Content-Type': ('application/json; charset='+MainProcess.data.charset),
+            'Content-Language': '*'
+          });
+          return res.end(response);
         }
+        res.writeHead( 200, {
+          'Content-Type': ('application/json; charset='+MainProcess.data.charset),
+          'Content-Language': '*'
+        });
         return res.end(
           "invalid bearer token"
         );
