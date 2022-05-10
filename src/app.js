@@ -22,6 +22,7 @@ import { Views } from './mods/views.js';
 import { ApiTest } from './api/api-test.js';
 import { Network } from './api/network.js';
 import { Posts } from './api/posts.js';
+import { Auth } from './api/auth.js';
 
 
 class MainProcess {
@@ -36,6 +37,9 @@ class MainProcess {
 
     console.log(' Load MOD Instance: '+colors.green('Middlewares'));
     new Middlewares(this);
+
+    console.log(' Load MOD Instance: '+colors.green('Auth'));
+    new Auth(this);
 
     console.log(' Load MOD Instance: '+colors.green('Views'));
     new Views(this);

@@ -48,6 +48,7 @@
     "javascript-obfuscator": "latest",
     "ajv": "latest",
     "handlebars": "latest",
-    "compression": "latest"
+    "compression": "latest",
+    "jsonwebtoken": "latest"
   }
 }
