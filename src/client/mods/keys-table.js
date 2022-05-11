@@ -158,7 +158,7 @@ class KeysTable {
                 })+`
             </div>
 
-            <div class='inl btn-underpost'>
+            <div class='inl btn-underpost btn-sign-paste'>
                 <i class='fas fa-paste'></i>
             </div>
 
@@ -180,7 +180,7 @@ class KeysTable {
                   <div class='inl btn-underpost btn-sign-cancel-result'>
                       <i class='fas fa-times'></i>
                   </div>
-                  <div class='inl btn-underpost'>
+                  <div class='inl btn-underpost btn-sign-copy-result'>
                       <i class='fas fa-copy'></i>
                   </div>
 
@@ -265,6 +265,9 @@ class KeysTable {
       </table-keys>
 
     `);
+
+    s('.btn-sign-paste').onclick = async () =>
+    s('.input-data-sign').value = await getPasteContent();
 
     let checksBox = [
       {
@@ -803,13 +806,30 @@ class KeysTable {
                   fadeIn(s('.result-sign-content'));
                   s('.key-pass-sign').value = '';
                   if(result.success === true){
+
+                    s('.btn-sign-copy-result').onclick = async () =>
+                    await copyStrClipboard(result.data);
+                    await s('.btn-sign-copy-result').click();
+
                     return notifi.display(
                        window.underpost.styles.notifi.backgroundNotifi,
-                       renderLang({es: 'Firma Generada', en: 'Success Sign'}),
+                       renderLang({
+                         es: 'Firma Generada y copiado al portapeles',
+                         en: 'Success Sign and Copy to Clipboard'
+                       }),
                        2000,
                        'success'
                      );
                   }else{
+
+                    s('.btn-sign-copy-result').onclick = () =>
+                    notifi.display(
+                       window.underpost.styles.notifi.backgroundNotifi,
+                       renderLang({es: 'Firma Invalida', en: 'Invalid Sign'}),
+                       2000,
+                       'error'
+                     );;
+
                     return notifi.display(
                        window.underpost.styles.notifi.backgroundNotifi,
                        renderLang({es: 'Error en el Servicio', en: 'Error service'}),

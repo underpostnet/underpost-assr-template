@@ -223,7 +223,9 @@ class Network {
             publicKeyData.base64,
             req.body.passphrase,
             true,
-            req.body.data
+            {
+              AUTH_TOKEN: req.body.data
+            }
           );
 
           const blockChainConfig = {};
