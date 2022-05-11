@@ -130,7 +130,6 @@ var POSTS_VIRTUAL_API = new Posts(MainProcess);
 // Incrementing OFFLINE_VERSION will kick off the install event and force
 // previously cached resources to be updated from the network.
 const OFFLINE_VERSION = 1;
-var _OFFLINE = false;
 
 console.warn('[Service Worker] Base URL ', _URL);
 console.warn('[Service Worker] Assets ', _ASSETS);
@@ -174,19 +173,6 @@ self.addEventListener('activate', (event) => {
 
     if ('navigationPreload' in self.registration) {
       await self.registration.navigationPreload.enable();
-
-      setInterval( async () => {
-        if(_OFFLINE === true){
-          try {
-              console.warn(' ATTEMPT TO ONLINE TRANSITION ->')
-              await fetch(_URL, {method: 'get'});
-              _OFFLINE = false;
-              console.log(' ATTEMPT TO ONLINE TRANSITION SUCCESS');
-          }catch(err){
-            console.error(' ATTEMPT TO ONLINE TRANSITION FAIL');
-          }
-        }
-      }, 2000);
 
       /*
       setInterval(()=>{
@@ -242,8 +228,6 @@ self.addEventListener('fetch', (event) => {
           return preloadResponse;
         }
 
-        if( _OFFLINE ){ throw event.request; }
-
         // Exit early if we don't have access to the client.
         // Eg, if it's cross-origin.
         if (!event.clientId) return;
@@ -278,7 +262,6 @@ self.addEventListener('fetch', (event) => {
         console.warn('[Service Worker] [Navigator Middleware] [Network Response]', _URI);
         return networkResponse;
       } catch (error) {
-        _OFFLINE = true;
         // catch is only triggered if an exception is thrown, which is likely
         // due to a network error.
         // If fetch() returns a valid HTTP response with a response code in

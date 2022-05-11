@@ -206,13 +206,51 @@ class Network {
       try {
         console.log(util.jsonSave(req.body));
         let success = true;
+        let dataResponse = {};
+
+        if(req.body.key.type === 'asymmetric'){
+
+          const path = this.consoleAbsolutePath
+          + this.consoleFolderName
+          + this.uriPathKeys
+          + '/asymmetric/'
+          + '/' + req.body.key.id;
+
+          const publicKeyData = await new FileGestor().getDataFile(path+'/public.pem');
+
+          let keySignData = new Keys().generateDataAsymetricSign(
+            path+'/private.pem',
+            publicKeyData.base64,
+            req.body.passphrase,
+            true,
+            req.body.data
+          );
+
+          const blockChainConfig = {};
+          let validateSign = new Keys().validateDataTempKeyAsymmetricSign(
+            publicKeyData.base64,
+            keySignData,
+            blockChainConfig,
+            MainProcess.data.charset,
+            this.consoleAbsolutePath + this.consoleFolderName
+          );
+
+          if(validateSign===true){
+            dataResponse = new Keys().
+              getBase64AsymmetricPublicKeySignFromJSON(keySignData);
+          }else{
+            success = false;
+          }
+
+        }
 
         res.writeHead( 200, {
           'Content-Type': ('application/json; charset='+MainProcess.data.charset),
           'Content-Language': '*'
         });
         return res.end(JSON.stringify({
-          success
+          success,
+          data: dataResponse
         }));
       }catch(error){
         console.log(colors.red(error));
@@ -222,7 +260,7 @@ class Network {
         });
         return res.end(JSON.stringify({
           success: false,
-          error
+          data: error
         }));
       }
     });
